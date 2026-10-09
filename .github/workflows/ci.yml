@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install CPU dependencies
+        run: |
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -e '.[test,benchmark]'
+      - name: Download public embedding model
+        run: |
+          mkdir -p "$RUNNER_TEMP/brain-bootstrap"
+          brain init --project "$RUNNER_TEMP/brain-bootstrap"
+          brain model download --project "$RUNNER_TEMP/brain-bootstrap"
+      - name: Unit and end-to-end tests
+        run: python -m pytest -q
+      - name: Measured repository benchmark
+        if: matrix.python-version == '3.12'
+        run: python benchmarks/measure.py
+      - name: Multilingual retrieval robustness
+        if: matrix.python-version == '3.12'
+        run: python benchmarks/robustness.py
+      - name: Measured growth benchmark
+        if: matrix.python-version == '3.12'
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            python benchmarks/growth.py --profile full
+            python benchmarks/project_scenarios.py
+          else
+            python benchmarks/growth.py --profile quick
+          fi

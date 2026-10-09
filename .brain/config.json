@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "embedding": {
+    "model": "intfloat/multilingual-e5-small",
+    "dimensions": 384,
+    "distance": "cosine",
+    "local_files_only": true
+  },
+  "retrieval": {
+    "default_limit": 8,
+    "default_token_budget": 2000,
+    "vector_weight": 0.55,
+    "keyword_weight": 0.2,
+    "importance_weight": 0.15,
+    "recency_weight": 0.1
+  },
+  "storage": {
+    "database": ".brain/index/brain.db"
+  }
+}

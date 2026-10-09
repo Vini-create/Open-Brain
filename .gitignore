@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pytest_cache/
+build/
+dist/
+.coverage
+htmlcov/
+.DS_Store
+.ruff_cache/
+*.egg-info/
+.brain/index/
+.brain/history/
+.brain/mcp.json
+.mcp.json
+GROWTH_QUICK_REPORT.md
+benchmarks/results/growth-quick.json

@@ -1,0 +1,434 @@
+{
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.14.7",
+    "cpu_model": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "logical_cpus": 12,
+    "torch": "2.14.1+cpu",
+    "sqlite_vec": "0.1.9"
+  },
+  "model": "intfloat/multilingual-e5-small",
+  "tokenizer": "cl100k_base (tiktoken)",
+  "documents": 1000,
+  "fact_documents": 4,
+  "distractors": 996,
+  "questions": [
+    {
+      "case": "auth",
+      "form": 0,
+      "query": "Como é feita a rotação do refresh token na autenticação?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 138,
+      "duration_ms": 438.78,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "auth",
+      "form": 0,
+      "query": "Como é feita a rotação do refresh token na autenticação?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 322,
+      "duration_ms": 439.62,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-synthetic-926"
+      ]
+    },
+    {
+      "case": "auth",
+      "form": 1,
+      "query": "How is a reused refresh credential rejected?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 134,
+      "duration_ms": 422.03,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "auth",
+      "form": 1,
+      "query": "How is a reused refresh credential rejected?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 315,
+      "duration_ms": 430.38,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-synthetic-913"
+      ]
+    },
+    {
+      "case": "auth",
+      "form": 2,
+      "query": "O que invalida o token anterior após renovar a sessão?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 138,
+      "duration_ms": 449.72,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "auth",
+      "form": 2,
+      "query": "O que invalida o token anterior após renovar a sessão?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 320,
+      "duration_ms": 455.05,
+      "returned_ids": [
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-synthetic-122"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 0,
+      "query": "Como evitamos mensagens duplicadas na fila de pagamentos?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 141,
+      "duration_ms": 455.95,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 0,
+      "query": "Como evitamos mensagens duplicadas na fila de pagamentos?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 316,
+      "duration_ms": 439.21,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-synthetic-739"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 1,
+      "query": "What makes payment processing safe when a message is delivered twice?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 135,
+      "duration_ms": 446.6,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-rotacao-de-refresh-token-3884c1ae"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 1,
+      "query": "What makes payment processing safe when a message is delivered twice?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 311,
+      "duration_ms": 440.83,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-synthetic-216"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 2,
+      "query": "Como evitar cobrança duplicada após redelivery da fila?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 140,
+      "duration_ms": 426.81,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-rotacao-de-refresh-token-3884c1ae"
+      ]
+    },
+    {
+      "case": "queue",
+      "form": 2,
+      "query": "Como evitar cobrança duplicada após redelivery da fila?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 319,
+      "duration_ms": 451.49,
+      "returned_ids": [
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-synthetic-739"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 0,
+      "query": "Como isolar dados entre organizações?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 141,
+      "duration_ms": 428.44,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 0,
+      "query": "Como isolar dados entre organizações?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 320,
+      "duration_ms": 434.39,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "decision-synthetic-117"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 1,
+      "query": "Where is tenant isolation enforced for data reads?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 136,
+      "duration_ms": 503.29,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "constraint-retencao-de-auditoria-4aebecb9"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 1,
+      "query": "Where is tenant isolation enforced for data reads?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 316,
+      "duration_ms": 421.48,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-synthetic-117"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 2,
+      "query": "Em que camada a organização é filtrada nas consultas?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 143,
+      "duration_ms": 417.03,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73"
+      ]
+    },
+    {
+      "case": "tenant",
+      "form": 2,
+      "query": "Em que camada a organização é filtrada nas consultas?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 320,
+      "duration_ms": 419.71,
+      "returned_ids": [
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "decision-synthetic-813"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 0,
+      "query": "Quanto tempo os registros de auditoria são guardados?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 137,
+      "duration_ms": 417.01,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 0,
+      "query": "Quanto tempo os registros de auditoria são guardados?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 319,
+      "duration_ms": 422.51,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-synthetic-117"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 1,
+      "query": "Which audit events survive cleanup, and for how long?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 142,
+      "duration_ms": 442.12,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "rule-idempotencia-de-pagamentos-19da4c73"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 1,
+      "query": "Which audit events survive cleanup, and for how long?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 318,
+      "duration_ms": 416.37,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "decision-synthetic-100"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 2,
+      "query": "Qual é a janela de retenção do log de auditoria?",
+      "budget": 180,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 142,
+      "duration_ms": 427.15,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "architecture-isolamento-entre-organizacoes-74b603ec"
+      ]
+    },
+    {
+      "case": "audit",
+      "form": 2,
+      "query": "Qual é a janela de retenção do log de auditoria?",
+      "budget": 400,
+      "top1": true,
+      "returned": true,
+      "fact_in_context": true,
+      "actual_tokens": 322,
+      "duration_ms": 421.8,
+      "returned_ids": [
+        "constraint-retencao-de-auditoria-4aebecb9",
+        "architecture-isolamento-entre-organizacoes-74b603ec",
+        "decision-rotacao-de-refresh-token-3884c1ae",
+        "rule-idempotencia-de-pagamentos-19da4c73",
+        "decision-synthetic-768"
+      ]
+    }
+  ],
+  "summaries": [
+    {
+      "budget": 180,
+      "questions": 12,
+      "top1": 12,
+      "returned": 12,
+      "fact_in_context": 12,
+      "payload_tokens": 1667,
+      "median_ms": 433.61
+    },
+    {
+      "budget": 400,
+      "questions": 12,
+      "top1": 12,
+      "returned": 12,
+      "fact_in_context": 12,
+      "payload_tokens": 3818,
+      "median_ms": 432.38
+    }
+  ]
+}

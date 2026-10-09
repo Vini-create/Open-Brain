@@ -1,0 +1,298 @@
+{
+  "tokenizer": "cl100k_base (tiktoken)",
+  "model": "intfloat/multilingual-e5-small",
+  "approximate_search_budget": 180,
+  "agent_instruction_tokens": 408,
+  "mcp_tool_schema_tokens": 352,
+  "levels": [
+    {
+      "source_documents": 4,
+      "brain_memories": 4,
+      "newly_embedded": 0,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 291,
+          "latency_ms": 17.66
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 292,
+          "latency_ms": 21.42
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 283,
+          "latency_ms": 17.62
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 290,
+          "latency_ms": 18.08
+        }
+      ],
+      "incremental_index_ms": 2.65,
+      "database_bytes": 1683456,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 1156,
+      "median_search_ms": 17.87
+    },
+    {
+      "source_documents": 44,
+      "brain_memories": 44,
+      "newly_embedded": 40,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 571,
+          "latency_ms": 31.22
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 572,
+          "latency_ms": 31.63
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 563,
+          "latency_ms": 31.4
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 570,
+          "latency_ms": 31.3
+        }
+      ],
+      "incremental_index_ms": 749.81,
+      "database_bytes": 2056192,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 2276,
+      "median_search_ms": 31.35
+    },
+    {
+      "source_documents": 164,
+      "brain_memories": 164,
+      "newly_embedded": 120,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 1411,
+          "latency_ms": 82.97
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 1412,
+          "latency_ms": 79.39
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 1403,
+          "latency_ms": 80.1
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 1410,
+          "latency_ms": 84.52
+        }
+      ],
+      "incremental_index_ms": 1736.94,
+      "database_bytes": 3186688,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 5636,
+      "median_search_ms": 81.53
+    },
+    {
+      "source_documents": 1000,
+      "brain_memories": 1000,
+      "newly_embedded": 836,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 7263,
+          "latency_ms": 433.76
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 7264,
+          "latency_ms": 429.54
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 7255,
+          "latency_ms": 425.87
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 7262,
+          "latency_ms": 417.97
+        }
+      ],
+      "incremental_index_ms": 12037.23,
+      "database_bytes": 10969088,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 29044,
+      "median_search_ms": 427.71
+    },
+    {
+      "source_documents": 5000,
+      "brain_memories": 5000,
+      "newly_embedded": 4000,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 39259,
+          "latency_ms": 2401.85
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 39260,
+          "latency_ms": 2254.63
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 39251,
+          "latency_ms": 2214.83
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 39258,
+          "latency_ms": 2048.42
+        }
+      ],
+      "incremental_index_ms": 79343.71,
+      "database_bytes": 54583296,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 157028,
+      "median_search_ms": 2234.73
+    },
+    {
+      "source_documents": 10000,
+      "brain_memories": 10000,
+      "newly_embedded": 5000,
+      "cases": [
+        {
+          "id": "auth",
+          "fact_found": true,
+          "brain_tokens": 144,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 79259,
+          "latency_ms": 4183.53
+        },
+        {
+          "id": "queue",
+          "fact_found": true,
+          "brain_tokens": 147,
+          "targeted_rg_tokens": 282,
+          "broad_rg_tokens": 79260,
+          "latency_ms": 4210.07
+        },
+        {
+          "id": "tenant",
+          "fact_found": true,
+          "brain_tokens": 148,
+          "targeted_rg_tokens": 273,
+          "broad_rg_tokens": 79251,
+          "latency_ms": 4148.66
+        },
+        {
+          "id": "audit",
+          "fact_found": true,
+          "brain_tokens": 143,
+          "targeted_rg_tokens": 280,
+          "broad_rg_tokens": 79258,
+          "latency_ms": 4034.77
+        }
+      ],
+      "incremental_index_ms": 100032.61,
+      "database_bytes": 109084672,
+      "facts_found": 4,
+      "brain_tokens": 582,
+      "targeted_rg_tokens": 1115,
+      "broad_rg_tokens": 317028,
+      "median_search_ms": 4166.09
+    }
+  ],
+  "fresh_process_facts_found": 4,
+  "fresh_process_queries": 4,
+  "fresh_process_first_ms": 8093.54,
+  "persisted_memory_tokens": 1286053,
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.14.7",
+    "cpu_model": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "logical_cpus": 12,
+    "torch": "2.14.1+cpu",
+    "sqlite_vec": "0.1.9"
+  }
+}

@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")"
+repository="$(cd "$(dirname "$script_path")/.." && pwd -P)"
+image="${BRAIN_DOCKER_IMAGE:-second-brain-local:latest}"
+
+if [[ "${1:-}" == build ]]; then
+    exec docker build -t "$image" "$repository"
+fi
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: brain-docker build | init | model download | status | index | search | remember | mcp" >&2
+    exit 2
+fi
+
+if ! docker image inspect "$image" >/dev/null 2>&1; then
+    echo "Image $image is missing. Run $script_path build once." >&2
+    exit 1
+fi
+
+project_dir="$PWD"
+forward=()
+while [[ $# -gt 0 ]]; do
+    if [[ "$1" == --project ]]; then
+        if [[ $# -lt 2 ]]; then
+            echo "--project requires a path" >&2
+            exit 2
+        fi
+        project_dir="$2"
+        shift 2
+    else
+        forward+=("$1")
+        shift
+    fi
+done
+
+if [[ ${#forward[@]} -eq 0 ]]; then
+    echo "Provide a brain command before --project" >&2
+    exit 2
+fi
+
+project_dir="$(cd "$project_dir" && pwd -P)"
+model_cache="${BRAIN_MODEL_CACHE:-${HOME}/.cache/second-brain-local/huggingface}"
+mkdir -p "$model_cache"
+model_cache="$(cd "$model_cache" && pwd -P)"
+
+network=(--network none)
+if [[ "${forward[0]}" == model && "${forward[1]:-}" == download ]]; then
+    network=()
+fi
+
+exec docker run --rm -i "${network[@]}" \
+    --user "$(id -u):$(id -g)" \
+    --volume "$project_dir:/workspace:z" \
+    --volume "$model_cache:/models:z" \
+    --env HF_HOME=/models \
+    --env "BRAIN_DOCKER_WRAPPER=$script_path" \
+    --env "BRAIN_HOST_PROJECT=$project_dir" \
+    --workdir /workspace \
+    "$image" "${forward[@]}" --project /workspace

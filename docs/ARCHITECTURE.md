@@ -1,0 +1,70 @@
+# Architecture
+
+Second Brain stores **durable project knowledge**, not the whole repository or a conversation dump. Markdown is canonical. A local SQLite database is a disposable index. A CPU embedding model and `sqlite-vec` provide semantic distance; keyword matching, importance, and recency also affect ranking.
+
+```mermaid
+flowchart LR
+    A[Agent or CLI] --> B[brain init / remember / search]
+    B --> C[Markdown in .brain]
+    C --> D[Changed-file indexer]
+    D --> E[Local CPU embedding model]
+    E --> F[SQLite and sqlite-vec]
+    B --> F
+    F --> G[Ranked, token-bounded context]
+    G --> A
+    H[MCP stdio client] --> B
+```
+
+## Repository layout
+
+| Path | Responsibility |
+| --- | --- |
+| `src/second_brain/cli.py` | CLI commands and user-facing output. |
+| `src/second_brain/core.py` | Project initialization, memory writes, hybrid ranking, response budget. |
+| `src/second_brain/documents.py` | Markdown and YAML front matter parsing, document IDs, chunks. |
+| `src/second_brain/embedding.py` | Local CPU model loading, explicit download, query and passage vectors. |
+| `src/second_brain/storage.py` | SQLite schema, `sqlite-vec`, incremental index, rebuild, status. |
+| `src/second_brain/mcp.py` | JSON-RPC over stdio: `brain_search`, `brain_remember`, `brain_status`. |
+| `scripts/brain-docker` and `Dockerfile` | Optional container execution with host project and model-cache mounts. |
+| `benchmarks/` and `tests/` | Reproducible measurements, analytical scenarios, and automated checks. |
+
+## Generated project layout
+
+```text
+your-project/
+├── AGENTS.md                  # tells agents to read the Brain protocol
+├── .mcp.json                  # local MCP command; ignored by Git
+└── .brain/
+    ├── AGENT_BRAIN.md         # when agents should search and remember
+    ├── README.md              # local instructions
+    ├── config.json            # embedding model, search weights, storage path
+    ├── project/               # idea.md, overview.md, goals.md
+    ├── knowledge/             # structured durable memories by type
+    ├── index/brain.db         # rebuildable SQLite index; ignored by Git
+    ├── history/               # versions and search log; ignored by Git
+    └── mcp.json               # local MCP command; ignored by Git
+```
+
+`brain init` is safe to rerun: it does not overwrite populated project templates or custom `AGENTS.md` rules. It refreshes local MCP paths and adds missing agent-protocol sections. It creates an empty index without loading the model. A supplied `--idea` is indexed immediately and therefore requires a downloaded model.
+
+## Write and retrieval flow
+
+1. `brain remember` validates a type, title, content, tags, and importance, then writes a Markdown file with YAML front matter. The type and title form a stable identity so updates replace the same memory. Previous versions are kept locally.
+2. `brain index` compares Markdown hashes with the database, embeds only changed chunks, removes deleted documents, and leaves unchanged vectors alone. `brain rebuild` recreates the index from Markdown.
+3. `brain search` first checks all Brain Markdown files for changes, embeds the query locally, computes vector similarity, combines it with keyword, importance, and recency scores, and returns ranked excerpts within an approximate token budget.
+4. The MCP server exposes the same search and write operations to a compatible client. It has no network listener or LLM dependency.
+
+The default model is `intfloat/multilingual-e5-small` with 384-dimensional vectors. Only `brain model download` is allowed to fetch model weights. Normal indexing and search request local cached files. No project content is sent to an embedding API.
+
+## Index choice and scaling
+
+The current index stores metadata and vectors in one local SQLite database. [`sqlite-vec`](https://github.com/asg017/sqlite-vec) supplies vector storage and cosine-distance functions. [FAISS](https://github.com/facebookresearch/faiss/wiki/guidelines-to-choose-an-index) offers specialized indexes that may be useful at much larger vector counts. For this V1, keeping Markdown and a rebuildable SQLite index is simpler to install and maintain.
+
+Hybrid ranking currently computes a vector distance and score for **every indexed chunk**. This avoids the `vec0` KNN query's `k` limit of 4,096, but search cost grows with memory count. The empirical benchmark includes 10,000 project documents and 10,000 corresponding indexed memories; projections above that size are token-payload arithmetic only and do not demonstrate acceptable latency or recall. An approximate nearest-neighbor index would require a measured quality and maintenance tradeoff before adoption.
+
+## Boundaries
+
+- No automatic repository scan, Git hook, file watcher, background daemon, or cloud sync.
+- The agent must decide what durable facts to record. New source-code changes are not searchable until relevant knowledge is written to `.brain/`.
+- A retrieved memory is project context, not proof that code still matches it. Agents should verify source files before edits.
+- The token budget uses a local approximation of three characters per token; benchmark reports count output with `cl100k_base` and disclose the difference.
