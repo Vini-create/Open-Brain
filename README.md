@@ -21,15 +21,16 @@ The broad baseline is actual `rg` path discovery plus one selected file for each
 
 ## Install once, then use it in any project
 
-On Linux or macOS, install Python 3.10+ and clone the repository. From the clone, run the installer once:
+On Linux or macOS, install Python 3.10+ and clone the repository into your home directory. Run the installer once:
 
 ```bash
+cd ~
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
 ./scripts/install.sh
 ```
 
-The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. **Cloning alone does not install the command.** If the installer reports that `~/.local/bin` is missing from `PATH`, run this once in the current terminal (and add it to your shell profile for future terminals):
+This puts the installation in `~/Open-Brain`, outside your other projects. The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. **Cloning alone does not install the command.** If the installer reports that `~/.local/bin` is missing from `PATH`, run this once in the current terminal (and add it to your shell profile for future terminals):
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"

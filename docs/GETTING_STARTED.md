@@ -7,6 +7,7 @@ Second Brain is a local CLI and MCP server. Install the application once, then r
 Requirements: Python 3.10 or newer with `venv`, Bash, and enough disk space for PyTorch, its dependencies, and the public embedding model. The installer has been tested on Linux x86_64.
 
 ```bash
+cd ~
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
 ./scripts/install.sh
@@ -14,7 +15,7 @@ export PATH="$HOME/.local/bin:$PATH" # Only needed if this directory is not alre
 brain --help
 ```
 
-The installer creates `.venv` inside the clone, installs the CLI, downloads `intfloat/multilingual-e5-small`, and links `brain` into `~/.local/bin`. Cloning alone does not install the command. If `brain --help` says command not found, add that directory to `PATH` in this terminal with `export PATH="$HOME/.local/bin:$PATH"`. Add the same line to your shell profile to keep it available in new terminals. You can set `BRAIN_BIN_DIR` when installing to choose a different command directory; that directory must be on `PATH`. No virtual environment activation is needed afterwards.
+`cd ~` places the clone at `~/Open-Brain`, outside individual project folders. The installer creates `.venv` inside the clone, installs the CLI, downloads `intfloat/multilingual-e5-small`, and links `brain` into `~/.local/bin`. Cloning alone does not install the command. If `brain --help` says command not found, add that directory to `PATH` in this terminal with `export PATH="$HOME/.local/bin:$PATH"`. Add the same line to your shell profile to keep it available in new terminals. You can set `BRAIN_BIN_DIR` when installing to choose a different command directory; that directory must be on `PATH`. No virtual environment activation is needed afterwards.
 
 Initialize an **existing, separate project**:
 
