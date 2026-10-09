@@ -21,7 +21,7 @@ The broad baseline is actual `rg` path discovery plus one selected file for each
 
 ## Install once, then use it in any project
 
-On Linux or macOS, install Python 3.10+ and clone the repository into your home directory. Run the installer once:
+On Linux, install Git, Bash and Python 3.10+ with `venv` (Python 3.12/3.13 is a conservative choice). Clone the repository into your home directory and run the installer once:
 
 ```bash
 cd ~
@@ -29,6 +29,8 @@ git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
 ./scripts/install.sh
 ```
+
+Choose the matching instructions in [INSTALLATION.md](docs/INSTALLATION.md): [Linux distributions](docs/INSTALLATION.md#linux), [macOS Apple Silicon](docs/INSTALLATION.md#macos-apple-silicon), [Windows PowerShell](docs/INSTALLATION.md#windows-powershell), or [WSL2](docs/INSTALLATION.md#windows-with-wsl2). The Bash installer does not run natively in PowerShell. Macs need Python with SQLite-extension support; Intel Macs should use the documented [Docker alternative](docs/INSTALLATION.md#docker). Native setup and Docker have been tested on Linux x86_64; other host environments are documented but not yet tested.
 
 This puts the installation in `~/Open-Brain`, outside your other projects. The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. **Cloning alone does not install the command.** If the installer reports that `~/.local/bin` is missing from `PATH`, run this once in the current terminal (and add it to your shell profile for future terminals):
 

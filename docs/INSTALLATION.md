@@ -2,22 +2,93 @@
 
 Second Brain is a local CLI and MCP server. Install the application once, then run `brain init` inside each software project that needs its own memory. No LLM provider, API key, FAISS server, or cloud account is required. The first installation and first embedding-model download require internet access.
 
-## Option A: one-time installer (Linux/macOS, recommended)
+## Choose your operating system
 
-Requirements: Python 3.10 or newer with `venv`, Bash, and enough disk space for PyTorch, its dependencies, and the public embedding model. The installer has been tested on Linux x86_64.
+The package requires Python 3.10+, Git, and disk space for PyTorch and the embedding model. **Python 3.12 or 3.13 is a conservative choice** when installing; a newer Python release may not yet have wheels for every dependency. No GPU is needed.
+
+| Environment | Installation path | Verification |
+| --- | --- | --- |
+| Linux x86_64 with glibc | [Linux installer](#linux) | Native installation and project isolation tested on the development Linux host. |
+| macOS Apple Silicon (M-series) | [macOS instructions](#macos-apple-silicon) | Documented; not tested on a Mac. |
+| Windows x64, native PowerShell | [Windows instructions](#windows-powershell) | Documented; not tested on Windows. |
+| Windows with WSL2 | [WSL instructions](#windows-with-wsl2) | Documented; not tested under WSL. |
+| macOS Intel | [Docker](#docker) | Native current PyTorch wheels unavailable; Docker host setup not tested on a Mac. |
+| Linux ARM64 | Linux installer if all dependency wheels are available; otherwise a compatible Docker image | Not tested on ARM64; depends on upstream binary availability. |
+| Alpine Linux / musl | Docker with this repository's Debian-based image | Native binary installation is not a supported path. |
+
+The Bash installer uses Unix `.venv/bin/` paths. Git Bash on native Windows does not turn it into a Windows installer; use PowerShell or WSL instead. Only the Linux host and Linux x86_64 Docker path have been exercised here; this table does not claim testing on every listed distribution.
+
+## Linux
+
+Install the prerequisites for your distribution, then use the same installer. Run only the block for your distribution.
+
+**Ubuntu, Debian, Linux Mint:**
+
+```bash
+sudo apt update
+sudo apt install git bash python3 python3-pip python3-venv
+```
+
+**Fedora, current RHEL-compatible distributions:**
+
+```bash
+sudo dnf install git bash python3 python3-pip
+```
+
+**Arch Linux, EndeavourOS:**
+
+```bash
+sudo pacman -Syu git bash python python-pip
+```
+
+On other distributions, including openSUSE, install Git, Bash and a Python 3.10+ package with `pip` and `venv` through the distribution's package manager. Package names vary with the distribution and Python version. Check `python3 --version` before continuing; on an older system choose a supported Python explicitly with `BRAIN_PYTHON` as shown below. Ubuntu's [Python setup guide](https://documentation.ubuntu.com/ubuntu-for-developers/howto/python-setup/) covers its virtual-environment prerequisites.
+
+Install Open Brain into your home directory:
 
 ```bash
 cd ~
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
-./scripts/install.sh
-export PATH="$HOME/.local/bin:$PATH" # Only needed if this directory is not already on PATH.
+bash scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH"
 brain --help
 ```
 
-`cd ~` places the clone at `~/Open-Brain`, outside individual project folders. The installer creates `.venv` inside the clone, installs the CLI, downloads `intfloat/multilingual-e5-small`, and links `brain` into `~/.local/bin`. Cloning alone does not install the command. If `brain --help` says command not found, add that directory to `PATH` in this terminal with `export PATH="$HOME/.local/bin:$PATH"`. Add the same line to your shell profile to keep it available in new terminals. You can set `BRAIN_BIN_DIR` when installing to choose a different command directory; that directory must be on `PATH`. No virtual environment activation is needed afterwards.
+If you already cloned it at `~/Open-Brain`, use `cd ~/Open-Brain` and run the installer there instead of cloning again. The installer creates `.venv`, installs CPU PyTorch and the application, downloads the model, and links `brain` into `~/.local/bin`. Installation is for your user. No virtual environment activation is needed afterwards.
 
-Initialize an **existing, separate project**:
+To choose another installed Python, replace the installer invocation with:
+
+```bash
+BRAIN_PYTHON=python3.12 bash scripts/install.sh
+```
+
+Current PyTorch Linux binaries require a compatible architecture and glibc version; see the [official platform requirements](https://pytorch.org/get-started/locally/). Older distributions and Alpine's musl environment may not satisfy them. Use [Docker](#docker) on a host capable of running the provided image if native wheels cannot be installed. ARM64 also requires compatible PyTorch and sqlite-vec binaries; it has not been validated here.
+
+## macOS Apple Silicon
+
+Use an ARM64 Terminal session (`uname -m` should report `arm64`) and a Python build that supports SQLite extensions. The system Python may omit that feature, which Open Brain needs for sqlite-vec. The [sqlite-vec macOS guide](https://alexgarcia.xyz/sqlite-vec/python.html#macos-blocks-sqlite-extensions-by-default) recommends Homebrew Python.
+
+With [Homebrew](https://brew.sh/) already installed:
+
+```bash
+brew install git python@3.12
+cd ~
+git clone https://github.com/Vini-create/Open-Brain.git
+cd Open-Brain
+BRAIN_PYTHON="$(brew --prefix)/bin/python3.12" bash scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH"
+brain --help
+```
+
+The [Homebrew Python 3.12 formula](https://formulae.brew.sh/formula/python@3.12) supplies the executable used above. The installer obtains PyTorch through the package's normal dependencies on macOS and runs embeddings on CPU. It does not use the Linux CPU-wheel index on a Mac. If using another Python distribution, check its SQLite-extension support first and set `BRAIN_PYTHON` to its executable.
+
+**Intel Macs:** use the [Docker path](#docker) with a compatible Docker Desktop installation. PyTorch [stopped publishing official macOS x86_64 binaries starting with release 2.3](https://dev-discuss.pytorch.org/t/pytorch-macos-x86-builds-deprecation-starting-january-2024/1690); the unpinned native install cannot be presented as a reliable current path for Intel Macs. The Docker image uses Linux dependencies and has been tested on Linux x86_64, rather than on macOS.
+
+## Make the Unix command available in new terminals
+
+On Linux/macOS, `export PATH="$HOME/.local/bin:$PATH"` applies to the current terminal. Add that same line once to your shell configuration (`~/.bashrc` for interactive Bash on Linux, `~/.zshrc` for Zsh, or the profile used by your Bash login shell on macOS), then open a new terminal. For Fish, use `fish_add_path ~/.local/bin` instead. `BRAIN_BIN_DIR` can select another launcher directory; that directory must be on `PATH`.
+
+Then initialize each existing project:
 
 ```bash
 cd /absolute/path/to/your-project
@@ -25,22 +96,92 @@ brain init
 brain status
 ```
 
-`brain init` creates an empty `.brain/`, `AGENTS.md`, and `.mcp.json` in the current project. Reuse the same installation in another project by changing directory and running `brain init` again. Each project gets separate memory; only the public model weights are shared. If you run `./scripts/install.sh --skip-model`, use `brain init` then `brain model download` before indexing or searching.
+The installer downloads `intfloat/multilingual-e5-small` once. If you chose `bash scripts/install.sh --skip-model`, run `brain model download` after your first `brain init`, before indexing or searching.
 
-`brain init` also creates `.brain/map.html`. Open it directly in a browser to inspect this project's memories and approximate stored context size. No model download is needed to create or refresh the map. The page is self-contained and makes no network request.
+## Windows PowerShell
 
-If the clone or virtual environment moves, rerun the installer and `brain init` in each project to refresh absolute MCP command paths.
+Install Git for Windows from its [official download page](https://git-scm.com/downloads/win) and 64-bit Python 3.12 from [Python.org](https://www.python.org/downloads/windows/), including the `py` command. Open a new PowerShell terminal and confirm `git --version` and `py -3.12 --version` work. These instructions target x64 Windows; native Windows ARM64 has not been validated and depends on upstream wheels.
 
-## Option B: manual Python setup (including Windows)
+```powershell
+Set-Location $env:USERPROFILE
+git clone https://github.com/Vini-create/Open-Brain.git
+Set-Location Open-Brain
+py -3.12 -m venv .venv
+& ".\.venv\Scripts\python.exe" -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+& ".\.venv\Scripts\python.exe" -m pip install -e .
+$brainScripts = Join-Path $env:USERPROFILE "Open-Brain\.venv\Scripts"
+$env:Path = "$brainScripts;$env:Path"
+brain --help
+```
 
-From the cloned repository, create and activate a Python 3.10+ virtual environment. On Linux/macOS:
+If using an installed Python 3.13 instead, replace `py -3.12` with `py -3.13`. Explicit selection avoids picking a newer interpreter whose dependency wheels may not be ready. The block calls the virtual environment's Python directly, so it does not require `Activate.ps1` or changing PowerShell's execution policy. The CPU-wheel installation follows the [PyTorch installation guide](https://pytorch.org/get-started/locally/).
+
+Make `brain` available in future terminals by opening Windows **Edit environment variables for your account**, editing the **user** `Path`, and adding `%USERPROFILE%\Open-Brain\.venv\Scripts`. Restart the terminal and your coding client after changing it. The `$env:Path` command above already handles the current terminal.
+
+Now initialize your project and download the embedding model once:
+
+```powershell
+Set-Location "C:\path\to\your-project"
+brain init
+brain model download
+brain status
+```
+
+In subsequent projects, run only `brain init`; the cached model is reused. If you prefer to avoid editing `Path`, call the executable directly from any project:
+
+```powershell
+& "$env:USERPROFILE\Open-Brain\.venv\Scripts\brain.exe" init
+```
+
+The generated MCP configuration uses the absolute Windows Python executable and project path. A native Windows MCP client can use that configuration. No Bash script is needed for this path.
+
+## Windows with WSL2
+
+For a Linux workflow on Windows, install WSL using [Microsoft's instructions](https://learn.microsoft.com/en-us/windows/wsl/install). In an administrator PowerShell terminal:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Restart if prompted, open Ubuntu, and follow the [Linux instructions](#linux) inside that shell. Keep the clone and your project paths consistent with the WSL environment. The Unix launcher belongs to WSL and is not a native PowerShell command.
+
+A client running inside WSL can use the generated Linux MCP configuration. A client running on the Windows host must launch it through `wsl.exe` instead; for example, adapt these paths and the distribution name in its MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "second-brain": {
+      "command": "wsl.exe",
+      "args": [
+        "--distribution", "Ubuntu", "--",
+        "/home/YOUR_WSL_USER/Open-Brain/.venv/bin/python",
+        "-m", "second_brain", "mcp", "--project",
+        "/home/YOUR_WSL_USER/your-project"
+      ]
+    }
+  }
+}
+```
+
+Both paths must exist inside WSL. An absolute Linux command copied unchanged into a native Windows client's settings will not launch successfully.
+
+## Manual Python alternative on Linux/macOS
+
+For an existing clone, you can manage the virtual environment yourself:
 
 ```bash
+cd ~/Open-Brain
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-On Windows PowerShell, use `py -m venv .venv` followed by `.venv\Scripts\Activate.ps1`. On Linux, install a CPU build of PyTorch with `python -m pip install torch --index-url https://download.pytorch.org/whl/cpu`. On Windows, follow the [official PyTorch instructions](https://pytorch.org/get-started/locally/). Then run:
+On Linux, install CPU PyTorch first:
+
+```bash
+python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+```
+
+On macOS Apple Silicon, omit that command; `pip install -e .` resolves PyTorch. Use a Python with SQLite-extension support as described in the macOS section. Then, on either system:
 
 ```bash
 python -m pip install -e .
@@ -49,26 +190,47 @@ brain init
 brain model download
 ```
 
-Keep the virtual environment active to type `brain` with this manual setup. The generated MCP configuration uses the absolute Python path, so the client does not need terminal activation. On macOS, `pip install -e .` installs the required PyTorch dependency.
+This manual path requires activating `~/Open-Brain/.venv/bin/activate` in each new terminal, or calling `~/Open-Brain/.venv/bin/brain` directly. Generated MCP settings use absolute paths and do not require terminal activation.
 
-## Option C: Docker
+## Docker
 
-Requirements: Docker with a running daemon and Bash. From the cloned repository:
+Requirements: Bash and Docker with a running Linux-container daemon. The wrapper and image have been tested on Linux x86_64. On macOS use Docker Desktop and Terminal; on Windows use a WSL2 shell with Docker Desktop's WSL integration enabled. The Bash wrapper is not a native PowerShell wrapper. macOS, WSL and ARM64 host setups remain untested here.
+
+From an existing clone:
 
 ```bash
-./scripts/brain-docker build
+cd ~/Open-Brain
+bash scripts/brain-docker build
 ```
 
-Then, from any project:
+Then, from any project in the same host environment:
 
 ```bash
 cd /absolute/path/to/your-project
-/absolute/path/to/Open-Brain/scripts/brain-docker init
-/absolute/path/to/Open-Brain/scripts/brain-docker model download
-/absolute/path/to/Open-Brain/scripts/brain-docker status
+~/Open-Brain/scripts/brain-docker init
+~/Open-Brain/scripts/brain-docker model download
+~/Open-Brain/scripts/brain-docker status
 ```
 
-The script mounts the current project into `/workspace`, uses your UID/GID, and keeps model files under `~/.cache/second-brain-local/huggingface`. Its generated MCP configuration points to the script on the **host**, not to a Python binary inside the container. Use `--project /absolute/path/to/another-project` to target a different directory. The Docker image and model cache are separate from the native Python installation. The wrapper disables container networking for ordinary commands; `model download` permits network access. It uses shared SELinux volume labels (`:z`) on Linux.
+For an Intel Mac, this uses an x86_64 Linux container rather than Intel macOS PyTorch binaries. The image's build still needs compatible Linux CPU wheels. The script mounts the current project into `/workspace`, uses your UID/GID, and keeps model files under `~/.cache/second-brain-local/huggingface`. Its generated MCP configuration points to the script on the **host**. The MCP client must be able to run Bash in that same environment; Windows-host clients using WSL need a `wsl.exe` launch configuration. Use `--project /absolute/path/to/another-project` to target a different directory.
+
+The Docker image and model cache are separate from the native Python installation. Ordinary commands disable container networking; `model download` permits it. The wrapper uses shared SELinux volume labels (`:z`) on Linux.
+
+## Installation checks and troubleshooting
+
+After installation, run `brain init`, `brain status`, `brain remember --type decision --title "Install check" --content "This project has its own local Brain."`, and `brain search "local Brain"` in a disposable project directory. These check local storage and actual embedding retrieval, beyond `brain --help`. Open `.brain/map.html` to inspect the resulting memory.
+
+| Symptom | Action |
+| --- | --- |
+| `brain` command not found | Follow the Unix shell or Windows user `Path` steps above, or call the absolute executable. |
+| `No module named venv` / `ensurepip` unavailable | Install your distribution's Python virtual-environment package; Ubuntu/Debian use `python3-venv`. |
+| No matching distribution for `torch` or another dependency | Check Python version, OS and CPU architecture; choose an installed Python 3.12/3.13, consult the upstream wheel support, or use a compatible Docker host. |
+| macOS `enable_load_extension` missing | Recreate the virtual environment using Homebrew Python as described above; this is a Python/SQLite build issue. |
+| Model unavailable locally | Run `brain model download` once with network access from an initialized project. |
+| Existing `~/.local/bin/brain` belongs to another clone | Keep the intended clone and remove only its obsolete launcher, or install with a different `BRAIN_BIN_DIR`; the installer refuses to overwrite another command. |
+| Clone moved or deleted | Recreate its virtual environment at the final path, repair the launcher, and rerun `brain init` in each project to refresh absolute MCP paths. Virtual environments are not portable directories. |
+
+`brain init` creates an empty `.brain/`, `AGENTS.md`, and `.mcp.json` in the selected project and also creates `.brain/map.html`. The map needs no model download. Your memories stay in that project's directory when the terminal closes.
 
 ## Give the Brain its first facts
 
