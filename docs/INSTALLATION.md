@@ -1,4 +1,4 @@
-# Getting started
+# Installation and project setup
 
 Second Brain is a local CLI and MCP server. Install the application once, then run `brain init` inside each software project that needs its own memory. No LLM provider, API key, FAISS server, or cloud account is required. The first installation and first embedding-model download require internet access.
 

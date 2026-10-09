@@ -12,7 +12,7 @@ This project has three levels of evidence. **Measured retrieval payload** is the
 
 ## Reproduce the measured benchmarks
 
-After following [Getting started](GETTING_STARTED.md) and downloading the model:
+After following [Installation guide](INSTALLATION.md) and downloading the model:
 
 ```bash
 python -m pip install -e '.[test,benchmark]'

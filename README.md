@@ -45,7 +45,7 @@ brain status
 brain map
 ```
 
-`brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. No terminal activation or second download is needed. The public `intfloat/multilingual-e5-small` embedding model is shared across projects; their memories are not. Normal indexing and search run locally and offline. Installation and model download need internet access. See the [step-by-step guide](docs/GETTING_STARTED.md) for Windows, manual installation, Docker, MCP setup, and what to commit.
+`brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. No terminal activation or second download is needed. The public `intfloat/multilingual-e5-small` embedding model is shared across projects; their memories are not. Normal indexing and search run locally and offline. Installation and model download need internet access. See the [installation guide](docs/INSTALLATION.md) for Windows, manual installation, Docker, MCP setup, and what to commit.
 
 Add verified project facts to `.brain/project/idea.md` and run `brain index`, or start with `brain init --idea "A short description"`. Then use `brain search "What is this project for?"` to retrieve them.
 
@@ -86,7 +86,7 @@ Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/inde
 
 ## MCP integration
 
-`brain init` generates `.brain/mcp.json` and a project-root `.mcp.json` with the exact stdio command for that installation. If your client does not read `.mcp.json`, copy its `command` and `args` into the client's stdio MCP settings. Restart the client and verify these three tools: `brain_status`, `brain_search`, and `brain_remember`. The generated `AGENTS.md` directs agents to `.brain/AGENT_BRAIN.md`; MCP initialization also returns those instructions. A client's behavior determines whether it presents them to the agent. Details are in [Getting started](docs/GETTING_STARTED.md#connect-an-mcp-client).
+`brain init` generates `.brain/mcp.json` and a project-root `.mcp.json` with the exact stdio command for that installation. If your client does not read `.mcp.json`, copy its `command` and `args` into the client's stdio MCP settings. Restart the client and verify these three tools: `brain_status`, `brain_search`, and `brain_remember`. The generated `AGENTS.md` directs agents to `.brain/AGENT_BRAIN.md`; MCP initialization also returns those instructions. A client's behavior determines whether it presents them to the agent. Details are in [Installation guide](docs/INSTALLATION.md#connect-an-mcp-client).
 
 ## What the benchmarks actually show
 
@@ -105,7 +105,7 @@ A separate [multilingual query test](ROBUSTNESS_REPORT.md) recovered the exact f
 | `brain status`, `brain index`, `brain rebuild` | Inspect, incrementally index, or rebuild the local index. |
 | `brain map` | Refresh the standalone, interactive `.brain/map.html` view. |
 
-- [Getting started](docs/GETTING_STARTED.md): exact clone, install, project setup, Docker, and MCP steps.
+- [Installation guide](docs/INSTALLATION.md): exact clone, install, project setup, Docker, and MCP steps.
 - [Architecture](docs/ARCHITECTURE.md): files, data flow, storage, and scaling boundaries.
 - [Benchmarking](docs/BENCHMARKS.md): evidence levels, reproduction, and fair comparisons.
 - [Repository benchmark](BENCHMARK_REPORT.md), [growth benchmark](GROWTH_REPORT.md), [query robustness](ROBUSTNESS_REPORT.md), and [large-project scenarios](docs/SCENARIOS.md).

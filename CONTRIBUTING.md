@@ -4,7 +4,7 @@ Thanks for improving Second Brain Local. The project aims to stay local, simple 
 
 ## Local setup
 
-Follow [Getting started](docs/GETTING_STARTED.md), then install test and benchmark extras:
+Follow [Installation guide](docs/INSTALLATION.md), then install test and benchmark extras:
 
 ```bash
 python -m pip install -e '.[test,benchmark]'
