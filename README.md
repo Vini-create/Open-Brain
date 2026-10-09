@@ -19,27 +19,34 @@ Four questions in one session, with **one copy of agent instructions and MCP too
 
 The broad baseline is actual `rg` path discovery plus one selected file for each question. Its uncapped output becomes too large for a practical prompt. The 8k/question column **simulates a cap on that measured output**; it does not show whether a truncated search still finds the right file. A precise keyword search used only **1,115 tokens** across the same four questions and beat Brain after its setup cost. The [growth report](GROWTH_REPORT.md) gives the raw method, full measurements, and limits; [benchmarking](docs/BENCHMARKS.md) explains how to interpret the claims.
 
-## Start from a GitHub clone
+## Install once, then use it in any project
 
-Copy this repository's HTTPS URL from GitHub's **Code** button. On Linux x86_64 with Python 3.10+:
+On Linux or macOS, install Python 3.10+ and clone the repository. From the clone, run the installer once:
 
 ```bash
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -e .
+./scripts/install.sh
+```
 
+The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. **Cloning alone does not install the command.** If the installer reports that `~/.local/bin` is missing from `PATH`, run this once in the current terminal (and add it to your shell profile for future terminals):
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Now, from **any** project directory:
+
+```bash
 cd /absolute/path/to/your-project
 brain init
-brain model download
-brain init --idea "A short, factual description of my project"
-brain search "What is this project for?"
+brain status
 brain map
 ```
 
-`brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. The public `intfloat/multilingual-e5-small` embedding model downloads once per installation mode and is reused across projects. Normal indexing and search then run locally and offline. The first installation, model download, and optional benchmark tokenizer download need internet access. See the [step-by-step guide](docs/GETTING_STARTED.md) for macOS, Windows, Docker, MCP setup, and what to commit.
+`brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. No terminal activation or second download is needed. The public `intfloat/multilingual-e5-small` embedding model is shared across projects; their memories are not. Normal indexing and search run locally and offline. Installation and model download need internet access. See the [step-by-step guide](docs/GETTING_STARTED.md) for Windows, manual installation, Docker, MCP setup, and what to commit.
+
+Add verified project facts to `.brain/project/idea.md` and run `brain index`, or start with `brain init --idea "A short description"`. Then use `brain search "What is this project for?"` to retrieve them.
 
 ### Docker instead of local Python dependencies
 

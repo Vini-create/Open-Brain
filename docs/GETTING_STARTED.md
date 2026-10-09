@@ -2,38 +2,55 @@
 
 Second Brain is a local CLI and MCP server. Install the application once, then run `brain init` inside each software project that needs its own memory. No LLM provider, API key, FAISS server, or cloud account is required. The first installation and first embedding-model download require internet access.
 
-## Option A: native Python (recommended)
+## Option A: one-time installer (Linux/macOS, recommended)
 
-Requirements: Python 3.10 or newer, `pip`, and enough disk space for PyTorch, its dependencies, and the public embedding model. On Linux x86_64:
+Requirements: Python 3.10 or newer with `venv`, Bash, and enough disk space for PyTorch, its dependencies, and the public embedding model. The installer has been tested on Linux x86_64.
 
 ```bash
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -e .
+./scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH" # Only needed if this directory is not already on PATH.
 brain --help
 ```
 
-On macOS, omit the PyTorch CPU-index command and run `python -m pip install -e .` in the virtual environment. On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`; install a CPU build of PyTorch using its [official instructions](https://pytorch.org/get-started/locally/) before `pip install -e .`. The Docker script below requires Bash and has been tested on Linux x86_64.
+The installer creates `.venv` inside the clone, installs the CLI, downloads `intfloat/multilingual-e5-small`, and links `brain` into `~/.local/bin`. Cloning alone does not install the command. If `brain --help` says command not found, add that directory to `PATH` in this terminal with `export PATH="$HOME/.local/bin:$PATH"`. Add the same line to your shell profile to keep it available in new terminals. You can set `BRAIN_BIN_DIR` when installing to choose a different command directory; that directory must be on `PATH`. No virtual environment activation is needed afterwards.
 
 Initialize an **existing, separate project**:
 
 ```bash
 cd /absolute/path/to/your-project
 brain init
-brain model download
 brain status
 ```
 
-`brain init` creates an empty `.brain/`, `AGENTS.md`, and `.mcp.json` in the current project. `brain model download` fetches the public `intfloat/multilingual-e5-small` weights once into the local Hugging Face cache. Later embedding and search commands load those files locally. Reuse the same installation in another project by changing directory and running `brain init` again. Keep the virtual environment active to type `brain`; the generated MCP configuration points to the absolute Python path and does not depend on terminal activation.
+`brain init` creates an empty `.brain/`, `AGENTS.md`, and `.mcp.json` in the current project. Reuse the same installation in another project by changing directory and running `brain init` again. Each project gets separate memory; only the public model weights are shared. If you run `./scripts/install.sh --skip-model`, use `brain init` then `brain model download` before indexing or searching.
 
 `brain init` also creates `.brain/map.html`. Open it directly in a browser to inspect this project's memories and approximate stored context size. No model download is needed to create or refresh the map. The page is self-contained and makes no network request.
 
-If `brain` is not found, activate the virtual environment in that terminal or run `/absolute/path/to/Open-Brain/.venv/bin/brain`. If the clone or virtual environment moves, rerun `brain init` in each project to refresh its MCP command path.
+If the clone or virtual environment moves, rerun the installer and `brain init` in each project to refresh absolute MCP command paths.
 
-## Option B: Docker
+## Option B: manual Python setup (including Windows)
+
+From the cloned repository, create and activate a Python 3.10+ virtual environment. On Linux/macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows PowerShell, use `py -m venv .venv` followed by `.venv\Scripts\Activate.ps1`. On Linux, install a CPU build of PyTorch with `python -m pip install torch --index-url https://download.pytorch.org/whl/cpu`. On Windows, follow the [official PyTorch instructions](https://pytorch.org/get-started/locally/). Then run:
+
+```bash
+python -m pip install -e .
+cd /absolute/path/to/your-project
+brain init
+brain model download
+```
+
+Keep the virtual environment active to type `brain` with this manual setup. The generated MCP configuration uses the absolute Python path, so the client does not need terminal activation. On macOS, `pip install -e .` installs the required PyTorch dependency.
+
+## Option C: Docker
 
 Requirements: Docker with a running daemon and Bash. From the cloned repository:
 
@@ -85,7 +102,7 @@ Initialization generates `.brain/mcp.json` and a project-root `.mcp.json`, both 
 
 ## What to commit in your project
 
-Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated map, SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Open Brain, run `brain init`, download the model, and run `brain index` to reconstruct the index and map from Markdown. Keep secrets out of memory files.
+Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated map, SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Open Brain, run `brain init` and `brain index` to reconstruct the index and map from Markdown. Keep secrets out of memory files.
 
 ## Common commands
 
