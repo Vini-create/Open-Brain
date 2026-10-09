@@ -5,25 +5,26 @@ usage() {
   cat <<'EOF'
 Install Open Brain once, then run brain from any project directory.
 
-Usage: ./scripts/install.sh [--skip-model]
+Usage: ./scripts/install.sh [--skip-model] [--no-shell-setup]
 
 The installer creates .venv in this clone and links its brain command into
 ${BRAIN_BIN_DIR:-$HOME/.local/bin}. It downloads the public embedding model
 unless --skip-model is given. Set BRAIN_PYTHON to choose a Python executable.
+The installer adds a marked PATH block to Bash, Zsh or Fish startup files
+for future terminals. Use --no-shell-setup to configure PATH yourself.
 EOF
 }
 
 skip_model=0
-case "${1:-}" in
-  "") ;;
-  --skip-model) skip_model=1 ;;
-  -h|--help) usage; exit 0 ;;
-  *) usage >&2; exit 2 ;;
-esac
-if (( $# > 1 )); then
-  usage >&2
-  exit 2
-fi
+shell_setup=1
+for option in "$@"; do
+  case "$option" in
+    --skip-model) skip_model=1 ;;
+    --no-shell-setup) shell_setup=0 ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+done
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 python_cmd="${BRAIN_PYTHON:-python3}"
@@ -65,6 +66,9 @@ else
 fi
 
 echo "Open Brain installed: $link"
+if (( shell_setup )); then
+  "$venv_python" "$repo_dir/scripts/setup-shell-path.py" "$bin_dir"
+fi
 if (( skip_model )); then
   echo "Model download skipped. In a project, run 'brain init' then 'brain model download' before indexing or searching."
 fi
@@ -73,4 +77,5 @@ case ":$PATH:" in
   *) echo "Add the command to this terminal: export PATH=\"$bin_dir:\$PATH\"" ;;
 esac
 echo "Next: cd /path/to/your-project && $link init"
+echo "Open a new terminal after shell setup, or use the export command above in this terminal."
 echo "Once $bin_dir is on PATH, use 'brain init' from any project directory."

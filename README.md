@@ -28,15 +28,13 @@ cd ~
 git clone https://github.com/Vini-create/Open-Brain.git
 cd Open-Brain
 ./scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH" # Make brain available in this terminal too.
+brain --help
 ```
 
 Choose the matching instructions in [INSTALLATION.md](docs/INSTALLATION.md): [Linux distributions](docs/INSTALLATION.md#linux), [macOS Apple Silicon](docs/INSTALLATION.md#macos-apple-silicon), [Windows PowerShell](docs/INSTALLATION.md#windows-powershell), or [WSL2](docs/INSTALLATION.md#windows-with-wsl2). The Bash installer does not run natively in PowerShell. Macs need Python with SQLite-extension support; Intel Macs should use the documented [Docker alternative](docs/INSTALLATION.md#docker). Native setup and Docker have been tested on Linux x86_64; other host environments are documented but not yet tested.
 
-This puts the installation in `~/Open-Brain`, outside your other projects. The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. **Cloning alone does not install the command.** If the installer reports that `~/.local/bin` is missing from `PATH`, run this once in the current terminal (and add it to your shell profile for future terminals):
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
+This puts the installation in `~/Open-Brain`, outside your other projects. The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. It adds a marked PATH block to your Bash, Zsh or Fish startup files so **new terminals find `brain` automatically**. The `export` above also makes it available in the current Bash/Zsh terminal; an installer process cannot change its parent terminal's environment. Use `--no-shell-setup` if you manage shell configuration yourself. **Cloning alone does not install the command.**
 
 Now, from **any** project directory:
 

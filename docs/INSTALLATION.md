@@ -54,7 +54,7 @@ export PATH="$HOME/.local/bin:$PATH"
 brain --help
 ```
 
-If you already cloned it at `~/Open-Brain`, use `cd ~/Open-Brain` and run the installer there instead of cloning again. The installer creates `.venv`, installs CPU PyTorch and the application, downloads the model, and links `brain` into `~/.local/bin`. Installation is for your user. No virtual environment activation is needed afterwards.
+If you already cloned it at `~/Open-Brain`, use `cd ~/Open-Brain` and run the installer there instead of cloning again. The installer creates `.venv`, installs CPU PyTorch and the application, downloads the model, and links `brain` into `~/.local/bin`. It configures supported shell startup files for new terminals; the `export` in the block also updates the current Bash/Zsh terminal. Installation is for your user. No virtual environment activation is needed afterwards.
 
 To choose another installed Python, replace the installer invocation with:
 
@@ -86,7 +86,25 @@ The [Homebrew Python 3.12 formula](https://formulae.brew.sh/formula/python@3.12)
 
 ## Make the Unix command available in new terminals
 
-On Linux/macOS, `export PATH="$HOME/.local/bin:$PATH"` applies to the current terminal. Add that same line once to your shell configuration (`~/.bashrc` for interactive Bash on Linux, `~/.zshrc` for Zsh, or the profile used by your Bash login shell on macOS), then open a new terminal. For Fish, use `fish_add_path ~/.local/bin` instead. `BRAIN_BIN_DIR` can select another launcher directory; that directory must be on `PATH`.
+The installer now adds a marked `Open Brain PATH` block automatically. Zsh uses `.zshrc` and `.zprofile` (respecting `ZDOTDIR`); Bash uses `.bashrc` and its existing login profile, falling back to `.profile`; Fish uses `conf.d/open-brain.fish`. Repeated installation updates the block without duplicating it. Other settings are preserved. Open a new terminal to load the change. `BRAIN_BIN_DIR` selects another launcher directory and the generated block uses that directory.
+
+The installer cannot change the already running parent terminal. For the current Bash/Zsh terminal, run:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+brain --help
+```
+
+For Fish, use `fish_add_path ~/.local/bin`. If you installed with an older version, update the clone and repair shell setup without reinstalling dependencies or downloading the model again:
+
+```bash
+cd ~/Open-Brain
+git pull --ff-only
+python3 scripts/setup-shell-path.py "$HOME/.local/bin"
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Use `bash scripts/install.sh --no-shell-setup` to opt out of startup-file changes, then add the launcher directory to your shell configuration yourself. Unsupported shells receive manual PATH guidance.
 
 Then initialize each existing project:
 
@@ -222,7 +240,7 @@ After installation, run `brain init`, `brain status`, `brain remember --type dec
 
 | Symptom | Action |
 | --- | --- |
-| `brain` command not found | Follow the Unix shell or Windows user `Path` steps above, or call the absolute executable. |
+| `brain` command not found in a different terminal | The earlier `export` applied only to the installation terminal. Open a new terminal after shell setup, or use the repair block above for older installations. Windows uses the user `Path` steps. `~/.local/bin/brain` is also usable by absolute path on Unix. |
 | `No module named venv` / `ensurepip` unavailable | Install your distribution's Python virtual-environment package; Ubuntu/Debian use `python3-venv`. |
 | No matching distribution for `torch` or another dependency | Check Python version, OS and CPU architecture; choose an installed Python 3.12/3.13, consult the upstream wheel support, or use a compatible Docker host. |
 | macOS `enable_load_extension` missing | Recreate the virtual environment using Homebrew Python as described above; this is a Python/SQLite build issue. |
