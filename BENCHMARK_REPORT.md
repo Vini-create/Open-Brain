@@ -51,6 +51,8 @@ O conteúdo do projeto não é enviado a API externa. Não há telemetria nem ch
 
 ## MCP setup sensitivity
 
+The instruction counts below describe the payload recorded in this benchmark run. The current onboarding protocol has expanded; rerun the benchmark for its updated setup cost. Initial project inspection and memory authoring remain additional costs.
+
 Agent instructions: **408 tokens**. JSON tool schemas: **352 tokens**. If both are presented once for all ten questions, Brain totals **2770 tokens** (79.32% below excerpts). If presented in ten independent sessions, Brain totals **9610 tokens** (28.24% below excerpts). These are hypothetical prompt accounting scenarios; MCP clients can represent, resend, or cache schemas differently.
 
 ## Shared input sensitivity

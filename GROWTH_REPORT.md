@@ -36,6 +36,8 @@ These are **retrieval-context reductions**, not measured changes in a builder's 
 
 ## MCP setup costs
 
+These instruction counts describe the payload recorded in this benchmark run. The current onboarding protocol has expanded; rerun the benchmark to measure its updated setup cost. Initial inspection and memory authoring are additional agent costs.
+
 The agent instructions contain **408 tokens** and the JSON schemas of the MCP tools contain **352 tokens**, or **760 tokens** together. These are measured text sizes, not observed client billing. If a client includes both for each of four fresh sessions:
 
 | Documents | Brain including four setup copies | Savings vs targeted `rg` | Savings vs broad `rg` |

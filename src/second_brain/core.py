@@ -14,6 +14,7 @@ from .storage import connect, index, stats, vector_scores
 
 CONTEXT_UPDATE_MARKER = "<!-- second-brain-context-update:v2 -->"
 BOOTSTRAP_MARKER = "<!-- second-brain-bootstrap:v1 -->"
+COVERAGE_MARKER = "<!-- second-brain-project-coverage:v1 -->"
 BOOTSTRAP_INSTRUCTIONS = f"""## First use in a new project
 
 {BOOTSTRAP_MARKER}
@@ -24,6 +25,46 @@ project description or read the essential project files once. Fill
 run `brain index`. Save durable decisions with `brain_remember`. Do not invent an
 architecture or dump the entire codebase into memory. Search the Brain for each
 task and read the source files needed for implementation.
+"""
+PROJECT_COVERAGE_INSTRUCTIONS = f"""## Build coverage for an existing project
+
+{COVERAGE_MARKER}
+
+When adopting an established project or when memory contains only summaries,
+read `.brain/PROJECT_COVERAGE.md` and audit the main modules, flows, decisions,
+rules, validation commands and remaining work. Check specific fact recovery
+through `brain_search` and save sources checked and gaps in "Memory coverage".
+Indexed record counts alone do not establish coverage. Read the detailed guide
+for this audit; later tasks update relevant memories incrementally.
+"""
+PROJECT_COVERAGE_GUIDE = """# Existing project memory coverage
+
+Project summaries provide entry points. When adopting an established project,
+or when memory contains only summaries, audit coverage even if `brain_status`
+reports indexed records. Search existing memory first, then:
+
+1. Inspect the source tree, manifests, documentation, entry points and relevant
+   tests to identify major subsystems and critical flows. Skip generated files,
+   dependencies and secrets. Read implementation where facts need verification.
+2. Save focused `architecture` or `feature` memories for each major subsystem:
+   responsibilities, source paths, interfaces, dependencies and important flows.
+   Record documented choices and reasons as `decision` memories; mark unknown
+   reasons explicitly. Use shared tags and related memory IDs for connections.
+3. Capture confirmed invariants as `rule` or `constraint` memories, setup and
+   validation commands, known bugs, and current next steps. Keep facts concise
+   and independently retrievable; use existing type/title to update a memory.
+4. Test coverage with specific `brain_search` queries about the main flow,
+   module boundaries, data storage, external integrations, important rules,
+   validation commands and unfinished work, where applicable. Compare returned
+   facts with the sources. For missing facts, inspect code, save and search again.
+5. Save a `constraint` memory titled "Memory coverage" listing areas covered,
+   sources checked, retrieval checks and remaining gaps. Distinguish retrieval
+   checks from application tests. Report partial coverage honestly.
+
+Use relevant fact recovery as the readiness criterion. Record counts alone do
+not establish coverage; avoid a fixed document quota or a whole-codebase dump.
+This initial audit costs context once. Later tasks fill gaps and update changed
+facts incrementally, including after a new session or context compaction.
 """
 CONTEXT_UPDATE_INSTRUCTIONS = f"""## Update context after meaningful changes
 
@@ -57,7 +98,7 @@ implementation details in source code before editing or testing. Keep
 manual Markdown edits.
 
 Search before rediscovering. Remember after learning.
-""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS
+""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS
 
 
 def _ensure_agent_instructions(path: Path) -> None:
@@ -67,6 +108,7 @@ def _ensure_agent_instructions(path: Path) -> None:
     existing = path.read_text(encoding="utf-8")
     additions = [section for marker, section in (
         (BOOTSTRAP_MARKER, BOOTSTRAP_INSTRUCTIONS),
+        (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS),
         (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
     ) if marker not in existing]
     if additions:
@@ -107,6 +149,9 @@ def initialize(root: Path, idea: str | None = None) -> dict:
         elif idea.strip() not in current:
             raise ValueError("idea.md already contains text; edit the file directly")
     _ensure_agent_instructions(brain / "AGENT_BRAIN.md")
+    coverage_guide = brain / "PROJECT_COVERAGE.md"
+    if not coverage_guide.exists():
+        coverage_guide.write_text(PROJECT_COVERAGE_GUIDE, encoding="utf-8")
     readme = brain / "README.md"
     if not readme.exists():
         readme.write_text("# Local Second Brain\n\nDescribe this project in `project/idea.md`, "

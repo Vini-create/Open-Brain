@@ -57,6 +57,8 @@ def main() -> None:
                 print("Empty, independent Brain created. Read .brain/AGENT_BRAIN.md; fill "
                       f".brain/project/*.md and run {brain_command} index, or use {brain_command} remember. "
                       f"If the model is not cached, run {brain_command} model download once.")
+                print("For an existing codebase, ask the agent to audit project memory coverage "
+                      "using .brain/AGENT_BRAIN.md, including major modules and retrieval checks.")
             else:
                 print(f"Brain ready. Use {brain_command} search to retrieve context and "
                       f"{brain_command} remember to update it.")

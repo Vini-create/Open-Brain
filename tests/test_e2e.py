@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from second_brain.config import load_config
-from second_brain.core import (BOOTSTRAP_MARKER, CONTEXT_UPDATE_MARKER,
+from second_brain.core import (BOOTSTRAP_MARKER, CONTEXT_UPDATE_MARKER, COVERAGE_MARKER,
                                _ensure_agent_instructions, initialize, remember, search)
 from second_brain.storage import SCHEMA, connect, index, stats, vector_scores
 
@@ -24,6 +24,7 @@ def test_agent_protocol_is_created_and_upgraded_without_losing_custom_rules(tmp_
     instructions = path.read_text(encoding="utf-8")
     assert BOOTSTRAP_MARKER in instructions
     assert CONTEXT_UPDATE_MARKER in instructions
+    assert COVERAGE_MARKER in instructions
     assert all(term in instructions for term in ("What changed", "Why it changed", "validation actually performed", "brain_remember", "brain_search"))
     path.write_text("# Custom rule\n\nKeep this.\n", encoding="utf-8")
     _ensure_agent_instructions(path)
@@ -32,6 +33,29 @@ def test_agent_protocol_is_created_and_upgraded_without_losing_custom_rules(tmp_
     assert "Keep this." in upgraded
     assert upgraded.count(BOOTSTRAP_MARKER) == 1
     assert upgraded.count(CONTEXT_UPDATE_MARKER) == 1
+    assert upgraded.count(COVERAGE_MARKER) == 1
+
+
+def test_existing_brain_protocol_gains_coverage_without_losing_custom_rules(tmp_path: Path):
+    from second_brain.core import BOOTSTRAP_INSTRUCTIONS, CONTEXT_UPDATE_INSTRUCTIONS
+
+    initialize(tmp_path)
+    path = tmp_path / ".brain" / "AGENT_BRAIN.md"
+    legacy = "# Custom instructions\n\nKeep deployment manual.\n\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS
+    path.write_text(legacy)
+    idea = tmp_path / ".brain" / "project" / "idea.md"
+    idea.write_text("# Project idea\n\nExisting project facts must be preserved.\n")
+    guide = tmp_path / ".brain" / "PROJECT_COVERAGE.md"
+    assert guide.exists()
+    guide.write_text(guide.read_text() + "\nCustom audit rule: review worker queues.\n")
+    initialize(tmp_path)
+    first_upgrade = path.read_text()
+    initialize(tmp_path)
+    assert path.read_text() == first_upgrade
+    assert first_upgrade.startswith(legacy.rstrip("\n"))
+    assert first_upgrade.count(COVERAGE_MARKER) == 1
+    assert idea.read_text().endswith("Existing project facts must be preserved.\n")
+    assert "review worker queues" in guide.read_text()
 
 
 def test_init_two_projects_starts_independent_and_docker_mcp_uses_host_paths(tmp_path: Path, monkeypatch):

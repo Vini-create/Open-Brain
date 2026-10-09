@@ -30,6 +30,8 @@ Its index timing now includes regeneration of the per-project `map.html`, and it
 
 The README's size-to-savings table is calculated from `benchmarks/results/growth.json`. For each size, it adds one measured copy of agent instructions and MCP tool schemas to the four Brain responses, then compares that with four broad `rg` discovery outputs plus selected files. Its capped column applies `min(actual_tokens, 8000)` to **each** conventional response before summing. The cap is simulated accounting on measured output; it is not a run that verifies fact retrieval after truncation. The uncapped column can be much larger than a real model prompt.
 
+Those setup counts describe the instruction payload recorded in that run. The current onboarding instructions include an additional project-coverage audit. Reproduce the benchmark to measure the current instruction cost; initial code inspection, memory creation, and subsequent memory maintenance are additional agent costs that the retrieval table does not measure.
+
 ## How to read the numbers
 
 `brain_search` returns the query and selected titles, scores, and snippets. These output tokens are measured with `cl100k_base`. The CLI's `--token-budget` is a rough local bound based on characters, so measured output may differ from the requested number. The stored Markdown corpus is **not** automatically put into the agent prompt. The agent may still read source code to implement a change.

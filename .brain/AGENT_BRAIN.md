@@ -40,3 +40,14 @@ to scripts. Impact: the frontend cannot read the token. Validation: refresh
 test passed." Never invent tests. Do not save every diff, log, conversation, or
 whole source file; save facts useful to a later session that are not obvious
 from the code.
+
+## Build coverage for an existing project
+
+<!-- second-brain-project-coverage:v1 -->
+
+When adopting an established project or when memory contains only summaries,
+read `.brain/PROJECT_COVERAGE.md` and audit the main modules, flows, decisions,
+rules, validation commands and remaining work. Check specific fact recovery
+through `brain_search` and save sources checked and gaps in "Memory coverage".
+Indexed record counts alone do not establish coverage. Read the detailed guide
+for this audit; later tasks update relevant memories incrementally.

@@ -275,6 +275,24 @@ Open `.brain/map.html` to browse the saved content. It updates after indexing or
 
 Run `brain init` from each project's directory. Project A's `.brain/` never becomes Project B's data source: Markdown, SQLite index, local history, and map all live under the selected project path. The model cache only contains reusable public embedding weights. You can close the terminal or agent and reopen the project later; its Brain stays on disk. `brain init` is safe to rerun and does not reset saved memories. To share memory with a teammate, commit the canonical Markdown as described below; to keep it private, keep those files out of your project's Git history.
 
+## Adopt an existing project
+
+The three project summaries describe purpose, architecture at a glance, and goals. Four indexed records can be a useful start, but the count alone does not show whether an established project's modules, interfaces, constraints and unfinished work are retrievable. Open Brain indexes the memories that were saved; it does not independently discover everything in your source code.
+
+`brain init` generates `.brain/PROJECT_COVERAGE.md` with the detailed audit steps. The routine agent instructions point to it when an audit is needed, so the detailed guide is read during onboarding or coverage repair. This guide is an instruction file, rather than an indexed project memory.
+
+After initialization and MCP connection, ask the agent:
+
+> Audit this existing project's Brain coverage. Search the existing memory first, inspect the main modules and critical flows, and follow `.brain/AGENT_BRAIN.md`. Save focused memories with source paths, responsibilities, interfaces, confirmed decisions and reasons, rules, validation commands, known bugs and next steps. Verify retrieval with specific questions and record covered areas and remaining gaps in "Memory coverage". Report which application tests were actually run.
+
+For example, a web project might need separate memories for authentication, its API/service boundaries, persistence and migrations, external integrations, deployment, test commands and active work. A project with a different structure needs a different set. Use tags and related memory IDs to connect the records. Save documented reasoning; label reasons that remain unknown. Avoid copying every source file or inventing a required memory count.
+
+Check readiness through searches: "How does the main request flow work?", "Where is authentication validated?", "What storage rules must changes preserve?", "How do I validate a change?", and "What work remains?", adjusted to the actual project. Confirm expected facts and source pointers in the returned context. Add missing facts and search again. Passing a search confirms retrieval of those facts; it does not prove complete project understanding or application correctness.
+
+This initial inspection and memory creation consume agent context. Subsequent sessions can reuse the saved knowledge while reading the code needed for each task. The agent updates existing memories after meaningful changes and fills newly discovered gaps. Stored context size does not automatically become LLM input, but larger memory still has storage, indexing and retrieval costs.
+
+To refresh older agent instructions, update the Open Brain installation clone with `git pull --ff-only`, then run `brain init` in the existing project again. It adds the coverage protocol while preserving project memories and custom instructions. Restart the MCP connection so the client receives the updated instructions. Refreshing instructions does not itself populate the memories; the agent must perform the audit.
+
 ## Connect an MCP client
 
 Initialization generates `.brain/mcp.json` and a project-root `.mcp.json`, both containing a `second-brain` stdio server with its exact host command and arguments. If your client reads `.mcp.json`, open the project in that client and restart it. Otherwise, copy the `command` and `args` from `.brain/mcp.json` into that client's stdio MCP configuration. Confirm that `brain_status`, `brain_search`, and `brain_remember` are listed.
@@ -283,7 +301,7 @@ Initialization generates `.brain/mcp.json` and a project-root `.mcp.json`, both 
 
 ## What to commit in your project
 
-Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated map, SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Open Brain, run `brain init` and `brain index` to reconstruct the index and map from Markdown. Keep secrets out of memory files.
+Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `.brain/PROJECT_COVERAGE.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated map, SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Open Brain, run `brain init` and `brain index` to reconstruct the index and map from Markdown. Keep secrets out of memory files.
 
 ## Common commands
 

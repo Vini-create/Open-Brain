@@ -6,7 +6,7 @@ The application is a Python CLI plus a small stdio MCP server. It works in any p
 
 ## Token savings by project size
 
-Four questions in one session, with **one copy of agent instructions and MCP tool schemas included** on the Brain side. Each measured project document has a corresponding indexed memory. All four facts were recovered at every size. Percentages compare the text given to an agent for retrieval, counted with `cl100k_base`; they are **not measured savings on a complete LLM task or bill**.
+Four questions in one session, with **one copy of the agent instructions and MCP tool schemas recorded in that benchmark run included** on the Brain side. Each measured project document has a corresponding indexed memory. All four facts were recovered at every size. Percentages compare the text given to an agent for retrieval, counted with `cl100k_base`; they are **not measured savings on a complete LLM task or bill**. The onboarding protocol has since expanded; reproducing the benchmark measures its current setup cost.
 
 | Project documents / memories | Brain context incl. setup | Broad search context | Saved vs broad search | Saved if broad output is capped at 8k/question | Median Brain search |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -81,6 +81,8 @@ Each project has its own `.brain/` with its own Markdown, SQLite index, history,
 2. Save durable knowledge with `brain remember --type decision --title "..." --content "..."`, or let an MCP-connected agent call `brain_remember`. The Markdown file is indexed automatically.
 3. Ask `brain search "question" --token-budget 500` or let the agent call `brain_search`. Search combines vector similarity, keywords, importance, and recency and returns a bounded response.
 4. After meaningful changes, the generated `.brain/AGENT_BRAIN.md` tells the agent to record **what changed, why, impact, and actual validation**. It also tells a new agent how to populate an empty Brain.
+
+For an established codebase, ask the agent to [audit memory coverage](docs/INSTALLATION.md#adopt-an-existing-project) after the initial summaries. Save focused knowledge about major modules, critical flows, constraints and active work, then check that specific searches recover the expected facts. Four records alone do not establish readiness. The generated protocol includes this audit even when the Brain already has indexed summaries; ongoing changes update the relevant memories incrementally.
 
 Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/index/brain.db` is a rebuildable SQLite + `sqlite-vec` index. `brain rebuild` reconstructs it from Markdown; unchanged files are not re-embedded by `brain index`. The product does **not** automatically read every source file, watch Git, or save every conversation. An agent must still inspect code before editing and validate its work. See [architecture](docs/ARCHITECTURE.md).
 

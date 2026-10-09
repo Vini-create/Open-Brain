@@ -37,6 +37,7 @@ your-project/
 ├── .mcp.json                  # local MCP command; ignored by Git
 └── .brain/
     ├── AGENT_BRAIN.md         # when agents should search and remember
+    ├── PROJECT_COVERAGE.md    # detailed onboarding audit; read when needed
     ├── README.md              # local instructions
     ├── config.json            # embedding model, search weights, storage path
     ├── project/               # idea.md, overview.md, goals.md
