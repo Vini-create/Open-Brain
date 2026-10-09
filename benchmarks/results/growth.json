@@ -1,6 +1,15 @@
 {
   "tokenizer": "cl100k_base (tiktoken)",
   "model": "intfloat/multilingual-e5-small",
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.14.7",
+    "cpu_model": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "logical_cpus": 12,
+    "torch": "2.14.1+cpu",
+    "sqlite_vec": "0.1.9"
+  },
   "approximate_search_budget": 180,
   "agent_instruction_tokens": 408,
   "mcp_tool_schema_tokens": 352,
@@ -16,7 +25,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 291,
-          "latency_ms": 17.66
+          "latency_ms": 16.94
         },
         {
           "id": "queue",
@@ -24,7 +33,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 292,
-          "latency_ms": 21.42
+          "latency_ms": 14.74
         },
         {
           "id": "tenant",
@@ -32,7 +41,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 283,
-          "latency_ms": 17.62
+          "latency_ms": 13.85
         },
         {
           "id": "audit",
@@ -40,16 +49,17 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 290,
-          "latency_ms": 18.08
+          "latency_ms": 17.19
         }
       ],
-      "incremental_index_ms": 2.65,
+      "incremental_index_ms": 2.6,
       "database_bytes": 1683456,
+      "map_bytes": 21263,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 1156,
-      "median_search_ms": 17.87
+      "median_search_ms": 15.84
     },
     {
       "source_documents": 44,
@@ -62,7 +72,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 571,
-          "latency_ms": 31.22
+          "latency_ms": 32.72
         },
         {
           "id": "queue",
@@ -70,7 +80,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 572,
-          "latency_ms": 31.63
+          "latency_ms": 30.17
         },
         {
           "id": "tenant",
@@ -78,7 +88,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 563,
-          "latency_ms": 31.4
+          "latency_ms": 28.8
         },
         {
           "id": "audit",
@@ -86,16 +96,17 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 570,
-          "latency_ms": 31.3
+          "latency_ms": 29.45
         }
       ],
-      "incremental_index_ms": 749.81,
+      "incremental_index_ms": 563.48,
       "database_bytes": 2056192,
+      "map_bytes": 36660,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 2276,
-      "median_search_ms": 31.35
+      "median_search_ms": 29.81
     },
     {
       "source_documents": 164,
@@ -108,7 +119,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 1411,
-          "latency_ms": 82.97
+          "latency_ms": 73.14
         },
         {
           "id": "queue",
@@ -116,7 +127,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 1412,
-          "latency_ms": 79.39
+          "latency_ms": 75.56
         },
         {
           "id": "tenant",
@@ -124,7 +135,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 1403,
-          "latency_ms": 80.1
+          "latency_ms": 71.8
         },
         {
           "id": "audit",
@@ -132,16 +143,17 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 1410,
-          "latency_ms": 84.52
+          "latency_ms": 78.82
         }
       ],
-      "incremental_index_ms": 1736.94,
+      "incremental_index_ms": 2308.08,
       "database_bytes": 3186688,
+      "map_bytes": 82963,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 5636,
-      "median_search_ms": 81.53
+      "median_search_ms": 74.35
     },
     {
       "source_documents": 1000,
@@ -154,7 +166,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 7263,
-          "latency_ms": 433.76
+          "latency_ms": 411.37
         },
         {
           "id": "queue",
@@ -162,7 +174,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 7264,
-          "latency_ms": 429.54
+          "latency_ms": 418.77
         },
         {
           "id": "tenant",
@@ -170,7 +182,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 7255,
-          "latency_ms": 425.87
+          "latency_ms": 400.94
         },
         {
           "id": "audit",
@@ -178,16 +190,17 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 7262,
-          "latency_ms": 417.97
+          "latency_ms": 405.71
         }
       ],
-      "incremental_index_ms": 12037.23,
+      "incremental_index_ms": 16017.8,
       "database_bytes": 10969088,
+      "map_bytes": 406071,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 29044,
-      "median_search_ms": 427.71
+      "median_search_ms": 408.54
     },
     {
       "source_documents": 5000,
@@ -200,7 +213,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 39259,
-          "latency_ms": 2401.85
+          "latency_ms": 2090.67
         },
         {
           "id": "queue",
@@ -208,7 +221,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 39260,
-          "latency_ms": 2254.63
+          "latency_ms": 2102.03
         },
         {
           "id": "tenant",
@@ -216,7 +229,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 39251,
-          "latency_ms": 2214.83
+          "latency_ms": 2022.77
         },
         {
           "id": "audit",
@@ -224,16 +237,17 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 39258,
-          "latency_ms": 2048.42
+          "latency_ms": 1996.81
         }
       ],
-      "incremental_index_ms": 79343.71,
+      "incremental_index_ms": 70647.7,
       "database_bytes": 54583296,
+      "map_bytes": 1974053,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 157028,
-      "median_search_ms": 2234.73
+      "median_search_ms": 2056.72
     },
     {
       "source_documents": 10000,
@@ -246,7 +260,7 @@
           "brain_tokens": 144,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 79259,
-          "latency_ms": 4183.53
+          "latency_ms": 4178.41
         },
         {
           "id": "queue",
@@ -254,7 +268,7 @@
           "brain_tokens": 147,
           "targeted_rg_tokens": 282,
           "broad_rg_tokens": 79260,
-          "latency_ms": 4210.07
+          "latency_ms": 3941.03
         },
         {
           "id": "tenant",
@@ -262,7 +276,7 @@
           "brain_tokens": 148,
           "targeted_rg_tokens": 273,
           "broad_rg_tokens": 79251,
-          "latency_ms": 4148.66
+          "latency_ms": 3985.67
         },
         {
           "id": "audit",
@@ -270,29 +284,21 @@
           "brain_tokens": 143,
           "targeted_rg_tokens": 280,
           "broad_rg_tokens": 79258,
-          "latency_ms": 4034.77
+          "latency_ms": 3842.55
         }
       ],
-      "incremental_index_ms": 100032.61,
+      "incremental_index_ms": 89862.18,
       "database_bytes": 109084672,
+      "map_bytes": 3938169,
       "facts_found": 4,
       "brain_tokens": 582,
       "targeted_rg_tokens": 1115,
       "broad_rg_tokens": 317028,
-      "median_search_ms": 4166.09
+      "median_search_ms": 3963.35
     }
   ],
   "fresh_process_facts_found": 4,
   "fresh_process_queries": 4,
-  "fresh_process_first_ms": 8093.54,
-  "persisted_memory_tokens": 1286053,
-  "environment": {
-    "os": "Linux",
-    "architecture": "x86_64",
-    "python": "3.14.7",
-    "cpu_model": "12th Gen Intel(R) Core(TM) i5-12450H",
-    "logical_cpus": 12,
-    "torch": "2.14.1+cpu",
-    "sqlite_vec": "0.1.9"
-  }
+  "fresh_process_first_ms": 7874.45,
+  "persisted_memory_tokens": 1286053
 }

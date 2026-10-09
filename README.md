@@ -1,6 +1,6 @@
 # Open Brain
 
-**Persistent, searchable project memory for coding agents.** Store durable decisions, architecture, rules, and next steps as Markdown. An agent retrieves relevant snippets through local vector search instead of receiving the whole memory on every request. Embeddings run on CPU with a public model; no LLM provider, API key, or hosted database is required.
+**Persistent, searchable project memory for coding agents.** Store durable decisions, architecture, rules, and next steps as Markdown. An agent retrieves relevant snippets through local vector search instead of receiving the whole memory on every request. Explore what it knows in an interactive, offline project map. Embeddings run on CPU with a public model; no LLM provider, API key, or hosted database is required.
 
 The application is a Python CLI plus a small stdio MCP server. It works in any project directory after one local installation. Docker is optional.
 
@@ -10,12 +10,12 @@ Four questions in one session, with **one copy of agent instructions and MCP too
 
 | Project documents / memories | Brain context incl. setup | Broad search context | Saved vs broad search | Saved if broad output is capped at 8k/question | Median Brain search |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 4 | 1,342 tokens | 1,156 tokens | −16.09% | −16.09% | 18 ms |
-| 44 | 1,342 tokens | 2,276 tokens | 41.04% | 41.04% | 31 ms |
-| 164 | 1,342 tokens | 5,636 tokens | 76.19% | 76.19% | 82 ms |
-| 1,000 | 1,342 tokens | 29,044 tokens | 95.38% | 95.38% | 428 ms |
-| 5,000 | 1,342 tokens | 157,028 tokens | 99.15% | 95.81% | 2,235 ms |
-| 10,000 | 1,342 tokens | 317,028 tokens | 99.58% | 95.81% | 4,166 ms |
+| 4 | 1,342 tokens | 1,156 tokens | −16.09% | −16.09% | 16 ms |
+| 44 | 1,342 tokens | 2,276 tokens | 41.04% | 41.04% | 30 ms |
+| 164 | 1,342 tokens | 5,636 tokens | 76.19% | 76.19% | 74 ms |
+| 1,000 | 1,342 tokens | 29,044 tokens | 95.38% | 95.38% | 409 ms |
+| 5,000 | 1,342 tokens | 157,028 tokens | 99.15% | 95.81% | 2,057 ms |
+| 10,000 | 1,342 tokens | 317,028 tokens | 99.58% | 95.81% | 3,963 ms |
 
 The broad baseline is actual `rg` path discovery plus one selected file for each question. Its uncapped output becomes too large for a practical prompt. The 8k/question column **simulates a cap on that measured output**; it does not show whether a truncated search still finds the right file. A precise keyword search used only **1,115 tokens** across the same four questions and beat Brain after its setup cost. The [growth report](GROWTH_REPORT.md) gives the raw method, full measurements, and limits; [benchmarking](docs/BENCHMARKS.md) explains how to interpret the claims.
 
@@ -36,6 +36,7 @@ brain init
 brain model download
 brain init --idea "A short, factual description of my project"
 brain search "What is this project for?"
+brain map
 ```
 
 `brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. The public `intfloat/multilingual-e5-small` embedding model downloads once per installation mode and is reused across projects. Normal indexing and search then run locally and offline. The first installation, model download, and optional benchmark tokenizer download need internet access. See the [step-by-step guide](docs/GETTING_STARTED.md) for macOS, Windows, Docker, MCP setup, and what to commit.
@@ -53,9 +54,18 @@ cd /absolute/path/to/your-project
 /absolute/path/to/Open-Brain/scripts/brain-docker init
 /absolute/path/to/Open-Brain/scripts/brain-docker model download
 /absolute/path/to/Open-Brain/scripts/brain-docker status
+/absolute/path/to/Open-Brain/scripts/brain-docker map
 ```
 
 The wrapper mounts your project and a persistent model cache, then writes MCP configuration using **host paths**. Use the same wrapper for `search`, `remember`, `index`, and `rebuild`. It does not need network access after the model download. Docker adds startup time per command; native Python is the simpler choice for frequent CLI use.
+
+## See what your Brain knows
+
+Open **`.brain/map.html`** in a browser. This standalone, offline map is created by `brain init` and refreshed after `brain remember`, `brain index`, and changed Markdown discovered by search. Use `brain map` to refresh it manually, then click **Reload map** if the page is already open. Search and filter memories, click nodes to read their content, and pan or zoom the graph. Strong links come from shared tags and explicit `--related` references; the faint hub lines show project membership. The graph displays up to 180 matching memories at once, while search covers all stored memories.
+
+The map shows the count of memories and links, Markdown and index size, and **approximate stored text tokens**. Stored text is not automatically sent to an LLM. The map is generated from this project's Markdown and requires no model download. It is a local file ignored by Git because it contains the project's memory content. After editing Markdown by hand, run `brain index` to make those changes searchable; `brain map` only refreshes the view.
+
+Each project has its own `.brain/` with its own Markdown, SQLite index, history, and map. Closing the CLI or agent does not erase it. Running `brain init` in another project creates a separate, empty Brain; only the downloaded **model weights** are shared in the installation cache, not project knowledge.
 
 ## How project memory works
 
@@ -72,7 +82,7 @@ Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/inde
 
 ## What the benchmarks actually show
 
-The [measured growth benchmark](GROWTH_REPORT.md) creates up to 10,000 project documents and 10,000 corresponding indexed memories: four fact-bearing pairs plus synthetic distractors. It checks exact facts in the returned text and counts that text with `cl100k_base`. The Brain returned **582 tokens** for four questions; one copy of the instructions and MCP schemas adds **760 tokens** to the table above. At 10,000 memories, adding the last 5,000 took **100 seconds** and the SQLite index occupied **104 MiB**. Token savings therefore come with a real latency and indexing cost at this scale.
+The [measured growth benchmark](GROWTH_REPORT.md) creates up to 10,000 project documents and 10,000 corresponding indexed memories: four fact-bearing pairs plus synthetic distractors. It checks exact facts in the returned text and counts that text with `cl100k_base`. The Brain returned **582 tokens** for four questions; one copy of the instructions and MCP schemas adds **760 tokens** to the table above. At 10,000 memories, adding the last 5,000 and regenerating the map took **90 seconds**; the SQLite index occupied **104 MiB** and the map **3.76 MiB**. Token savings therefore come with a real latency and indexing cost at this scale.
 
 A separate [multilingual query test](ROBUSTNESS_REPORT.md) recovered the exact fact in **12/12 fixed direct and paraphrased questions** against 1,000 indexed memories, at both approximate budgets of 180 and 400 tokens per query. Its authored distractors are repetitive, so this is a limited retrieval check. The [large-project scenario report](docs/SCENARIOS.md) projects 20,000 to 1,000,000 documents with explicit assumptions, including a capped discovery output, repeated sessions, common prompt input, and a hypothetical memory-creation cost. **Those figures are projections, not measurements at those sizes.** The [benchmarking guide](docs/BENCHMARKS.md) explains methods, limitations, reproduction, and how to compare actual paired builder traces. No end-to-end LLM token saving has been measured yet.
 
@@ -85,6 +95,7 @@ A separate [multilingual query test](ROBUSTNESS_REPORT.md) recovered the exact f
 | `brain remember --type decision --title ... --content ...` | Save and index a durable fact. |
 | `brain search "question" --token-budget 500` | Retrieve bounded context. |
 | `brain status`, `brain index`, `brain rebuild` | Inspect, incrementally index, or rebuild the local index. |
+| `brain map` | Refresh the standalone, interactive `.brain/map.html` view. |
 
 - [Getting started](docs/GETTING_STARTED.md): exact clone, install, project setup, Docker, and MCP steps.
 - [Architecture](docs/ARCHITECTURE.md): files, data flow, storage, and scaling boundaries.

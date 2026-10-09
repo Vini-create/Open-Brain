@@ -6,24 +6,24 @@ CPU embedding model: `intfloat/multilingual-e5-small`. Tokenizer: cl100k_base (t
 
 | Approximate budget | Questions with all facts | Selected source excerpts | Brain payload | Largest actual response | Savings vs excerpts | Savings vs whole files |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 150 | 8/10 | 13192 | 1222 | 143 | 90.74% | 97.17% |
-| 250 | 10/10 | 13192 | 2010 | 219 | 84.76% | 95.34% |
-| 400 | 10/10 | 13192 | 3184 | 345 | 75.86% | 92.62% |
-| 600 | 10/10 | 13192 | 3224 | 350 | 75.56% | 92.53% |
+| 150 | 8/10 | 13392 | 1222 | 143 | 90.88% | 97.20% |
+| 250 | 10/10 | 13392 | 2010 | 219 | 84.99% | 95.40% |
+| 400 | 10/10 | 13392 | 3184 | 345 | 76.22% | 92.71% |
+| 600 | 10/10 | 13392 | 3224 | 350 | 75.93% | 92.62% |
 
-The smallest tested budget with complete fact coverage was **250**. The measured retrieval payload fell from **13192** selected excerpt tokens to **2010** Brain tokens (**84.76%** less). The first search took **4824.69 ms** including model loading; the median of subsequent searches was **21.80 ms**.
+The smallest tested budget with complete fact coverage was **250**. The measured retrieval payload fell from **13392** selected excerpt tokens to **2010** Brain tokens (**84.99%** less). The first search took **4167.01 ms** including model loading; the median of subsequent searches was **16.67 ms**.
 
 ## Questions at the selected budget
 
 | Question ID | Excerpt tokens | Brain tokens | Payload savings | All facts found |
 | --- | ---: | ---: | ---: | --- |
-| indexacao | 1252 | 202 | 83.87% | yes |
-| mcp | 2103 | 204 | 90.30% | yes |
+| indexacao | 1290 | 202 | 84.34% | yes |
+| mcp | 2165 | 204 | 90.58% | yes |
 | embedding | 539 | 205 | 61.97% | yes |
 | historico | 1236 | 204 | 83.50% | yes |
 | busca | 1455 | 211 | 85.50% | yes |
-| indexacao_parafrase | 1254 | 199 | 84.13% | yes |
-| mcp_parafrase | 2105 | 186 | 91.16% | yes |
+| indexacao_parafrase | 1292 | 199 | 84.60% | yes |
+| mcp_parafrase | 2167 | 186 | 91.42% | yes |
 | embedding_parafrase | 548 | 194 | 64.60% | yes |
 | historico_parafrase | 1239 | 186 | 84.99% | yes |
 | busca_parafrase | 1461 | 219 | 85.01% | yes |
@@ -51,7 +51,7 @@ O conteúdo do projeto não é enviado a API externa. Não há telemetria nem ch
 
 ## MCP setup sensitivity
 
-Agent instructions: **408 tokens**. JSON tool schemas: **352 tokens**. If both are presented once for all ten questions, Brain totals **2770 tokens** (79.00% below excerpts). If presented in ten independent sessions, Brain totals **9610 tokens** (27.15% below excerpts). These are hypothetical prompt accounting scenarios; MCP clients can represent, resend, or cache schemas differently.
+Agent instructions: **408 tokens**. JSON tool schemas: **352 tokens**. If both are presented once for all ten questions, Brain totals **2770 tokens** (79.32% below excerpts). If presented in ten independent sessions, Brain totals **9610 tokens** (28.24% below excerpts). These are hypothetical prompt accounting scenarios; MCP clients can represent, resend, or cache schemas differently.
 
 ## Shared input sensitivity
 
@@ -59,11 +59,11 @@ The table adds the same non-retrieval input to both workflows for each of ten qu
 
 | Other input/question | Excerpt workflow | Brain workflow | Total input reduction |
 | ---: | ---: | ---: | ---: |
-| 0 | 13,192 | 2,010 | 84.76% |
-| 500 | 18,192 | 7,010 | 61.47% |
-| 1,000 | 23,192 | 12,010 | 48.21% |
-| 5,000 | 63,192 | 52,010 | 17.70% |
-| 10,000 | 113,192 | 102,010 | 9.88% |
+| 0 | 13,392 | 2,010 | 84.99% |
+| 500 | 18,392 | 7,010 | 61.89% |
+| 1,000 | 23,392 | 12,010 | 48.66% |
+| 5,000 | 63,392 | 52,010 | 17.95% |
+| 10,000 | 113,392 | 102,010 | 10.04% |
 
 ## Interpretation
 

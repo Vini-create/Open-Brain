@@ -126,8 +126,12 @@ def index(root: Path, config: dict, *, rebuild: bool = False) -> dict:
                 for key in stale:
                     _delete_vectors(db, key)
                 db.executemany("DELETE FROM documents WHERE id=?", [(key,) for key in stale])
-        return {"changed_documents": len(changed), "embedded_chunks": count_chunks,
-                "deleted_documents": len(stale), "unchanged_documents": len(seen) - len(changed)}
+        result = {"changed_documents": len(changed), "embedded_chunks": count_chunks,
+                  "deleted_documents": len(stale), "unchanged_documents": len(seen) - len(changed)}
+        if changed or stale or not (root / ".brain" / "map.html").exists():
+            from .visualization import write_map
+            write_map(root)
+        return result
     finally:
         db.close()
 

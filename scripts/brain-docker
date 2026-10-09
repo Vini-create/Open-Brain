@@ -10,7 +10,7 @@ if [[ "${1:-}" == build ]]; then
 fi
 
 if [[ $# -eq 0 ]]; then
-    echo "Usage: brain-docker build | init | model download | status | index | search | remember | mcp" >&2
+    echo "Usage: brain-docker build | init | model download | status | index | search | remember | map | mcp" >&2
     exit 2
 fi
 

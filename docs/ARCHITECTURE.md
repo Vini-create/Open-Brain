@@ -25,6 +25,7 @@ flowchart LR
 | `src/second_brain/embedding.py` | Local CPU model loading, explicit download, query and passage vectors. |
 | `src/second_brain/storage.py` | SQLite schema, `sqlite-vec`, incremental index, rebuild, status. |
 | `src/second_brain/mcp.py` | JSON-RPC over stdio: `brain_search`, `brain_remember`, `brain_status`. |
+| `src/second_brain/visualization.py` and `assets/brain_map.html` | Build an offline, interactive view from one project's Markdown. |
 | `scripts/brain-docker` and `Dockerfile` | Optional container execution with host project and model-cache mounts. |
 | `benchmarks/` and `tests/` | Reproducible measurements, analytical scenarios, and automated checks. |
 
@@ -42,6 +43,7 @@ your-project/
     ├── knowledge/             # structured durable memories by type
     ├── index/brain.db         # rebuildable SQLite index; ignored by Git
     ├── history/               # versions and search log; ignored by Git
+    ├── map.html               # generated, interactive local view; ignored by Git
     └── mcp.json               # local MCP command; ignored by Git
 ```
 
@@ -53,6 +55,7 @@ your-project/
 2. `brain index` compares Markdown hashes with the database, embeds only changed chunks, removes deleted documents, and leaves unchanged vectors alone. `brain rebuild` recreates the index from Markdown.
 3. `brain search` first checks all Brain Markdown files for changes, embeds the query locally, computes vector similarity, combines it with keyword, importance, and recency scores, and returns ranked excerpts within an approximate token budget.
 4. The MCP server exposes the same search and write operations to a compatible client. It has no network listener or LLM dependency.
+5. `brain init`, `brain remember`, and any indexing change regenerate `.brain/map.html`. `brain map` refreshes it directly from canonical Markdown without loading the embedding model. The page embeds its own data and scripts and does not contact a server. It shows shared-tag and explicit-`related` links; hub lines mean project membership, not semantic similarity.
 
 The default model is `intfloat/multilingual-e5-small` with 384-dimensional vectors. Only `brain model download` is allowed to fetch model weights. Normal indexing and search request local cached files. No project content is sent to an embedding API.
 
@@ -68,3 +71,5 @@ Hybrid ranking currently computes a vector distance and score for **every indexe
 - The agent must decide what durable facts to record. New source-code changes are not searchable until relevant knowledge is written to `.brain/`.
 - A retrieved memory is project context, not proof that code still matches it. Agents should verify source files before edits.
 - The token budget uses a local approximation of three characters per token; benchmark reports count output with `cl100k_base` and disclose the difference.
+- The map's stored-token estimate uses the same rough three-characters-per-token rule. It is not the number of tokens sent to an LLM. The graph draws at most 180 matching memories at once, while its list can search every stored memory.
+- Every project owns its own `.brain/` Markdown, index, history, and map. The installation cache shares only public model weights. Closing a process does not remove project data.

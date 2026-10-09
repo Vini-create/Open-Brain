@@ -21,3 +21,6 @@ brain = "second_brain.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+second_brain = ["assets/*.html"]

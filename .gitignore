@@ -11,6 +11,7 @@ htmlcov/
 .brain/index/
 .brain/history/
 .brain/mcp.json
+.brain/map.html
 .mcp.json
 GROWTH_QUICK_REPORT.md
 benchmarks/results/growth-quick.json

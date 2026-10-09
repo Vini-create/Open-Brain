@@ -29,6 +29,8 @@ brain status
 
 `brain init` creates an empty `.brain/`, `AGENTS.md`, and `.mcp.json` in the current project. `brain model download` fetches the public `intfloat/multilingual-e5-small` weights once into the local Hugging Face cache. Later embedding and search commands load those files locally. Reuse the same installation in another project by changing directory and running `brain init` again. Keep the virtual environment active to type `brain`; the generated MCP configuration points to the absolute Python path and does not depend on terminal activation.
 
+`brain init` also creates `.brain/map.html`. Open it directly in a browser to inspect this project's memories and approximate stored context size. No model download is needed to create or refresh the map. The page is self-contained and makes no network request.
+
 If `brain` is not found, activate the virtual environment in that terminal or run `/absolute/path/to/Open-Brain/.venv/bin/brain`. If the clone or virtual environment moves, rerun `brain init` in each project to refresh its MCP command path.
 
 ## Option B: Docker
@@ -64,9 +66,16 @@ Then index them:
 brain index
 brain remember --type decision --title "Authentication" --content "Refresh tokens are rotated and stored in HTTPOnly cookies."
 brain search "How do refresh tokens work?" --token-budget 500
+brain map
 ```
 
 You can also run `brain init --idea "..."` **after** the model is downloaded. `brain remember` writes a structured Markdown file and indexes it immediately. `brain index` synchronizes manual Markdown edits. `brain search` also notices and indexes changed Markdown before retrieving context. For Docker, replace `brain` with the absolute path to `scripts/brain-docker`.
+
+Open `.brain/map.html` to browse the saved content. It updates after indexing or remembering. If the page is already open, click **Reload map**. Use `--tag auth` when remembering related facts, and `--related <memory-id>` to create an explicit link; both appear in the map. The list searches all memories, while the graph displays up to 180 at a time. `brain map` refreshes the view from Markdown but does not index manual edits; run `brain index` for those.
+
+## Separate Brain for every project
+
+Run `brain init` from each project's directory. Project A's `.brain/` never becomes Project B's data source: Markdown, SQLite index, local history, and map all live under the selected project path. The model cache only contains reusable public embedding weights. You can close the terminal or agent and reopen the project later; its Brain stays on disk. `brain init` is safe to rerun and does not reset saved memories. To share memory with a teammate, commit the canonical Markdown as described below; to keep it private, keep those files out of your project's Git history.
 
 ## Connect an MCP client
 
@@ -76,7 +85,7 @@ Initialization generates `.brain/mcp.json` and a project-root `.mcp.json`, both 
 
 ## What to commit in your project
 
-Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Second Brain, run `brain init`, download the model, and run `brain index` to reconstruct the index from Markdown. Keep secrets out of memory files.
+Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGENT_BRAIN.md`, `AGENTS.md`, and `.brain/README.md` if you want to share the memory. Do not commit the generated map, SQLite index, local history, or absolute-path MCP configuration. `brain init` adds those paths to `.gitignore`. A teammate can clone the project, install Open Brain, run `brain init`, download the model, and run `brain index` to reconstruct the index and map from Markdown. Keep secrets out of memory files.
 
 ## Common commands
 
@@ -87,6 +96,7 @@ Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGE
 | `brain remember --type decision --title ... --content ...` | Save and index durable knowledge. |
 | `brain search "question" --token-budget 500` | Retrieve bounded context. |
 | `brain status` | Show document and index counts. |
+| `brain map` | Refresh `.brain/map.html` for local visual inspection. |
 | `brain index` | Index changed Markdown only. |
 | `brain rebuild` | Recreate SQLite from Markdown. |
 | `brain mcp --project /absolute/path` | Run the stdio MCP server. |

@@ -1,6 +1,6 @@
 # Project idea
 
-Second Brain Local is persistent, searchable Markdown memory for coding agents. It stores a project's purpose, architecture, decisions, rules, and current state so a new agent can retrieve useful facts without relying on a long conversation history.
+Open Brain is persistent, searchable Markdown memory for coding agents. It stores a project's purpose, architecture, decisions, rules, and current state so a new agent can retrieve useful facts without relying on a long conversation history. A standalone local map lets people inspect the memory and its connections.
 
 ## Problem
 

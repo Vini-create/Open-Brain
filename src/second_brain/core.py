@@ -117,10 +117,12 @@ def initialize(root: Path, idea: str | None = None) -> dict:
                           "on CPU, without a provider or API key. Run `brain model download` once to "
                           "fetch its public weights. Vectors are indexed with SQLite + sqlite-vec.\n\n"
                           "The MCP server uses stdio. Adapt `mcp.json` to your client if needed. "
-                          "`AGENT_BRAIN.md` tells the agent when to search and save.\n", encoding="utf-8")
+                          "`AGENT_BRAIN.md` tells the agent when to search and save.\n\n"
+                          "Open `map.html` in a browser to explore this project's memories, links, "
+                          "and approximate stored context size. Run `brain map` to refresh it.\n", encoding="utf-8")
     ignore = root / ".gitignore"
     original = ignore.read_text(encoding="utf-8") if ignore.exists() else ""
-    local_paths = (".brain/index/", ".brain/history/", ".brain/mcp.json", ".mcp.json")
+    local_paths = (".brain/index/", ".brain/history/", ".brain/mcp.json", ".brain/map.html", ".mcp.json")
     missing = [entry for entry in local_paths if entry not in original.splitlines()]
     if missing:
         ignore.write_text(original.rstrip("\n") + ("\n" if original else "")
@@ -154,7 +156,10 @@ def initialize(root: Path, idea: str | None = None) -> dict:
     config = load_config(root)
     from .storage import connect
     connect(root, config).close()
-    return index(root, config) if idea else stats(root, config)
+    result = index(root, config) if idea else stats(root, config)
+    from .visualization import write_map
+    write_map(root)
+    return result
 
 
 def _normalized(text: str) -> str:

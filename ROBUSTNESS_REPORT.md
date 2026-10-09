@@ -6,8 +6,8 @@ Model: `intfloat/multilingual-e5-small` on CPU. Tokenizer: cl100k_base (tiktoken
 
 | Approximate budget/query | Questions | Correct memory first | Correct memory returned | Exact fact in context | Actual payload tokens | Median search ms |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 180 | 12 | 12/12 | 12/12 | 12/12 | 1,667 | 433.61 |
-| 400 | 12 | 12/12 | 12/12 | 12/12 | 3,818 | 432.38 |
+| 180 | 12 | 12/12 | 12/12 | 12/12 | 1,667 | 403.75 |
+| 400 | 12 | 12/12 | 12/12 | 12/12 | 3,818 | 404.62 |
 
 ## Per-question evidence
 

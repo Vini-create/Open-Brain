@@ -169,6 +169,7 @@ def run(project: Path, levels: tuple[int, ...] = FULL_LEVELS) -> dict:
                         "newly_embedded": indexed["embedded_chunks"], "cases": cases,
                         "incremental_index_ms": index_ms,
                         "database_bytes": (project / ".brain/index/brain.db").stat().st_size,
+                        "map_bytes": (project / ".brain/map.html").stat().st_size,
                         "facts_found": sum(item["fact_found"] for item in cases),
                         "brain_tokens": sum(item["brain_tokens"] for item in cases),
                         "targeted_rg_tokens": sum(item["targeted_rg_tokens"] for item in cases),
@@ -229,8 +230,8 @@ def markdown(report: dict, *, result_name: str = "growth.json") -> str:
               "at the largest levels. Exact-keyword search can use fewer tokens than Brain after "
               "MCP setup. Search latency is reported below.", "",
               "## Full measurements", "",
-              "| Documents | Facts found | Brain payload | Targeted `rg` + file | Broad `rg` + file | Savings vs targeted | Savings vs broad | Median search ms | New-chunk index s | DB MiB |",
-             "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+             "| Documents | Facts found | Brain payload | Targeted `rg` + file | Broad `rg` + file | Savings vs targeted | Savings vs broad | Median search ms | New-chunk index s | DB MiB | Map MiB |",
+             "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for level in report["levels"]:
         brain = level["brain_tokens"]
         targeted = level["targeted_rg_tokens"]
@@ -239,7 +240,8 @@ def markdown(report: dict, *, result_name: str = "growth.json") -> str:
                      f"{100 * (1 - brain / targeted):.2f}% | {100 * (1 - brain / broad):.2f}% | "
                      f"{level['median_search_ms']:.2f} | "
                      f"{level['incremental_index_ms'] / 1000:.2f} | "
-                     f"{level['database_bytes'] / 1048576:.2f} |")
+                     f"{level['database_bytes'] / 1048576:.2f} | "
+                     f"{level['map_bytes'] / 1048576:.2f} |")
     protocol = report["agent_instruction_tokens"] + report["mcp_tool_schema_tokens"]
     lines += ["", "## MCP setup costs", "",
               f"The agent instructions contain **{report['agent_instruction_tokens']} tokens** "

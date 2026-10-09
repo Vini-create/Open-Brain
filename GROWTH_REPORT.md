@@ -25,14 +25,14 @@ These are **retrieval-context reductions**, not measured changes in a builder's 
 
 ## Full measurements
 
-| Documents | Facts found | Brain payload | Targeted `rg` + file | Broad `rg` + file | Savings vs targeted | Savings vs broad | Median search ms | New-chunk index s | DB MiB |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 4 | 4/4 | 582 | 1115 | 1156 | 47.80% | 49.65% | 17.87 | 0.00 | 1.61 |
-| 44 | 4/4 | 582 | 1115 | 2276 | 47.80% | 74.43% | 31.35 | 0.75 | 1.96 |
-| 164 | 4/4 | 582 | 1115 | 5636 | 47.80% | 89.67% | 81.53 | 1.74 | 3.04 |
-| 1000 | 4/4 | 582 | 1115 | 29044 | 47.80% | 98.00% | 427.71 | 12.04 | 10.46 |
-| 5000 | 4/4 | 582 | 1115 | 157028 | 47.80% | 99.63% | 2234.73 | 79.34 | 52.05 |
-| 10000 | 4/4 | 582 | 1115 | 317028 | 47.80% | 99.82% | 4166.09 | 100.03 | 104.03 |
+| Documents | Facts found | Brain payload | Targeted `rg` + file | Broad `rg` + file | Savings vs targeted | Savings vs broad | Median search ms | New-chunk index s | DB MiB | Map MiB |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 4 | 4/4 | 582 | 1115 | 1156 | 47.80% | 49.65% | 15.84 | 0.00 | 1.61 | 0.02 |
+| 44 | 4/4 | 582 | 1115 | 2276 | 47.80% | 74.43% | 29.81 | 0.56 | 1.96 | 0.03 |
+| 164 | 4/4 | 582 | 1115 | 5636 | 47.80% | 89.67% | 74.35 | 2.31 | 3.04 | 0.08 |
+| 1000 | 4/4 | 582 | 1115 | 29044 | 47.80% | 98.00% | 408.54 | 16.02 | 10.46 | 0.39 |
+| 5000 | 4/4 | 582 | 1115 | 157028 | 47.80% | 99.63% | 2056.72 | 70.65 | 52.05 | 1.88 |
+| 10000 | 4/4 | 582 | 1115 | 317028 | 47.80% | 99.82% | 3963.35 | 89.86 | 104.03 | 3.76 |
 
 ## MCP setup costs
 
@@ -58,7 +58,7 @@ If the same four questions share one setup copy in one session:
 | 5000 | 1342 | -20.36% | 99.15% |
 | 10000 | 1342 | -20.36% | 99.58% |
 
-In a new Python process with no conversation history, the Brain found **4/4 facts** at the largest measured size. The stored memory Markdown totals **1,286,053 tokens**; it is not sent in full to the agent. The first query in that fresh process took **8093.54 ms**, including model startup.
+In a new Python process with no conversation history, the Brain found **4/4 facts** at the largest measured size. The stored memory Markdown totals **1,286,053 tokens**; it is not sent in full to the agent. The first query in that fresh process took **7874.45 ms**, including model startup.
 
 ## Method and limitations
 

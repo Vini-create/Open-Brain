@@ -26,6 +26,7 @@ python benchmarks/project_scenarios.py
 The scripts require `rg` and `tiktoken`'s `cl100k_base` tokenizer file. The tokenizer file may need one initial public download. If it is unavailable, measurement fails rather than silently switching to an estimate. `growth.py --profile quick` runs only 4, 44, and 164 documents and writes ignored `GROWTH_QUICK_REPORT.md` and `growth-quick.json`, preserving the published full measurements. `full` also measures 1,000, 5,000, and 10,000. A full run embeds thousands of local texts on CPU and takes longer than the unit tests.
 
 The growth report records the CPU, Python, PyTorch, and sqlite-vec versions used for its latency and index-size numbers. Token counts are based on actual returned text; timing depends on hardware and cache state.
+Its index timing now includes regeneration of the per-project `map.html`, and it reports the map's disk size separately from SQLite.
 
 The README's size-to-savings table is calculated from `benchmarks/results/growth.json`. For each size, it adds one measured copy of agent instructions and MCP tool schemas to the four Brain responses, then compares that with four broad `rg` discovery outputs plus selected files. Its capped column applies `min(actual_tokens, 8000)` to **each** conventional response before summing. The cap is simulated accounting on measured output; it is not a run that verifies fact retrieval after truncation. The uncapped column can be much larger than a real model prompt.
 

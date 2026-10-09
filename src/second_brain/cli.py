@@ -17,7 +17,7 @@ def parser() -> argparse.ArgumentParser:
     init = commands.add_parser("init", help="Initialize .brain in a project")
     init.add_argument("--project", type=Path, default=Path.cwd())
     init.add_argument("--idea", help="Initial description of the project")
-    for name in ("status", "index", "rebuild", "mcp"):
+    for name in ("status", "index", "rebuild", "map", "mcp"):
         command = commands.add_parser(name)
         command.add_argument("--project", type=Path, default=Path.cwd())
     find = commands.add_parser("search", help="Retrieve relevant context")
@@ -51,6 +51,7 @@ def main() -> None:
             display_root = Path(os.environ.get("BRAIN_HOST_PROJECT", str(root)))
             brain_command = os.environ.get("BRAIN_DOCKER_WRAPPER", "brain")
             print(f"Brain initialized at {display_root / '.brain'}")
+            print(f"Open {display_root / '.brain' / 'map.html'} in a browser to inspect this project's memory.")
             print(json.dumps(result, ensure_ascii=False, indent=2))
             if result.get("memories") == 0:
                 print("Empty, independent Brain created. Read .brain/AGENT_BRAIN.md; fill "
@@ -61,6 +62,11 @@ def main() -> None:
                       f"{brain_command} remember to update it.")
         elif args.command == "status":
             print(json.dumps(stats(root, load_config(root)), ensure_ascii=False, indent=2))
+        elif args.command == "map":
+            from .visualization import write_map
+            write_map(root)
+            display_root = Path(os.environ.get("BRAIN_HOST_PROJECT", str(root)))
+            print(f"Open {display_root / '.brain' / 'map.html'} in a browser to explore this project's Brain.")
         elif args.command in {"index", "rebuild"}:
             print(json.dumps(index(root, load_config(root), rebuild=args.command == "rebuild"), ensure_ascii=False, indent=2))
         elif args.command == "search":

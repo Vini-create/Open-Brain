@@ -23,7 +23,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 138,
-      "duration_ms": 438.78,
+      "duration_ms": 411.96,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -38,7 +38,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 322,
-      "duration_ms": 439.62,
+      "duration_ms": 410.82,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -56,7 +56,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 134,
-      "duration_ms": 422.03,
+      "duration_ms": 471.26,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -71,7 +71,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 315,
-      "duration_ms": 430.38,
+      "duration_ms": 404.36,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -89,7 +89,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 138,
-      "duration_ms": 449.72,
+      "duration_ms": 407.89,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -104,7 +104,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 320,
-      "duration_ms": 455.05,
+      "duration_ms": 405.31,
       "returned_ids": [
         "decision-rotacao-de-refresh-token-3884c1ae",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -122,7 +122,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 141,
-      "duration_ms": 455.95,
+      "duration_ms": 422.72,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -137,7 +137,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 316,
-      "duration_ms": 439.21,
+      "duration_ms": 409.5,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -155,7 +155,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 135,
-      "duration_ms": 446.6,
+      "duration_ms": 484.79,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "decision-rotacao-de-refresh-token-3884c1ae"
@@ -170,7 +170,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 311,
-      "duration_ms": 440.83,
+      "duration_ms": 399.22,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "decision-rotacao-de-refresh-token-3884c1ae",
@@ -188,7 +188,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 140,
-      "duration_ms": 426.81,
+      "duration_ms": 399.6,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "decision-rotacao-de-refresh-token-3884c1ae"
@@ -203,7 +203,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 319,
-      "duration_ms": 451.49,
+      "duration_ms": 400.12,
       "returned_ids": [
         "rule-idempotencia-de-pagamentos-19da4c73",
         "decision-rotacao-de-refresh-token-3884c1ae",
@@ -221,7 +221,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 141,
-      "duration_ms": 428.44,
+      "duration_ms": 386.4,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "rule-idempotencia-de-pagamentos-19da4c73"
@@ -236,7 +236,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 320,
-      "duration_ms": 434.39,
+      "duration_ms": 409.1,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "rule-idempotencia-de-pagamentos-19da4c73",
@@ -254,7 +254,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 136,
-      "duration_ms": 503.29,
+      "duration_ms": 444.2,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "constraint-retencao-de-auditoria-4aebecb9"
@@ -269,7 +269,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 316,
-      "duration_ms": 421.48,
+      "duration_ms": 410.65,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "constraint-retencao-de-auditoria-4aebecb9",
@@ -287,7 +287,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 143,
-      "duration_ms": 417.03,
+      "duration_ms": 399.37,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "rule-idempotencia-de-pagamentos-19da4c73"
@@ -302,7 +302,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 320,
-      "duration_ms": 419.71,
+      "duration_ms": 400.39,
       "returned_ids": [
         "architecture-isolamento-entre-organizacoes-74b603ec",
         "rule-idempotencia-de-pagamentos-19da4c73",
@@ -320,7 +320,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 137,
-      "duration_ms": 417.01,
+      "duration_ms": 393.24,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -335,7 +335,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 319,
-      "duration_ms": 422.51,
+      "duration_ms": 404.89,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -353,7 +353,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 142,
-      "duration_ms": 442.12,
+      "duration_ms": 393.75,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "rule-idempotencia-de-pagamentos-19da4c73"
@@ -368,7 +368,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 318,
-      "duration_ms": 416.37,
+      "duration_ms": 400.1,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "rule-idempotencia-de-pagamentos-19da4c73",
@@ -386,7 +386,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 142,
-      "duration_ms": 427.15,
+      "duration_ms": 395.4,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "architecture-isolamento-entre-organizacoes-74b603ec"
@@ -401,7 +401,7 @@
       "returned": true,
       "fact_in_context": true,
       "actual_tokens": 322,
-      "duration_ms": 421.8,
+      "duration_ms": 388.17,
       "returned_ids": [
         "constraint-retencao-de-auditoria-4aebecb9",
         "architecture-isolamento-entre-organizacoes-74b603ec",
@@ -419,7 +419,7 @@
       "returned": 12,
       "fact_in_context": 12,
       "payload_tokens": 1667,
-      "median_ms": 433.61
+      "median_ms": 403.75
     },
     {
       "budget": 400,
@@ -428,7 +428,7 @@
       "returned": 12,
       "fact_in_context": 12,
       "payload_tokens": 3818,
-      "median_ms": 432.38
+      "median_ms": 404.62
     }
   ]
 }
