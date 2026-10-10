@@ -1,0 +1,292 @@
+[
+  {
+    "name": "commerce",
+    "description": "A storefront handles card purchases, warehouse inventory and parcel delivery.",
+    "cases": [
+      {
+        "title": "Payment callback deduplication",
+        "type": "rule",
+        "content": "Payment callbacks are deduplicated by event_id with a unique database constraint. Duplicate delivery returns HTTP 204 without creating a second charge. Failed processing retries after 30 seconds.",
+        "facts": [
+          "event_id",
+          "HTTP 204",
+          "30 seconds"
+        ],
+        "queries": [
+          "What happens if the payment provider sends the same notification twice?",
+          "Como evitamos cobrar duas vezes quando a confirmação do pagamento chega repetida?"
+        ]
+      },
+      {
+        "title": "Cart stock reservation",
+        "type": "feature",
+        "content": "Cart inventory is reserved for 12 minutes. Expired reservations release stock using the release_stock job. Checkout verifies the reservation version before committing.",
+        "facts": [
+          "12 minutes",
+          "release_stock",
+          "reservation version"
+        ],
+        "queries": [
+          "When does a cart stop holding inventory and how is checkout protected?",
+          "Por quanto tempo o carrinho segura produtos e o que impede finalizar uma reserva antiga?"
+        ]
+      },
+      {
+        "title": "Shipment address freeze",
+        "type": "constraint",
+        "content": "The delivery address becomes immutable at label_created. A later correction requires cancel_label before reissuing. Orders remain blocked until carrier_ack.",
+        "facts": [
+          "label_created",
+          "cancel_label",
+          "carrier_ack"
+        ],
+        "queries": [
+          "Can the shipping destination change after a parcel label exists?",
+          "Como corrigir o endereço depois que a etiqueta de entrega foi emitida?"
+        ]
+      }
+    ],
+    "distractors": [
+      "Refunds require an operator review and retain their original order reference.",
+      "Discount coupons expire at midnight UTC and cannot be stacked.",
+      "Product photographs use object storage and signed upload URLs.",
+      "Warehouse counts run nightly; adjustments record operator identity.",
+      "Shipment tracking polls the carrier independently of payment callbacks.",
+      "Tax rounding uses integer cents and keeps an audit record.",
+      "Customer email changes require a confirmation link.",
+      "Purchase receipts include item totals, shipping and tax separately."
+    ]
+  },
+  {
+    "name": "data-pipeline",
+    "description": "A Python analytics pipeline imports events, validates records and publishes datasets.",
+    "cases": [
+      {
+        "title": "Late arrival processing",
+        "type": "rule",
+        "content": "The ingestion watermark tolerates 7 minutes of lateness. Later events enter late_events rather than disappearing. Backfills run with replay_mode and never advance the live watermark.",
+        "facts": [
+          "7 minutes",
+          "late_events",
+          "replay_mode"
+        ],
+        "queries": [
+          "What happens to delayed records and how do historical imports affect progress?",
+          "Como tratamos eventos atrasados sem bagunçar o avanço da ingestão ao reprocessar o passado?"
+        ]
+      },
+      {
+        "title": "Malformed record quarantine",
+        "type": "feature",
+        "content": "Invalid records go to quarantine/raw with validation_code and source_offset. A reviewer must approve the corrected payload before requeue.",
+        "facts": [
+          "quarantine/raw",
+          "validation_code",
+          "source_offset"
+        ],
+        "queries": [
+          "Where do broken incoming records go and how can we trace them?",
+          "Onde ficam os registros inválidos e como descobrimos de onde vieram?"
+        ]
+      },
+      {
+        "title": "Dataset publication transaction",
+        "type": "architecture",
+        "content": "Dataset publication writes to staging first, verifies sha256, then atomically swaps current_manifest. Readers continue using the previous version if validation fails.",
+        "facts": [
+          "staging",
+          "sha256",
+          "current_manifest"
+        ],
+        "queries": [
+          "How do readers avoid a partially published dataset?",
+          "O que impede os consumidores de ler um conjunto de dados publicado pela metade?"
+        ]
+      }
+    ],
+    "distractors": [
+      "CSV exports escape embedded quotes and preserve UTF-8.",
+      "A dashboard aggregates daily counts after successful publication.",
+      "User permissions determine which dataset columns are visible.",
+      "Metrics include ingestion latency, errors and file sizes.",
+      "Schema evolution allows nullable columns with documented defaults.",
+      "The scheduler prevents two live imports from overlapping.",
+      "Compressed files are unpacked in an isolated temporary directory.",
+      "Retention removes archived output only after backup verification."
+    ]
+  },
+  {
+    "name": "mobile-notes",
+    "description": "A mobile notes application works offline and synchronizes edits across devices.",
+    "cases": [
+      {
+        "title": "Concurrent offline edit resolution",
+        "type": "rule",
+        "content": "Offline note conflicts use a Lamport clock and device_id as a deterministic tie-breaker. Deleted notes retain a tombstone for 21 days.",
+        "facts": [
+          "Lamport",
+          "device_id",
+          "21 days"
+        ],
+        "queries": [
+          "How are simultaneous disconnected edits merged and deletions preserved?",
+          "Como resolvemos edições feitas sem internet em dois celulares e preservamos exclusões?"
+        ]
+      },
+      {
+        "title": "Biometric vault key lifecycle",
+        "type": "architecture",
+        "content": "Biometric unlock unwraps the vault key in Secure Enclave. After backgrounding, the plaintext key expires in 90 seconds. Recovery requires the recovery_phrase, never the biometric sample.",
+        "facts": [
+          "Secure Enclave",
+          "90 seconds",
+          "recovery_phrase"
+        ],
+        "queries": [
+          "What happens to the encryption key when the app leaves the foreground?",
+          "Como a chave fica protegida ao sair do aplicativo e como recuperamos o acesso?"
+        ]
+      },
+      {
+        "title": "Notification privacy boundary",
+        "type": "constraint",
+        "content": "Push notifications contain note_id only, never note text. The content is fetched after local unlock via fetch_after_unlock. A denied session receives HTTP 403.",
+        "facts": [
+          "note_id",
+          "fetch_after_unlock",
+          "HTTP 403"
+        ],
+        "queries": [
+          "Can a locked phone notification reveal a private note?",
+          "A notificação de um celular bloqueado consegue expor o conteúdo de uma anotação?"
+        ]
+      }
+    ],
+    "distractors": [
+      "Text search indexes only unlocked notes on the device.",
+      "Attachments have a configurable upload limit and local previews.",
+      "The editor preserves cursor position when rotating the screen.",
+      "Account export requires recent authentication.",
+      "Favorites are stored separately from note contents.",
+      "The accessibility layout supports large fonts.",
+      "Sync retries use exponential delays after connection failures.",
+      "Storage usage is shown separately for notes and attachments."
+    ]
+  },
+  {
+    "name": "infrastructure",
+    "description": "Infrastructure automation manages environment resources, releases and service credentials.",
+    "cases": [
+      {
+        "title": "Environment state isolation",
+        "type": "architecture",
+        "content": "Infrastructure state uses a separate bucket per environment. Production obtains a DynamoDB lock before applying. CI rejects plans containing destroy_count greater than zero unless explicitly approved.",
+        "facts": [
+          "separate bucket",
+          "DynamoDB",
+          "destroy_count"
+        ],
+        "queries": [
+          "What prevents a deployment from modifying the wrong environment or destroying production?",
+          "Como impedimos uma implantação de mexer no ambiente errado ou apagar recursos de produção?"
+        ]
+      },
+      {
+        "title": "Release health rollback",
+        "type": "rule",
+        "content": "Canary rollout starts at 5 percent of traffic. A p95 latency above 800 ms for 3 minutes triggers rollback to stable_revision.",
+        "facts": [
+          "5 percent",
+          "800 ms",
+          "stable_revision"
+        ],
+        "queries": [
+          "When is a gradual release rolled back and where does traffic return?",
+          "Quando uma versão liberada aos poucos deve ser revertida e para onde volta o tráfego?"
+        ]
+      },
+      {
+        "title": "Service secret rotation",
+        "type": "feature",
+        "content": "Credentials rotate every 24 hours with a 15-minute overlap. Applications read credentials via secret_mount, never environment dumps. An old lease is revoked after the overlap.",
+        "facts": [
+          "24 hours",
+          "15-minute",
+          "secret_mount"
+        ],
+        "queries": [
+          "How can service credentials change without interrupting running workloads?",
+          "Como trocamos credenciais sem interromper os serviços que já estão rodando?"
+        ]
+      }
+    ],
+    "distractors": [
+      "Build artifacts are identified by immutable content digests.",
+      "Log aggregation strips authorization headers before export.",
+      "Developer preview environments are removed after branch deletion.",
+      "The load balancer performs independent readiness checks.",
+      "DNS changes are reviewed with a preview of affected records.",
+      "Resource tags identify owners and cost centers.",
+      "Nightly backups are copied into a separate account.",
+      "Monitoring alerts route to the owning service team."
+    ]
+  },
+  {
+    "name": "multiplayer-game",
+    "description": "A multiplayer game coordinates deterministic simulation, player input and save data.",
+    "cases": [
+      {
+        "title": "Prediction reconciliation window",
+        "type": "architecture",
+        "content": "Network prediction retains 8 frames of rollback history. A state_digest mismatch rewinds to confirmed_tick and replays buffered input.",
+        "facts": [
+          "8 frames",
+          "state_digest",
+          "confirmed_tick"
+        ],
+        "queries": [
+          "How does the simulation correct a disagreement with the server?",
+          "Como a simulação corrige uma divergência com o servidor sem perder os comandos do jogador?"
+        ]
+      },
+      {
+        "title": "Save file recovery",
+        "type": "rule",
+        "content": "Saving writes to save.tmp, validates CRC32, then performs atomic_replace. Startup loads save.backup if the primary file fails validation.",
+        "facts": [
+          "save.tmp",
+          "CRC32",
+          "save.backup"
+        ],
+        "queries": [
+          "How does the game recover if power is lost while saving?",
+          "Como recuperamos o progresso se faltar energia no meio de um salvamento?"
+        ]
+      },
+      {
+        "title": "Controller input priority",
+        "type": "feature",
+        "content": "Controller input timestamps use monotonic_ns. When keyboard and controller conflict, last_input_device wins. Rebinding is disabled during ranked_match.",
+        "facts": [
+          "monotonic_ns",
+          "last_input_device",
+          "ranked_match"
+        ],
+        "queries": [
+          "What resolves competing input devices and when can controls be remapped?",
+          "Como resolvemos comandos conflitantes entre teclado e controle e quando podemos trocar as teclas?"
+        ]
+      }
+    ],
+    "distractors": [
+      "Audio effects are pooled and obey the master volume setting.",
+      "Texture streaming uses an LRU cache for nearby scenes.",
+      "Spectators receive snapshots without controlling the match.",
+      "Achievements unlock after authoritative match results.",
+      "Chat moderation uses local rules and operator review.",
+      "The launcher verifies downloaded assets before replacing them.",
+      "Frame pacing measures rendering independently of simulation ticks.",
+      "The tutorial stores completion flags separately from ranked statistics."
+    ]
+  }
+]

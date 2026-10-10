@@ -96,6 +96,13 @@ checklist without replacing your memories or custom instructions. The next
 index/search refreshes the older passage format locally; restart a running MCP
 client to load the updated server.
 
+A [cross-project check](CROSS_PROJECT_REPORT.md) uses five different synthetic
+domains and 30 new English/Portuguese questions. At 500 estimated tokens,
+**29/30 answers contained all expected facts** with the default search limit;
+one paraphrase required refinement. All 30 operational checks passed, covering
+isolated project storage, updates, deletion, reopening and MCP. These are
+bounded development tests, not a guarantee of recall for every project.
+
 Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/index/brain.db` is a rebuildable SQLite + `sqlite-vec` index. `brain rebuild` reconstructs it from Markdown; unchanged files are not re-embedded by `brain index`. The product does **not** automatically read every source file, watch Git, or save every conversation. An agent must still inspect code before editing and validate its work. See [architecture](docs/ARCHITECTURE.md).
 
 ## MCP integration

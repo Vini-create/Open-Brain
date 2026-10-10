@@ -1,0 +1,2266 @@
+{
+  "fixture_sha256": "4fe333e0f573451d4901b7755e736c95947085f49563d297ac6e088a15da456f",
+  "projects": 5,
+  "memories_per_project": 14,
+  "retrieval_limit": 8,
+  "model": "intfloat/multilingual-e5-small",
+  "tokenizer": "cl100k_base (tiktoken)",
+  "rows": [
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "en",
+      "query": "What happens if the payment provider sends the same notification twice?",
+      "budget": 180,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 102,
+      "correct_memory_returned": true,
+      "duration_ms": 28.15,
+      "estimated_tokens": 172
+    },
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "en",
+      "query": "What happens if the payment provider sends the same notification twice?",
+      "budget": 500,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 300,
+      "correct_memory_returned": true,
+      "duration_ms": 28.45,
+      "estimated_tokens": 497
+    },
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "en",
+      "query": "What happens if the payment provider sends the same notification twice?",
+      "budget": 900,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 302,
+      "correct_memory_returned": true,
+      "duration_ms": 28.16,
+      "estimated_tokens": 501
+    },
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "pt",
+      "query": "Como evitamos cobrar duas vezes quando a confirmação do pagamento chega repetida?",
+      "budget": 180,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 100,
+      "correct_memory_returned": true,
+      "duration_ms": 29.15,
+      "estimated_tokens": 158
+    },
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "pt",
+      "query": "Como evitamos cobrar duas vezes quando a confirmação do pagamento chega repetida?",
+      "budget": 500,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 307,
+      "correct_memory_returned": true,
+      "duration_ms": 30.44,
+      "estimated_tokens": 499
+    },
+    {
+      "project": "commerce",
+      "case": "Payment callback deduplication",
+      "language": "pt",
+      "query": "Como evitamos cobrar duas vezes quando a confirmação do pagamento chega repetida?",
+      "budget": 900,
+      "expected_facts": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "present": [
+        "event_id",
+        "HTTP 204",
+        "30 seconds"
+      ],
+      "complete": true,
+      "tokens": 324,
+      "correct_memory_returned": true,
+      "duration_ms": 28.96,
+      "estimated_tokens": 535
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "en",
+      "query": "When does a cart stop holding inventory and how is checkout protected?",
+      "budget": 180,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 108,
+      "correct_memory_returned": true,
+      "duration_ms": 28.63,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "en",
+      "query": "When does a cart stop holding inventory and how is checkout protected?",
+      "budget": 500,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 272,
+      "correct_memory_returned": true,
+      "duration_ms": 28.47,
+      "estimated_tokens": 462
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "en",
+      "query": "When does a cart stop holding inventory and how is checkout protected?",
+      "budget": 900,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 304,
+      "correct_memory_returned": true,
+      "duration_ms": 28.53,
+      "estimated_tokens": 514
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "pt",
+      "query": "Por quanto tempo o carrinho segura produtos e o que impede finalizar uma reserva antiga?",
+      "budget": 180,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 101,
+      "correct_memory_returned": true,
+      "duration_ms": 29.47,
+      "estimated_tokens": 167
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "pt",
+      "query": "Por quanto tempo o carrinho segura produtos e o que impede finalizar uma reserva antiga?",
+      "budget": 500,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 278,
+      "correct_memory_returned": true,
+      "duration_ms": 29.33,
+      "estimated_tokens": 462
+    },
+    {
+      "project": "commerce",
+      "case": "Cart stock reservation",
+      "language": "pt",
+      "query": "Por quanto tempo o carrinho segura produtos e o que impede finalizar uma reserva antiga?",
+      "budget": 900,
+      "expected_facts": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "present": [
+        "12 minutes",
+        "release_stock",
+        "reservation version"
+      ],
+      "complete": true,
+      "tokens": 316,
+      "correct_memory_returned": true,
+      "duration_ms": 29.21,
+      "estimated_tokens": 524
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "en",
+      "query": "Can the shipping destination change after a parcel label exists?",
+      "budget": 180,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 107,
+      "correct_memory_returned": true,
+      "duration_ms": 27.6,
+      "estimated_tokens": 177
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "en",
+      "query": "Can the shipping destination change after a parcel label exists?",
+      "budget": 500,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 292,
+      "correct_memory_returned": true,
+      "duration_ms": 27.25,
+      "estimated_tokens": 490
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "en",
+      "query": "Can the shipping destination change after a parcel label exists?",
+      "budget": 900,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 292,
+      "correct_memory_returned": true,
+      "duration_ms": 27.34,
+      "estimated_tokens": 490
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "pt",
+      "query": "Como corrigir o endereço depois que a etiqueta de entrega foi emitida?",
+      "budget": 180,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 110,
+      "correct_memory_returned": true,
+      "duration_ms": 28.47,
+      "estimated_tokens": 177
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "pt",
+      "query": "Como corrigir o endereço depois que a etiqueta de entrega foi emitida?",
+      "budget": 500,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 308,
+      "correct_memory_returned": true,
+      "duration_ms": 34.33,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "commerce",
+      "case": "Shipment address freeze",
+      "language": "pt",
+      "query": "Como corrigir o endereço depois que a etiqueta de entrega foi emitida?",
+      "budget": 900,
+      "expected_facts": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "present": [
+        "label_created",
+        "cancel_label",
+        "carrier_ack"
+      ],
+      "complete": true,
+      "tokens": 316,
+      "correct_memory_returned": true,
+      "duration_ms": 30.02,
+      "estimated_tokens": 517
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "en",
+      "query": "What happens to delayed records and how do historical imports affect progress?",
+      "budget": 180,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 86,
+      "correct_memory_returned": false,
+      "duration_ms": 32.1,
+      "estimated_tokens": 165
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "en",
+      "query": "What happens to delayed records and how do historical imports affect progress?",
+      "budget": 500,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "complete": true,
+      "tokens": 265,
+      "correct_memory_returned": true,
+      "duration_ms": 28.17,
+      "estimated_tokens": 470
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "en",
+      "query": "What happens to delayed records and how do historical imports affect progress?",
+      "budget": 900,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "complete": true,
+      "tokens": 297,
+      "correct_memory_returned": true,
+      "duration_ms": 28.32,
+      "estimated_tokens": 519
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "pt",
+      "query": "Como tratamos eventos atrasados sem bagunçar o avanço da ingestão ao reprocessar o passado?",
+      "budget": 180,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "complete": true,
+      "tokens": 112,
+      "correct_memory_returned": true,
+      "duration_ms": 31.04,
+      "estimated_tokens": 177
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "pt",
+      "query": "Como tratamos eventos atrasados sem bagunçar o avanço da ingestão ao reprocessar o passado?",
+      "budget": 500,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "complete": true,
+      "tokens": 279,
+      "correct_memory_returned": true,
+      "duration_ms": 30.23,
+      "estimated_tokens": 480
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Late arrival processing",
+      "language": "pt",
+      "query": "Como tratamos eventos atrasados sem bagunçar o avanço da ingestão ao reprocessar o passado?",
+      "budget": 900,
+      "expected_facts": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "present": [
+        "7 minutes",
+        "late_events",
+        "replay_mode"
+      ],
+      "complete": true,
+      "tokens": 311,
+      "correct_memory_returned": true,
+      "duration_ms": 30.25,
+      "estimated_tokens": 528
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "en",
+      "query": "Where do broken incoming records go and how can we trace them?",
+      "budget": 180,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 88,
+      "correct_memory_returned": true,
+      "duration_ms": 28.49,
+      "estimated_tokens": 153
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "en",
+      "query": "Where do broken incoming records go and how can we trace them?",
+      "budget": 500,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 291,
+      "correct_memory_returned": true,
+      "duration_ms": 33.39,
+      "estimated_tokens": 500
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "en",
+      "query": "Where do broken incoming records go and how can we trace them?",
+      "budget": 900,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 296,
+      "correct_memory_returned": true,
+      "duration_ms": 28.17,
+      "estimated_tokens": 516
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "pt",
+      "query": "Onde ficam os registros inválidos e como descobrimos de onde vieram?",
+      "budget": 180,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 119,
+      "correct_memory_returned": true,
+      "duration_ms": 29.58,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "pt",
+      "query": "Onde ficam os registros inválidos e como descobrimos de onde vieram?",
+      "budget": 500,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 291,
+      "correct_memory_returned": true,
+      "duration_ms": 29.49,
+      "estimated_tokens": 486
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Malformed record quarantine",
+      "language": "pt",
+      "query": "Onde ficam os registros inválidos e como descobrimos de onde vieram?",
+      "budget": 900,
+      "expected_facts": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "present": [
+        "quarantine/raw",
+        "validation_code",
+        "source_offset"
+      ],
+      "complete": true,
+      "tokens": 291,
+      "correct_memory_returned": true,
+      "duration_ms": 28.94,
+      "estimated_tokens": 486
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "en",
+      "query": "How do readers avoid a partially published dataset?",
+      "budget": 180,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 88,
+      "correct_memory_returned": true,
+      "duration_ms": 26.79,
+      "estimated_tokens": 164
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "en",
+      "query": "How do readers avoid a partially published dataset?",
+      "budget": 500,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 254,
+      "correct_memory_returned": true,
+      "duration_ms": 26.19,
+      "estimated_tokens": 464
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "en",
+      "query": "How do readers avoid a partially published dataset?",
+      "budget": 900,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 284,
+      "correct_memory_returned": true,
+      "duration_ms": 26.89,
+      "estimated_tokens": 518
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "pt",
+      "query": "O que impede os consumidores de ler um conjunto de dados publicado pela metade?",
+      "budget": 180,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 95,
+      "correct_memory_returned": true,
+      "duration_ms": 28.24,
+      "estimated_tokens": 155
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "pt",
+      "query": "O que impede os consumidores de ler um conjunto de dados publicado pela metade?",
+      "budget": 500,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 286,
+      "correct_memory_returned": true,
+      "duration_ms": 28.4,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "data-pipeline",
+      "case": "Dataset publication transaction",
+      "language": "pt",
+      "query": "O que impede os consumidores de ler um conjunto de dados publicado pela metade?",
+      "budget": 900,
+      "expected_facts": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "present": [
+        "staging",
+        "sha256",
+        "current_manifest"
+      ],
+      "complete": true,
+      "tokens": 289,
+      "correct_memory_returned": true,
+      "duration_ms": 28.48,
+      "estimated_tokens": 509
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "en",
+      "query": "How are simultaneous disconnected edits merged and deletions preserved?",
+      "budget": 180,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "complete": true,
+      "tokens": 90,
+      "correct_memory_returned": true,
+      "duration_ms": 83.19,
+      "estimated_tokens": 143
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "en",
+      "query": "How are simultaneous disconnected edits merged and deletions preserved?",
+      "budget": 500,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "complete": true,
+      "tokens": 290,
+      "correct_memory_returned": true,
+      "duration_ms": 34.1,
+      "estimated_tokens": 495
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "en",
+      "query": "How are simultaneous disconnected edits merged and deletions preserved?",
+      "budget": 900,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "complete": true,
+      "tokens": 290,
+      "correct_memory_returned": true,
+      "duration_ms": 29.79,
+      "estimated_tokens": 495
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "pt",
+      "query": "Como resolvemos edições feitas sem internet em dois celulares e preservamos exclusões?",
+      "budget": 180,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 115,
+      "correct_memory_returned": false,
+      "duration_ms": 29.57,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "pt",
+      "query": "Como resolvemos edições feitas sem internet em dois celulares e preservamos exclusões?",
+      "budget": 500,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "complete": true,
+      "tokens": 303,
+      "correct_memory_returned": true,
+      "duration_ms": 31.58,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Concurrent offline edit resolution",
+      "language": "pt",
+      "query": "Como resolvemos edições feitas sem internet em dois celulares e preservamos exclusões?",
+      "budget": 900,
+      "expected_facts": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "present": [
+        "Lamport",
+        "device_id",
+        "21 days"
+      ],
+      "complete": true,
+      "tokens": 303,
+      "correct_memory_returned": true,
+      "duration_ms": 29.15,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "en",
+      "query": "What happens to the encryption key when the app leaves the foreground?",
+      "budget": 180,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 107,
+      "correct_memory_returned": true,
+      "duration_ms": 28.86,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "en",
+      "query": "What happens to the encryption key when the app leaves the foreground?",
+      "budget": 500,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 285,
+      "correct_memory_returned": true,
+      "duration_ms": 29.03,
+      "estimated_tokens": 474
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "en",
+      "query": "What happens to the encryption key when the app leaves the foreground?",
+      "budget": 900,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 317,
+      "correct_memory_returned": true,
+      "duration_ms": 30.1,
+      "estimated_tokens": 526
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "pt",
+      "query": "Como a chave fica protegida ao sair do aplicativo e como recuperamos o acesso?",
+      "budget": 180,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 113,
+      "correct_memory_returned": true,
+      "duration_ms": 28.66,
+      "estimated_tokens": 178
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "pt",
+      "query": "Como a chave fica protegida ao sair do aplicativo e como recuperamos o acesso?",
+      "budget": 500,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 302,
+      "correct_memory_returned": true,
+      "duration_ms": 28.48,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Biometric vault key lifecycle",
+      "language": "pt",
+      "query": "Como a chave fica protegida ao sair do aplicativo e como recuperamos o acesso?",
+      "budget": 900,
+      "expected_facts": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "present": [
+        "Secure Enclave",
+        "90 seconds",
+        "recovery_phrase"
+      ],
+      "complete": true,
+      "tokens": 318,
+      "correct_memory_returned": true,
+      "duration_ms": 28.43,
+      "estimated_tokens": 527
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "en",
+      "query": "Can a locked phone notification reveal a private note?",
+      "budget": 180,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "complete": true,
+      "tokens": 94,
+      "correct_memory_returned": true,
+      "duration_ms": 26.82,
+      "estimated_tokens": 164
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "en",
+      "query": "Can a locked phone notification reveal a private note?",
+      "budget": 500,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "complete": true,
+      "tokens": 301,
+      "correct_memory_returned": true,
+      "duration_ms": 27.02,
+      "estimated_tokens": 499
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "en",
+      "query": "Can a locked phone notification reveal a private note?",
+      "budget": 900,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "complete": true,
+      "tokens": 302,
+      "correct_memory_returned": true,
+      "duration_ms": 27.44,
+      "estimated_tokens": 503
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "pt",
+      "query": "A notificação de um celular bloqueado consegue expor o conteúdo de uma anotação?",
+      "budget": 180,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 99,
+      "correct_memory_returned": false,
+      "duration_ms": 29.15,
+      "estimated_tokens": 171
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "pt",
+      "query": "A notificação de um celular bloqueado consegue expor o conteúdo de uma anotação?",
+      "budget": 500,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "complete": true,
+      "tokens": 286,
+      "correct_memory_returned": true,
+      "duration_ms": 29.1,
+      "estimated_tokens": 469
+    },
+    {
+      "project": "mobile-notes",
+      "case": "Notification privacy boundary",
+      "language": "pt",
+      "query": "A notificação de um celular bloqueado consegue expor o conteúdo de uma anotação?",
+      "budget": 900,
+      "expected_facts": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "present": [
+        "note_id",
+        "fetch_after_unlock",
+        "HTTP 403"
+      ],
+      "complete": true,
+      "tokens": 314,
+      "correct_memory_returned": true,
+      "duration_ms": 28.88,
+      "estimated_tokens": 514
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "en",
+      "query": "What prevents a deployment from modifying the wrong environment or destroying production?",
+      "budget": 180,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 90,
+      "correct_memory_returned": true,
+      "duration_ms": 32.02,
+      "estimated_tokens": 173
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "en",
+      "query": "What prevents a deployment from modifying the wrong environment or destroying production?",
+      "budget": 500,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 271,
+      "correct_memory_returned": true,
+      "duration_ms": 29.09,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "en",
+      "query": "What prevents a deployment from modifying the wrong environment or destroying production?",
+      "budget": 900,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 301,
+      "correct_memory_returned": true,
+      "duration_ms": 29.4,
+      "estimated_tokens": 546
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "pt",
+      "query": "Como impedimos uma implantação de mexer no ambiente errado ou apagar recursos de produção?",
+      "budget": 180,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 98,
+      "correct_memory_returned": true,
+      "duration_ms": 29.75,
+      "estimated_tokens": 178
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "pt",
+      "query": "Como impedimos uma implantação de mexer no ambiente errado ou apagar recursos de produção?",
+      "budget": 500,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 254,
+      "correct_memory_returned": true,
+      "duration_ms": 32.1,
+      "estimated_tokens": 463
+    },
+    {
+      "project": "infrastructure",
+      "case": "Environment state isolation",
+      "language": "pt",
+      "query": "Como impedimos uma implantação de mexer no ambiente errado ou apagar recursos de produção?",
+      "budget": 900,
+      "expected_facts": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "present": [
+        "separate bucket",
+        "DynamoDB",
+        "destroy_count"
+      ],
+      "complete": true,
+      "tokens": 282,
+      "correct_memory_returned": true,
+      "duration_ms": 29.44,
+      "estimated_tokens": 513
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "en",
+      "query": "When is a gradual release rolled back and where does traffic return?",
+      "budget": 180,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 108,
+      "correct_memory_returned": true,
+      "duration_ms": 28.05,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "en",
+      "query": "When is a gradual release rolled back and where does traffic return?",
+      "budget": 500,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 271,
+      "correct_memory_returned": true,
+      "duration_ms": 28.85,
+      "estimated_tokens": 485
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "en",
+      "query": "When is a gradual release rolled back and where does traffic return?",
+      "budget": 900,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 299,
+      "correct_memory_returned": true,
+      "duration_ms": 27.99,
+      "estimated_tokens": 535
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "pt",
+      "query": "Quando uma versão liberada aos poucos deve ser revertida e para onde volta o tráfego?",
+      "budget": 180,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 132,
+      "correct_memory_returned": true,
+      "duration_ms": 43.79,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "pt",
+      "query": "Quando uma versão liberada aos poucos deve ser revertida e para onde volta o tráfego?",
+      "budget": 500,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 286,
+      "correct_memory_returned": true,
+      "duration_ms": 33.85,
+      "estimated_tokens": 470
+    },
+    {
+      "project": "infrastructure",
+      "case": "Release health rollback",
+      "language": "pt",
+      "query": "Quando uma versão liberada aos poucos deve ser revertida e para onde volta o tráfego?",
+      "budget": 900,
+      "expected_facts": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "present": [
+        "5 percent",
+        "800 ms",
+        "stable_revision"
+      ],
+      "complete": true,
+      "tokens": 286,
+      "correct_memory_returned": true,
+      "duration_ms": 29.68,
+      "estimated_tokens": 470
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "en",
+      "query": "How can service credentials change without interrupting running workloads?",
+      "budget": 180,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 93,
+      "correct_memory_returned": true,
+      "duration_ms": 28.25,
+      "estimated_tokens": 170
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "en",
+      "query": "How can service credentials change without interrupting running workloads?",
+      "budget": 500,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 285,
+      "correct_memory_returned": true,
+      "duration_ms": 28.25,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "en",
+      "query": "How can service credentials change without interrupting running workloads?",
+      "budget": 900,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 285,
+      "correct_memory_returned": true,
+      "duration_ms": 28.16,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "pt",
+      "query": "Como trocamos credenciais sem interromper os serviços que já estão rodando?",
+      "budget": 180,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 98,
+      "correct_memory_returned": true,
+      "duration_ms": 29.24,
+      "estimated_tokens": 148
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "pt",
+      "query": "Como trocamos credenciais sem interromper os serviços que já estão rodando?",
+      "budget": 500,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 279,
+      "correct_memory_returned": true,
+      "duration_ms": 28.9,
+      "estimated_tokens": 491
+    },
+    {
+      "project": "infrastructure",
+      "case": "Service secret rotation",
+      "language": "pt",
+      "query": "Como trocamos credenciais sem interromper os serviços que já estão rodando?",
+      "budget": 900,
+      "expected_facts": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "present": [
+        "24 hours",
+        "15-minute",
+        "secret_mount"
+      ],
+      "complete": true,
+      "tokens": 279,
+      "correct_memory_returned": true,
+      "duration_ms": 29.0,
+      "estimated_tokens": 491
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "en",
+      "query": "How does the simulation correct a disagreement with the server?",
+      "budget": 180,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 83,
+      "correct_memory_returned": false,
+      "duration_ms": 31.93,
+      "estimated_tokens": 157
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "en",
+      "query": "How does the simulation correct a disagreement with the server?",
+      "budget": 500,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "complete": true,
+      "tokens": 283,
+      "correct_memory_returned": true,
+      "duration_ms": 27.68,
+      "estimated_tokens": 499
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "en",
+      "query": "How does the simulation correct a disagreement with the server?",
+      "budget": 900,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "complete": true,
+      "tokens": 283,
+      "correct_memory_returned": true,
+      "duration_ms": 28.62,
+      "estimated_tokens": 499
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "pt",
+      "query": "Como a simulação corrige uma divergência com o servidor sem perder os comandos do jogador?",
+      "budget": 180,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 94,
+      "correct_memory_returned": false,
+      "duration_ms": 30.44,
+      "estimated_tokens": 166
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "pt",
+      "query": "Como a simulação corrige uma divergência com o servidor sem perder os comandos do jogador?",
+      "budget": 500,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 284,
+      "correct_memory_returned": false,
+      "duration_ms": 30.43,
+      "estimated_tokens": 489
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Prediction reconciliation window",
+      "language": "pt",
+      "query": "Como a simulação corrige uma divergência com o servidor sem perder os comandos do jogador?",
+      "budget": 900,
+      "expected_facts": [
+        "8 frames",
+        "state_digest",
+        "confirmed_tick"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 284,
+      "correct_memory_returned": false,
+      "duration_ms": 30.26,
+      "estimated_tokens": 489
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "en",
+      "query": "How does the game recover if power is lost while saving?",
+      "budget": 180,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 108,
+      "correct_memory_returned": true,
+      "duration_ms": 27.69,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "en",
+      "query": "How does the game recover if power is lost while saving?",
+      "budget": 500,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 287,
+      "correct_memory_returned": true,
+      "duration_ms": 27.95,
+      "estimated_tokens": 497
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "en",
+      "query": "How does the game recover if power is lost while saving?",
+      "budget": 900,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 289,
+      "correct_memory_returned": true,
+      "duration_ms": 32.47,
+      "estimated_tokens": 502
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "pt",
+      "query": "Como recuperamos o progresso se faltar energia no meio de um salvamento?",
+      "budget": 180,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 110,
+      "correct_memory_returned": true,
+      "duration_ms": 43.94,
+      "estimated_tokens": 179
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "pt",
+      "query": "Como recuperamos o progresso se faltar energia no meio de um salvamento?",
+      "budget": 500,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 285,
+      "correct_memory_returned": true,
+      "duration_ms": 43.84,
+      "estimated_tokens": 497
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Save file recovery",
+      "language": "pt",
+      "query": "Como recuperamos o progresso se faltar energia no meio de um salvamento?",
+      "budget": 900,
+      "expected_facts": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "present": [
+        "save.tmp",
+        "CRC32",
+        "save.backup"
+      ],
+      "complete": true,
+      "tokens": 285,
+      "correct_memory_returned": true,
+      "duration_ms": 43.72,
+      "estimated_tokens": 497
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "en",
+      "query": "What resolves competing input devices and when can controls be remapped?",
+      "budget": 180,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 105,
+      "correct_memory_returned": true,
+      "duration_ms": 43.78,
+      "estimated_tokens": 178
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "en",
+      "query": "What resolves competing input devices and when can controls be remapped?",
+      "budget": 500,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 288,
+      "correct_memory_returned": true,
+      "duration_ms": 43.77,
+      "estimated_tokens": 498
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "en",
+      "query": "What resolves competing input devices and when can controls be remapped?",
+      "budget": 900,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 293,
+      "correct_memory_returned": true,
+      "duration_ms": 43.64,
+      "estimated_tokens": 511
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "pt",
+      "query": "Como resolvemos comandos conflitantes entre teclado e controle e quando podemos trocar as teclas?",
+      "budget": 180,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 101,
+      "correct_memory_returned": true,
+      "duration_ms": 45.27,
+      "estimated_tokens": 169
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "pt",
+      "query": "Como resolvemos comandos conflitantes entre teclado e controle e quando podemos trocar as teclas?",
+      "budget": 500,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 273,
+      "correct_memory_returned": true,
+      "duration_ms": 45.14,
+      "estimated_tokens": 469
+    },
+    {
+      "project": "multiplayer-game",
+      "case": "Controller input priority",
+      "language": "pt",
+      "query": "Como resolvemos comandos conflitantes entre teclado e controle e quando podemos trocar as teclas?",
+      "budget": 900,
+      "expected_facts": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "present": [
+        "monotonic_ns",
+        "last_input_device",
+        "ranked_match"
+      ],
+      "complete": true,
+      "tokens": 305,
+      "correct_memory_returned": true,
+      "duration_ms": 50.38,
+      "estimated_tokens": 527
+    }
+  ],
+  "summaries": [
+    {
+      "project": "commerce",
+      "budget": 180,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 628
+    },
+    {
+      "project": "commerce",
+      "budget": 500,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1757
+    },
+    {
+      "project": "commerce",
+      "budget": 900,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1854
+    },
+    {
+      "project": "data-pipeline",
+      "budget": 180,
+      "questions": 6,
+      "complete": 5,
+      "facts": 15,
+      "expected_facts": 18,
+      "tokens": 588
+    },
+    {
+      "project": "data-pipeline",
+      "budget": 500,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1666
+    },
+    {
+      "project": "data-pipeline",
+      "budget": 900,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1768
+    },
+    {
+      "project": "mobile-notes",
+      "budget": 180,
+      "questions": 6,
+      "complete": 4,
+      "facts": 12,
+      "expected_facts": 18,
+      "tokens": 618
+    },
+    {
+      "project": "mobile-notes",
+      "budget": 500,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1767
+    },
+    {
+      "project": "mobile-notes",
+      "budget": 900,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1844
+    },
+    {
+      "project": "infrastructure",
+      "budget": 180,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 619
+    },
+    {
+      "project": "infrastructure",
+      "budget": 500,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1646
+    },
+    {
+      "project": "infrastructure",
+      "budget": 900,
+      "questions": 6,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 18,
+      "tokens": 1732
+    },
+    {
+      "project": "multiplayer-game",
+      "budget": 180,
+      "questions": 6,
+      "complete": 4,
+      "facts": 12,
+      "expected_facts": 18,
+      "tokens": 601
+    },
+    {
+      "project": "multiplayer-game",
+      "budget": 500,
+      "questions": 6,
+      "complete": 5,
+      "facts": 15,
+      "expected_facts": 18,
+      "tokens": 1700
+    },
+    {
+      "project": "multiplayer-game",
+      "budget": 900,
+      "questions": 6,
+      "complete": 5,
+      "facts": 15,
+      "expected_facts": 18,
+      "tokens": 1739
+    }
+  ],
+  "checks": [
+    {
+      "project": "commerce",
+      "check": "incremental_index",
+      "passed": true
+    },
+    {
+      "project": "commerce",
+      "check": "restart_status",
+      "passed": true
+    },
+    {
+      "project": "commerce",
+      "check": "fresh_process_mcp_search",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "incremental_index",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "restart_status",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "fresh_process_mcp_search",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "incremental_index",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "restart_status",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "fresh_process_mcp_search",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "incremental_index",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "restart_status",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "fresh_process_mcp_search",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "incremental_index",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "restart_status",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "fresh_process_mcp_search",
+      "passed": true
+    },
+    {
+      "project": "commerce",
+      "check": "cross_project_isolation_12_queries",
+      "passed": true
+    },
+    {
+      "project": "commerce",
+      "check": "replacement_removes_stale_chunks",
+      "passed": true
+    },
+    {
+      "project": "commerce",
+      "check": "deleted_memory_removed",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "cross_project_isolation_12_queries",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "replacement_removes_stale_chunks",
+      "passed": true
+    },
+    {
+      "project": "data-pipeline",
+      "check": "deleted_memory_removed",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "cross_project_isolation_12_queries",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "replacement_removes_stale_chunks",
+      "passed": true
+    },
+    {
+      "project": "mobile-notes",
+      "check": "deleted_memory_removed",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "cross_project_isolation_12_queries",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "replacement_removes_stale_chunks",
+      "passed": true
+    },
+    {
+      "project": "infrastructure",
+      "check": "deleted_memory_removed",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "cross_project_isolation_12_queries",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "replacement_removes_stale_chunks",
+      "passed": true
+    },
+    {
+      "project": "multiplayer-game",
+      "check": "deleted_memory_removed",
+      "passed": true
+    }
+  ],
+  "refinement": {
+    "query": "Qual é a janela de rollback e como o cliente reconcilia seu estado com a simulação confirmada do servidor?",
+    "authored_after_initial_run": true,
+    "expected_facts": [
+      "8 frames",
+      "state_digest",
+      "confirmed_tick"
+    ],
+    "present": [
+      "8 frames",
+      "state_digest",
+      "confirmed_tick"
+    ],
+    "tokens": 289
+  }
+}

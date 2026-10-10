@@ -7,6 +7,7 @@ This project has three levels of evidence. **Measured retrieval payload** is the
 | Repository questions | `benchmarks/measure.py` | [`BENCHMARK_REPORT.md`](../BENCHMARK_REPORT.md) | Ten questions, selected source excerpts, multiple budgets, exact fact strings. |
 | Growing synthetic corpus | `benchmarks/growth.py --profile full` | [`GROWTH_REPORT.md`](../GROWTH_REPORT.md) | 4 to 10,000 documents, four facts, targeted and broad `rg`, new-process recall, latency. |
 | Query paraphrases | `benchmarks/robustness.py` | [`ROBUSTNESS_REPORT.md`](../ROBUSTNESS_REPORT.md) | Twelve English/Portuguese questions, two budgets, first-result and returned-context accuracy. |
+| Different project domains | `benchmarks/cross_project.py` | [`CROSS_PROJECT_REPORT.md`](../CROSS_PROJECT_REPORT.md) | Five independent synthetic projects, 30 questions, three budgets, isolation, updates, deletion and fresh-process MCP. |
 | Giant-project arithmetic | `benchmarks/project_scenarios.py` | [`SCENARIOS.md`](SCENARIOS.md) | 20k to 1M documents under stated retrieval, MCP, session, and common-input assumptions. |
 | Paired builder traces | `benchmarks/compare_codex_traces.py` | JSON output when traces are supplied | Actual input, cache, output, and total counters for provided comparable runs. |
 
