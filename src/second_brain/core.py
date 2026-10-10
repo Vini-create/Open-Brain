@@ -15,6 +15,50 @@ from .storage import connect, index, stats, vector_scores
 CONTEXT_UPDATE_MARKER = "<!-- second-brain-context-update:v2 -->"
 BOOTSTRAP_MARKER = "<!-- second-brain-bootstrap:v1 -->"
 COVERAGE_MARKER = "<!-- second-brain-project-coverage:v1 -->"
+DETAIL_MARKER = "<!-- second-brain-detail-coverage:v1 -->"
+DETAIL_INSTRUCTIONS = f"""## Preserve implementation details
+
+{DETAIL_MARKER}
+
+Follow the detail checklist in `.brain/PROJECT_COVERAGE.md`: keep contracts,
+failure cases and validation independently searchable. For a broad question,
+split it into subquestions when the bounded response omits facts. Never assume
+that a summary or a successful search establishes complete source coverage.
+"""
+DETAIL_GUIDE = f"""## Detail coverage checklist
+
+{DETAIL_MARKER}
+
+For each maintained subsystem, inspect the implementation and relevant tests.
+Save focused memories with descriptive titles and plain-language descriptions
+of what a future user might ask, rather than only code identifiers. Cover:
+
+- Entry points, inputs/outputs, API or event contracts and source paths.
+- State transitions and the steps connecting a request to its final outcome.
+- Persistence, schema, defaults, configuration and lifecycle after restart.
+- Permissions, invariants, error handling, retries, cancellation and edge cases.
+- Dependencies, cross-module relationships, reasons for decisions and limits.
+- Exact validation commands, tests actually run, known failures and open work.
+
+Use one independently answerable subject per memory. Keep short paragraphs or
+bullets; separate large flows into linked memories rather than hiding a detail
+at the end of a general overview. Include concrete values and identifiers,
+the source paths checked and the conditions under which each fact holds.
+Do not invent a reason where none is documented. Never store credentials.
+
+Maintain a module checklist in the "Memory coverage" memory with sources
+inspected, details captured, queries checked and unresolved gaps. On changes,
+update the affected contract and related flow/rule memories, including removed
+or invalidated facts. A new module adds a checklist entry. The agent must do
+this work: `brain init` does not read source files or autonomously learn code.
+
+Check retrieval using paraphrased questions without filenames or function
+names. Verify the required facts, not just a matching title. If a 500-token
+response misses part of a multi-part question, ask focused subquestions or
+raise the budget; tags/types are optional refinements. Read source to settle
+missing or conflicting details, then save the verified knowledge. Larger
+storage does not guarantee coverage or fitting every answer into one response.
+"""
 BOOTSTRAP_INSTRUCTIONS = f"""## First use in a new project
 
 {BOOTSTRAP_MARKER}
@@ -98,7 +142,7 @@ implementation details in source code before editing or testing. Keep
 manual Markdown edits.
 
 Search before rediscovering. Remember after learning.
-""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS
+""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS + "\n" + DETAIL_INSTRUCTIONS
 
 
 def _ensure_agent_instructions(path: Path) -> None:
@@ -110,6 +154,7 @@ def _ensure_agent_instructions(path: Path) -> None:
         (BOOTSTRAP_MARKER, BOOTSTRAP_INSTRUCTIONS),
         (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS),
         (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
+        (DETAIL_MARKER, DETAIL_INSTRUCTIONS),
     ) if marker not in existing]
     if additions:
         path.write_text(existing.rstrip("\n") + "\n\n" + "\n\n".join(additions), encoding="utf-8")
@@ -121,6 +166,11 @@ PROJECT_TEMPLATES = {
 }
 
 CHARS_PER_TOKEN = 3  # Conservative local estimate for Portuguese Markdown.
+STOP_WORDS = set("""the and for with from this that what where when how which into
+are was were have has does can should after before about project please
+como onde quando quais qual para por com uma uns umas dos das aos que
+isso esse essa este esta pelo pela ficam fazer devo depois antes projeto
+seus suas mais tambem sobre entre sem ao seu sua ele ela nao nos nas""".split())
 SEARCH_ALIASES = (
     ("embedding", {"embed", "vetor"}),
     ("credential", {"chave", "key", "crede"}),
@@ -151,7 +201,10 @@ def initialize(root: Path, idea: str | None = None) -> dict:
     _ensure_agent_instructions(brain / "AGENT_BRAIN.md")
     coverage_guide = brain / "PROJECT_COVERAGE.md"
     if not coverage_guide.exists():
-        coverage_guide.write_text(PROJECT_COVERAGE_GUIDE, encoding="utf-8")
+        coverage_guide.write_text(PROJECT_COVERAGE_GUIDE + "\n" + DETAIL_GUIDE, encoding="utf-8")
+    elif DETAIL_MARKER not in coverage_guide.read_text(encoding="utf-8"):
+        with coverage_guide.open("a", encoding="utf-8") as file:
+            file.write("\n" + DETAIL_GUIDE)
     readme = brain / "README.md"
     if not readme.exists():
         readme.write_text("# Local Second Brain\n\nDescribe this project in `project/idea.md`, "
@@ -282,7 +335,7 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
 
 
 def _tokens(text: str) -> set[str]:
-    return {word for word in _normalized(text).split() if len(word) > 2}
+    return {word for word in _normalized(text).split() if len(word) > 2 and word not in STOP_WORDS}
 
 
 def _word_root(word: str) -> str:
@@ -302,6 +355,21 @@ def _recency(timestamp: str) -> float:
         return 1 / (1 + age / 180)
     except (ValueError, TypeError):
         return 0.5
+
+
+def _excerpt(source: str, available: int, query_terms: set[str]) -> str:
+    if len(source) <= available:
+        return source
+    roots = {_word_root(term) for term in query_terms}
+    starts = [0] + [match.end() for match in re.finditer(r"\n+|[.!?]\s+(?=[A-ZÀ-Ý])", source)]
+    def relevance(start):
+        terms = _tokens(source[start:start + available])
+        return (len(query_terms & terms), len(roots & {_word_root(term) for term in terms}), -start)
+    start = max(starts, key=relevance)
+    snippet = source[start:start + available].strip()
+    if start + available < len(source):
+        snippet = snippet.rsplit(" ", 1)[0].rstrip() + "…"
+    return snippet
 
 
 def search(root: Path, query: str, *, types: list[str] | None = None, tags: list[str] | None = None,
@@ -328,6 +396,12 @@ def search(root: Path, query: str, *, types: list[str] | None = None, tags: list
     finally:
         db.close()
     query_terms = _tokens(query)
+    # E5 cosine scores occupy a narrow band. Put relevance on the same scale
+    # as keyword coverage so metadata does not overpower semantic differences.
+    eligible = [row for row in rows if (not types or row['type'] in types)
+                and (not tags or set(tags).issubset(json.loads(row['tags'])))]
+    values = [similarities.get(row['chunk_id'], 0.0) for row in eligible]
+    floor, ceiling = (min(values), max(values)) if values else (0.0, 0.0)
     selected = {}
     weights = retrieval
     weight_sum = sum(weights[f"{name}_weight"] for name in ("vector", "keyword", "importance", "recency"))
@@ -345,7 +419,8 @@ def search(root: Path, query: str, *, types: list[str] | None = None, tags: list
         if _normalized(query) in _normalized(row["title"] + " " + row["chunk"]):
             keyword = 1.0
         score = (
-            weights["vector_weight"] * similarities.get(row["chunk_id"], 0.0)
+            weights["vector_weight"] * ((similarities.get(row["chunk_id"], 0.0) - floor) / (ceiling - floor)
+                                        if ceiling > floor else similarities.get(row["chunk_id"], 0.0))
             + weights["keyword_weight"] * keyword
             + weights["importance_weight"] * row["importance"]
             + weights["recency_weight"] * _recency(row["updated_at"])
@@ -361,15 +436,19 @@ def search(root: Path, query: str, *, types: list[str] | None = None, tags: list
     remaining = token_budget * CHARS_PER_TOKEN - len(heading)
     results = []
     context = heading
-    for item in ranked[:limit]:
+    candidates = ranked[:limit]
+    for position, item in enumerate(candidates):
         prefix = f"\n[{item['type']} | {item['score']:.2f}]\n{item['title']}\n"
         available = remaining - len(prefix) - 2
         if available < 24:
             break
         source = re.sub(r"^# [^\n]+\n*", "", item["content"]).strip() or item["content"]
-        snippet = source[:available]
-        if len(snippet) < len(source):
-            snippet = snippet.rsplit(" ", 1)[0].rstrip() + "…"
+        # Reserve space for up to three distinct memories. Short records release
+        # their unused share; long summaries cannot swallow the entire response.
+        slots = min(3 if token_budget >= 350 else 1, len(candidates)) - position
+        if slots > 1:
+            available = max(24, (remaining - slots * (len(prefix) + 2)) // slots)
+        snippet = _excerpt(source, available, query_terms)
         context += prefix + snippet + "\n"
         context = context[:token_budget * CHARS_PER_TOKEN]
         remaining = token_budget * CHARS_PER_TOKEN - len(context)

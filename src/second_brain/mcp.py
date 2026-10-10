@@ -7,6 +7,7 @@ from pathlib import Path
 from .config import load_config
 from .core import (AGENT_INSTRUCTIONS, BOOTSTRAP_INSTRUCTIONS, BOOTSTRAP_MARKER,
                    CONTEXT_UPDATE_INSTRUCTIONS, CONTEXT_UPDATE_MARKER, remember, search)
+from .core import COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS, DETAIL_MARKER, DETAIL_INSTRUCTIONS
 from .storage import stats
 
 TOOLS = [
@@ -48,6 +49,10 @@ def serve(root: Path) -> None:
         instructions = instructions.rstrip("\n") + "\n\n" + BOOTSTRAP_INSTRUCTIONS
     if CONTEXT_UPDATE_MARKER not in instructions:
         instructions = instructions.rstrip("\n") + "\n\n" + CONTEXT_UPDATE_INSTRUCTIONS
+    for marker, section in ((COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS),
+                            (DETAIL_MARKER, DETAIL_INSTRUCTIONS)):
+        if marker not in instructions:
+            instructions = instructions.rstrip("\n") + "\n\n" + section
     for line in sys.stdin:
         try:
             message = json.loads(line)

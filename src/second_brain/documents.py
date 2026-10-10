@@ -74,7 +74,7 @@ def markdown_paths(root: Path):
             yield from sorted(folder.rglob("*.md"))
 
 
-def chunks(body: str, max_chars: int = 1300, overlap: int = 160) -> list[str]:
+def chunks(body: str, max_chars: int = 850, overlap: int = 100) -> list[str]:
     if len(body) <= max_chars:
         return [body]
     result = []
@@ -83,10 +83,17 @@ def chunks(body: str, max_chars: int = 1300, overlap: int = 160) -> list[str]:
         end = min(position + max_chars, len(body))
         if end < len(body):
             boundary = body.rfind("\n\n", position + max_chars // 2, end)
+            if boundary <= position:
+                sentences = list(re.finditer(r"[.!?](?=\s+[A-ZÀ-Ý])|\n", body[position + max_chars // 2:end]))
+                if sentences:
+                    boundary = position + max_chars // 2 + sentences[-1].end()
             if boundary > position:
                 end = boundary
         result.append(body[position:end].strip())
         if end == len(body):
             break
-        position = max(position + 1, end - overlap)
+        # Overlap at a word boundary, never in the middle of an identifier.
+        start = max(position + 1, end - overlap)
+        boundary = body.find(" ", start, end)
+        position = boundary + 1 if boundary >= 0 else start
     return [item for item in result if item]

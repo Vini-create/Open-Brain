@@ -1,0 +1,812 @@
+{
+  "engine": "before-4045ab8",
+  "corpus_memories": 47,
+  "tokenizer": "cl100k_base (tiktoken)",
+  "model": "intfloat/multilingual-e5-small",
+  "rows": [
+    {
+      "case": "storage",
+      "query": "Where does conversation history live and when is it removed?",
+      "budget": 180,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 99,
+      "titles": [
+        "Project overview",
+        "Project idea"
+      ],
+      "duration_ms": 211.87
+    },
+    {
+      "case": "storage",
+      "query": "Where does conversation history live and when is it removed?",
+      "budget": 500,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 266,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview"
+      ],
+      "duration_ms": 81.94
+    },
+    {
+      "case": "storage",
+      "query": "Where does conversation history live and when is it removed?",
+      "budget": 900,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 382,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview",
+        "Module 18 integration overview"
+      ],
+      "duration_ms": 135.01
+    },
+    {
+      "case": "storage",
+      "query": "What survives closing the app, and how long is chat retained?",
+      "budget": 180,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 101,
+      "titles": [
+        "Project overview",
+        "Project idea"
+      ],
+      "duration_ms": 130.74
+    },
+    {
+      "case": "storage",
+      "query": "What survives closing the app, and how long is chat retained?",
+      "budget": 500,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 268,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview"
+      ],
+      "duration_ms": 358.08
+    },
+    {
+      "case": "storage",
+      "query": "What survives closing the app, and how long is chat retained?",
+      "budget": 900,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 384,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview",
+        "Module 6 integration overview"
+      ],
+      "duration_ms": 83.56
+    },
+    {
+      "case": "storage",
+      "query": "How are old conversations stored and cleaned up?",
+      "budget": 180,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 98,
+      "titles": [
+        "Project overview",
+        "Project idea"
+      ],
+      "duration_ms": 65.76
+    },
+    {
+      "case": "storage",
+      "query": "How are old conversations stored and cleaned up?",
+      "budget": 500,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 267,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview"
+      ],
+      "duration_ms": 81.69
+    },
+    {
+      "case": "storage",
+      "query": "How are old conversations stored and cleaned up?",
+      "budget": 900,
+      "facts": [
+        "SQLite",
+        "workspace.db",
+        "45 days"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 380,
+      "titles": [
+        "Project overview",
+        "Project idea",
+        "Goals",
+        "Module 1 integration overview",
+        "Module 36 integration overview"
+      ],
+      "duration_ms": 109.35
+    },
+    {
+      "case": "permissions",
+      "query": "Can a tool open a folder outside the workspace?",
+      "budget": 180,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 104,
+      "titles": [
+        "External folder authorization",
+        "Project overview"
+      ],
+      "duration_ms": 91.34
+    },
+    {
+      "case": "permissions",
+      "query": "Can a tool open a folder outside the workspace?",
+      "budget": 500,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 270,
+      "titles": [
+        "External folder authorization",
+        "Project overview",
+        "Module 9 integration overview",
+        "Module 0 integration overview"
+      ],
+      "duration_ms": 101.43
+    },
+    {
+      "case": "permissions",
+      "query": "Can a tool open a folder outside the workspace?",
+      "budget": 900,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 373,
+      "titles": [
+        "External folder authorization",
+        "Project overview",
+        "Module 9 integration overview",
+        "Module 0 integration overview",
+        "Module 31 integration overview"
+      ],
+      "duration_ms": 101.25
+    },
+    {
+      "case": "permissions",
+      "query": "How is permission granted to read files beyond the project directory?",
+      "budget": 180,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 103,
+      "titles": [
+        "External folder authorization",
+        "Project overview"
+      ],
+      "duration_ms": 92.47
+    },
+    {
+      "case": "permissions",
+      "query": "How is permission granted to read files beyond the project directory?",
+      "budget": 500,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 266,
+      "titles": [
+        "External folder authorization",
+        "Project overview",
+        "Project idea",
+        "Module 27 integration overview"
+      ],
+      "duration_ms": 80.93
+    },
+    {
+      "case": "permissions",
+      "query": "How is permission granted to read files beyond the project directory?",
+      "budget": 900,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 361,
+      "titles": [
+        "External folder authorization",
+        "Project overview",
+        "Project idea",
+        "Module 27 integration overview",
+        "Module 25 integration overview"
+      ],
+      "duration_ms": 84.29
+    },
+    {
+      "case": "permissions",
+      "query": "What stops an approved tool from accessing other folders?",
+      "budget": 180,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 104,
+      "titles": [
+        "External folder authorization",
+        "Module 33 integration overview"
+      ],
+      "duration_ms": 83.07
+    },
+    {
+      "case": "permissions",
+      "query": "What stops an approved tool from accessing other folders?",
+      "budget": 500,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 270,
+      "titles": [
+        "External folder authorization",
+        "Module 33 integration overview",
+        "Module 31 integration overview",
+        "Module 27 integration overview"
+      ],
+      "duration_ms": 83.96
+    },
+    {
+      "case": "permissions",
+      "query": "What stops an approved tool from accessing other folders?",
+      "budget": 900,
+      "facts": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "present": [
+        "single-use",
+        "exact path",
+        "human approval"
+      ],
+      "complete": true,
+      "tokens": 387,
+      "titles": [
+        "External folder authorization",
+        "Module 33 integration overview",
+        "Module 31 integration overview",
+        "Module 27 integration overview",
+        "Module 23 integration overview"
+      ],
+      "duration_ms": 84.84
+    },
+    {
+      "case": "transport",
+      "query": "How does the desktop screen talk to the backend and receive live changes?",
+      "budget": 180,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 101,
+      "titles": [
+        "Project overview",
+        "Goals"
+      ],
+      "duration_ms": 85.91
+    },
+    {
+      "case": "transport",
+      "query": "How does the desktop screen talk to the backend and receive live changes?",
+      "budget": 500,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 269,
+      "titles": [
+        "Project overview",
+        "Goals",
+        "Module 1 integration overview",
+        "Project idea"
+      ],
+      "duration_ms": 109.37
+    },
+    {
+      "case": "transport",
+      "query": "How does the desktop screen talk to the backend and receive live changes?",
+      "budget": 900,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 385,
+      "titles": [
+        "Project overview",
+        "Goals",
+        "Module 1 integration overview",
+        "Project idea",
+        "Module 11 integration overview"
+      ],
+      "duration_ms": 84.28
+    },
+    {
+      "case": "transport",
+      "query": "How do requests and streaming updates reach the user interface?",
+      "budget": 180,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 96,
+      "titles": [
+        "Module 37 integration overview"
+      ],
+      "duration_ms": 84.43
+    },
+    {
+      "case": "transport",
+      "query": "How do requests and streaming updates reach the user interface?",
+      "budget": 500,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 261,
+      "titles": [
+        "Module 37 integration overview",
+        "Module 1 integration overview",
+        "Module 33 integration overview"
+      ],
+      "duration_ms": 80.33
+    },
+    {
+      "case": "transport",
+      "query": "How do requests and streaming updates reach the user interface?",
+      "budget": 900,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 410,
+      "titles": [
+        "Module 37 integration overview",
+        "Module 1 integration overview",
+        "Module 33 integration overview",
+        "Goals",
+        "Module 21 integration overview"
+      ],
+      "duration_ms": 97.11
+    },
+    {
+      "case": "transport",
+      "query": "How is the desktop connection established and kept up to date?",
+      "budget": 180,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 99,
+      "titles": [
+        "Goals",
+        "Project overview"
+      ],
+      "duration_ms": 84.88
+    },
+    {
+      "case": "transport",
+      "query": "How is the desktop connection established and kept up to date?",
+      "budget": 500,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 267,
+      "titles": [
+        "Goals",
+        "Project overview",
+        "Project idea",
+        "Module 16 integration overview"
+      ],
+      "duration_ms": 83.47
+    },
+    {
+      "case": "transport",
+      "query": "How is the desktop connection established and kept up to date?",
+      "budget": 900,
+      "facts": [
+        "127.0.0.1",
+        "SSE",
+        "/health"
+      ],
+      "present": [],
+      "complete": false,
+      "tokens": 383,
+      "titles": [
+        "Goals",
+        "Project overview",
+        "Project idea",
+        "Module 16 integration overview",
+        "Module 15 integration overview"
+      ],
+      "duration_ms": 111.42
+    },
+    {
+      "case": "validation",
+      "query": "Which checks should I run after modifying the server or web screen?",
+      "budget": 180,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 106,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 37 integration overview"
+      ],
+      "duration_ms": 115.09
+    },
+    {
+      "case": "validation",
+      "query": "Which checks should I run after modifying the server or web screen?",
+      "budget": 500,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 273,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 37 integration overview",
+        "Project overview",
+        "Module 33 integration overview"
+      ],
+      "duration_ms": 116.91
+    },
+    {
+      "case": "validation",
+      "query": "Which checks should I run after modifying the server or web screen?",
+      "budget": 900,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 386,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 37 integration overview",
+        "Project overview",
+        "Module 33 integration overview",
+        "Module 17 integration overview"
+      ],
+      "duration_ms": 105.16
+    },
+    {
+      "case": "validation",
+      "query": "How do I test both sides of the app and verify the production build?",
+      "budget": 180,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 109,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Project overview"
+      ],
+      "duration_ms": 107.47
+    },
+    {
+      "case": "validation",
+      "query": "How do I test both sides of the app and verify the production build?",
+      "budget": 500,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 273,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Project overview",
+        "Project idea",
+        "Module 2 integration overview"
+      ],
+      "duration_ms": 81.3
+    },
+    {
+      "case": "validation",
+      "query": "How do I test both sides of the app and verify the production build?",
+      "budget": 900,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 374,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Project overview",
+        "Project idea",
+        "Module 2 integration overview",
+        "Module 19 integration overview"
+      ],
+      "duration_ms": 93.31
+    },
+    {
+      "case": "validation",
+      "query": "What commands validate backend changes and the frontend?",
+      "budget": 180,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 105,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 11 integration overview"
+      ],
+      "duration_ms": 90.09
+    },
+    {
+      "case": "validation",
+      "query": "What commands validate backend changes and the frontend?",
+      "budget": 500,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 273,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 11 integration overview",
+        "Module 22 integration overview",
+        "Module 23 integration overview"
+      ],
+      "duration_ms": 86.85
+    },
+    {
+      "case": "validation",
+      "query": "What commands validate backend changes and the frontend?",
+      "budget": 900,
+      "facts": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "present": [
+        "go test ./...",
+        "npm --prefix web test",
+        "npm --prefix web run build"
+      ],
+      "complete": true,
+      "tokens": 396,
+      "titles": [
+        "Backend and frontend validation commands",
+        "Module 11 integration overview",
+        "Module 22 integration overview",
+        "Module 23 integration overview",
+        "Module 25 integration overview"
+      ],
+      "duration_ms": 79.27
+    }
+  ],
+  "summaries": [
+    {
+      "budget": 180,
+      "questions": 12,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 36,
+      "tokens": 1225
+    },
+    {
+      "budget": 500,
+      "questions": 12,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 36,
+      "tokens": 3223
+    },
+    {
+      "budget": 900,
+      "questions": 12,
+      "complete": 6,
+      "facts": 18,
+      "expected_facts": 36,
+      "tokens": 4601
+    }
+  ]
+}

@@ -84,6 +84,18 @@ Each project has its own `.brain/` with its own Markdown, SQLite index, history,
 
 For an established codebase, ask the agent to [audit memory coverage](docs/INSTALLATION.md#adopt-an-existing-project) after the initial summaries. Save focused knowledge about major modules, critical flows, constraints and active work, then check that specific searches recover the expected facts. Four records alone do not establish readiness. The generated protocol includes this audit even when the Brain already has indexed summaries; ongoing changes update the relevant memories incrementally.
 
+The coverage checklist also asks the agent to preserve **contracts, state
+transitions, permissions, failure cases, exact commands and source paths** in
+focused memories. Search uses smaller passages and reserves room for multiple
+memories at normal budgets, helping details compete with general summaries.
+See the [retrieval quality comparison](RETRIEVAL_QUALITY_REPORT.md) for measured
+results and remaining gaps. No tool automatically understands every source
+file: adoption requires a source audit and later changes require memory updates.
+Run `brain init` again in an existing project after upgrading to add the new
+checklist without replacing your memories or custom instructions. The next
+index/search refreshes the older passage format locally; restart a running MCP
+client to load the updated server.
+
 Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/index/brain.db` is a rebuildable SQLite + `sqlite-vec` index. `brain rebuild` reconstructs it from Markdown; unchanged files are not re-embedded by `brain index`. The product does **not** automatically read every source file, watch Git, or save every conversation. An agent must still inspect code before editing and validate its work. See [architecture](docs/ARCHITECTURE.md).
 
 ## MCP integration

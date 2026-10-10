@@ -51,3 +51,10 @@ The current hybrid ranker scores every chunk. Indexing time and search latency c
 ## What would prove end-to-end savings
 
 Use two equivalent checkouts and the same model, client, tasks, and fresh-session policy. Preload Brain memories in one checkout. Verify both runs finish the tasks to equivalent quality. Collect actual token usage per turn, including cached input, output, and reasoning when available, plus file reads, MCP calls, elapsed time, and memory-authoring effort. Repeat across projects and task types. `benchmarks/compare_codex_traces.py` computes paired totals from supplied JSONL traces; it does not run a builder or invent usage. Until such a study exists, the public claim is **reduced retrieval context in the measured scenarios**, not a universal reduction in LLM bills.
+## Current retrieval quality
+
+The [paired retrieval comparison](../RETRIEVAL_QUALITY_REPORT.md) measures
+the newer search implementation against `4045ab8` with identical authored
+memories, queries and budgets. It measures fact recovery and actual response
+tokens. Older savings reports retain their historical engine measurements;
+they should not be read as measurements of the updated retrieval engine.

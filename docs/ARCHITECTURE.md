@@ -58,6 +58,29 @@ your-project/
 4. The MCP server exposes the same search and write operations to a compatible client. It has no network listener or LLM dependency.
 5. `brain init`, `brain remember`, and any indexing change regenerate `.brain/map.html`. `brain map` refreshes it directly from canonical Markdown without loading the embedding model. The page embeds its own data and scripts and does not contact a server. It shows shared-tag and explicit-`related` links; hub lines mean project membership, not semantic similarity.
 
+### Detailed retrieval
+
+Passages have a maximum of 850 characters with approximately 100 characters
+of overlap, preferring paragraph/sentence boundaries. Embeddings include the
+memory title and tags. A versioned index format re-embeds existing Markdown
+once after an upgrade; subsequent indexing remains incremental. Markdown and
+user instructions are preserved.
+
+English and Portuguese common words are excluded from keyword coverage. Vector
+scores are scaled between the lowest and highest cosine similarities in the
+filtered candidate set before combining the configured ranking weights. Scores
+are relative rankings within a query, not confidence probabilities and not
+comparable across queries or corpora. With budgets of at least 350 estimated
+tokens, space is reserved for up to three memories; shorter budgets favor the
+first result. Truncated excerpts prefer sentence windows matching the query
+instead of always returning the document introduction.
+
+Search still returns the best passage per document and does not perform an
+LLM reranking step. Multi-part questions can require multiple focused searches.
+The agent's detailed coverage checklist records contracts, state transitions,
+failure cases, source paths and validation, then checks paraphrased retrieval.
+Saving a general overview alone does not capture these details automatically.
+
 The default model is `intfloat/multilingual-e5-small` with 384-dimensional vectors. Only `brain model download` is allowed to fetch model weights. Normal indexing and search request local cached files. No project content is sent to an embedding API.
 
 ## Index choice and scaling

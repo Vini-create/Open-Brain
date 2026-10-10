@@ -23,6 +23,8 @@ CREATE INDEX IF NOT EXISTS documents_type ON documents(type);
 CREATE TABLE IF NOT EXISTS index_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
+INDEX_FORMAT = "2"  # Smaller passages; upgrades re-embed unchanged Markdown once.
+
 
 def db_path(root: Path, config: dict) -> Path:
     relative = Path(config["storage"]["database"])
@@ -81,6 +83,8 @@ def index(root: Path, config: dict, *, rebuild: bool = False) -> dict:
     db = connect(root, config)
     try:
         known = {row["path"]: row for row in db.execute("SELECT id, path, hash FROM documents")}
+        format_row = db.execute("SELECT value FROM index_meta WHERE key='format'").fetchone()
+        upgrade = format_row is None or format_row[0] != INDEX_FORMAT
         seen = set()
         changed = []
         for path in markdown_paths(root):
@@ -89,13 +93,13 @@ def index(root: Path, config: dict, *, rebuild: bool = False) -> dict:
             if doc is None:
                 continue
             seen.add(relative)
-            if relative not in known or known[relative]["hash"] != doc["hash"]:
+            if upgrade or relative not in known or known[relative]["hash"] != doc["hash"]:
                 changed.append(doc)
         count_chunks = 0
         for doc in changed:
             meta = doc["metadata"]
             doc_chunks = chunks(doc["body"])
-            texts = [f"{meta['title']}\n{chunk}" for chunk in doc_chunks]
+            texts = [f"{meta['title']}\nTags: {', '.join(meta['tags'])}\n{chunk}" for chunk in doc_chunks]
             vectors = embed(texts, config)
             old = known.get(doc["path"])
             with db:
@@ -128,6 +132,8 @@ def index(root: Path, config: dict, *, rebuild: bool = False) -> dict:
                 db.executemany("DELETE FROM documents WHERE id=?", [(key,) for key in stale])
         result = {"changed_documents": len(changed), "embedded_chunks": count_chunks,
                   "deleted_documents": len(stale), "unchanged_documents": len(seen) - len(changed)}
+        with db:
+            db.execute("INSERT OR REPLACE INTO index_meta(key,value) VALUES('format',?)", (INDEX_FORMAT,))
         if changed or stale or not (root / ".brain" / "map.html").exists():
             from .visualization import write_map
             write_map(root)
