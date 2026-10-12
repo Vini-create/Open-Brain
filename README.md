@@ -19,6 +19,45 @@ Four questions in one session, with **one copy of the agent instructions and MCP
 
 The broad baseline is actual `rg` path discovery plus one selected file for each question. Its uncapped output becomes too large for a practical prompt. The 8k/question column **simulates a cap on that measured output**; it does not show whether a truncated search still finds the right file. A precise keyword search used only **1,115 tokens** across the same four questions and beat Brain after its setup cost. The [growth report](GROWTH_REPORT.md) gives the raw method, full measurements, and limits; [benchmarking](docs/BENCHMARKS.md) explains how to interpret the claims.
 
+## Brain Engine: shared service for Creare, Jarvis and coding agents
+
+Open Brain also runs as the **Brain Engine** of the Creare · Brain · Jarvis ecosystem
+(see `~/create-hack/ARCHITECTURE.md`). The same package provides:
+
+- `brain_engine` — a FastAPI service on PostgreSQL + pgvector (schema `brain`) with
+  **project memory** (typed records: decisions, architecture, components, features, bugs,
+  requirements, risks…; versions, relations, events) kept separate from a reusable
+  **knowledge base** (heading-aware chunks of your technical material).
+- Intent-based hybrid retrieval: local intent classification, query expansion,
+  pgvector HNSW + Postgres full-text, RRF fusion, explicit boosts, MMR, token budgets and
+  citations. Embeddings stay local (`multilingual-e5-small`, CPU).
+- MCP over stdio (`brain mcp`) **and** Streamable HTTP (`POST /mcp`), one tool contract:
+  `brain_context`, `brain_relevant_context`, `brain_search`, `brain_knowledge`, `brain_get`,
+  `brain_list`, `brain_record`, `brain_update_status`, `brain_log_event`, `brain_relate`,
+  `brain_status` (+ V1 `brain_remember`).
+- LLM usage/cost telemetry per workflow and component (`brain cost`).
+
+```bash
+pip install -e ".[server,test]"                 # server dependencies
+BRAIN_DATABASE_URL=postgresql://… brain serve   # or: docker compose up (in create-hack)
+brain kb ingest ~/AI-engineering-material/AI-Engineering-Senior --collection ai-engineering --direct
+
+cd your-project
+brain link my-project --create                  # .brain/ becomes a mirror of the service project
+brain context --task "implement the retrieval layer"
+brain decisions | features | bugs | architecture
+brain feature "Retrieval layer" --status in_progress
+brain sync                                       # send offline writes, refresh mirror + BRAIN.md
+```
+
+Each project can receive its own access token (`POST /v1/projects/{p}/access-tokens`,
+stored as a hash). A project token reaches only its project, its MCP and the knowledge base; the
+admin token (`BRAIN_API_TOKEN`) manages everything. `brain link` reads the project token from
+`.brain/credentials.json` when present.
+
+A linked project keeps working offline: reads fall back to the local mirror and writes
+queue in `.brain/outbox.jsonl` until `brain sync`. Unlinked projects behave exactly as V1.
+
 ## Install once, then use it in any project
 
 On Linux, install Git, Bash and Python 3.10+ with `venv` (Python 3.12/3.13 is a conservative choice). Clone the repository into your home directory and run the installer once:

@@ -31,6 +31,15 @@ TYPES = {
     "rationale": "rationale",
     "next-step": "next-steps",
 }
+# Folders created by `brain init`. Linked projects also mirror the richer server ontology.
+CORE_TYPES = tuple(TYPES)
+TYPES.update({
+    "idea": "ideas", "objective": "objectives", "problem": "problems", "actor": "actors",
+    "hypothesis": "hypotheses", "question": "questions", "alternative": "alternatives",
+    "tradeoff": "tradeoffs", "requirement": "requirements", "component": "components", "risk": "risks",
+    "state": "state", "experiment": "experiments", "result": "results", "learning": "learnings",
+    "implementation": "implementations", "spec": "specs", "doc": "docs",
+})
 
 
 def load_config(root: Path) -> dict:

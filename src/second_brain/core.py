@@ -7,7 +7,7 @@ import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .config import DEFAULT_CONFIG, TYPES, load_config
+from .config import CORE_TYPES, DEFAULT_CONFIG, TYPES, load_config
 from .documents import document_id, now, parse, render
 from .embedding import embed
 from .storage import connect, index, stats, vector_scores
@@ -165,26 +165,15 @@ PROJECT_TEMPLATES = {
     "goals.md": "# Goals\n\n## Current priorities\n\n## Out of scope\n\n## Next steps\n",
 }
 
-CHARS_PER_TOKEN = 3  # Conservative local estimate for Portuguese Markdown.
-STOP_WORDS = set("""the and for with from this that what where when how which into
-are was were have has does can should after before about project please
-como onde quando quais qual para por com uma uns umas dos das aos que
-isso esse essa este esta pelo pela ficam fazer devo depois antes projeto
-seus suas mais tambem sobre entre sem ao seu sua ele ela nao nos nas""".split())
-SEARCH_ALIASES = (
-    ("embedding", {"embed", "vetor"}),
-    ("credential", {"chave", "key", "crede"}),
-    ("cpu", {"cpu", "maqui"}),
-    ("ranking", {"ranki", "formu", "prior", "score", "peso", "relev"}),
-    ("budget", {"budge", "orcam", "limit", "corto", "taman"}),
-    ("history", {"histo", "versa", "snaps"}),
-)
+from brain_engine.text import (CHARS_PER_TOKEN, SEARCH_ALIASES, STOP_WORDS,  # noqa: E402,F401
+                               excerpt as _excerpt, normalized as _normalized,
+                               tokens as _tokens, word_root as _word_root)
 
 
 def initialize(root: Path, idea: str | None = None) -> dict:
     root = root.resolve()
     brain = root / ".brain"
-    for folder in ("project", "index", "history", *(f"knowledge/{name}" for name in TYPES.values())):
+    for folder in ("project", "index", "history", *(f"knowledge/{TYPES[name]}" for name in CORE_TYPES)):
         (brain / folder).mkdir(parents=True, exist_ok=True)
     config_path = brain / "config.json"
     if not config_path.exists():
@@ -260,10 +249,6 @@ def initialize(root: Path, idea: str | None = None) -> dict:
     return result
 
 
-def _normalized(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode().casefold()
-    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", text)).strip()
-
 
 def remember(root: Path, *, type: str, title: str, content: str, tags: list[str] | None = None,
              importance: float | None = None, related: list[str] | None = None, status: str | None = None) -> dict:
@@ -334,18 +319,6 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
     return {"id": doc_id, "path": event["path"], "changed": True, "index": result}
 
 
-def _tokens(text: str) -> set[str]:
-    return {word for word in _normalized(text).split() if len(word) > 2 and word not in STOP_WORDS}
-
-
-def _word_root(word: str) -> str:
-    if word.startswith("re") and len(word) >= 8:
-        word = word[2:]
-    root = word[:5] if len(word) >= 6 else word
-    for canonical, aliases in SEARCH_ALIASES:
-        if root in aliases:
-            return canonical
-    return root
 
 
 def _recency(timestamp: str) -> float:
@@ -356,20 +329,6 @@ def _recency(timestamp: str) -> float:
     except (ValueError, TypeError):
         return 0.5
 
-
-def _excerpt(source: str, available: int, query_terms: set[str]) -> str:
-    if len(source) <= available:
-        return source
-    roots = {_word_root(term) for term in query_terms}
-    starts = [0] + [match.end() for match in re.finditer(r"\n+|[.!?]\s+(?=[A-ZÀ-Ý])", source)]
-    def relevance(start):
-        terms = _tokens(source[start:start + available])
-        return (len(query_terms & terms), len(roots & {_word_root(term) for term in terms}), -start)
-    start = max(starts, key=relevance)
-    snippet = source[start:start + available].strip()
-    if start + available < len(source):
-        snippet = snippet.rsplit(" ", 1)[0].rstrip() + "…"
-    return snippet
 
 
 def search(root: Path, query: str, *, types: list[str] | None = None, tags: list[str] | None = None,

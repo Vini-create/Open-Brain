@@ -239,7 +239,9 @@ def test_v1_acceptance(tmp_path: Path):
     assert CONTEXT_UPDATE_MARKER in responses[0]["result"]["instructions"]
     assert BOOTSTRAP_MARKER in responses[0]["result"]["instructions"]
     assert "What changed" in responses[0]["result"]["instructions"]
-    assert {tool["name"] for tool in responses[1]["result"]["tools"]} == {"brain_search", "brain_remember", "brain_status"}
+    local_tools = {tool["name"] for tool in responses[1]["result"]["tools"]}
+    assert {"brain_search", "brain_remember", "brain_status", "brain_context", "brain_list"} <= local_tools
+    assert "brain_relate" not in local_tools  # typed relations need the Brain service
     assert responses[2]["result"]["isError"] is False
     assert "OAuth" in responses[3]["result"]["content"][0]["text"]
     assert "6" in responses[4]["result"]["content"][0]["text"]
