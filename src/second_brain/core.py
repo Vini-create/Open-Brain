@@ -165,7 +165,7 @@ PROJECT_TEMPLATES = {
     "goals.md": "# Goals\n\n## Current priorities\n\n## Out of scope\n\n## Next steps\n",
 }
 
-from brain_engine.text import (CHARS_PER_TOKEN, SEARCH_ALIASES, STOP_WORDS,  # noqa: E402,F401
+from .text import (CHARS_PER_TOKEN, SEARCH_ALIASES, STOP_WORDS,  # noqa: E402,F401
                                excerpt as _excerpt, normalized as _normalized,
                                tokens as _tokens, word_root as _word_root)
 

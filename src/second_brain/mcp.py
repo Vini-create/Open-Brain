@@ -2,14 +2,14 @@
 
 Standalone projects use the local ``.brain/``; linked projects (``brain link``) use the
 Brain service with the local mirror as offline fallback. Tools come from
-``brain_engine.mcp_tools`` so stdio and HTTP expose the same contract.
+``second_brain.mcp_tools`` so stdio and HTTP expose the same contract.
 """
 
 import json
 import sys
 from pathlib import Path
 
-from brain_engine import mcp_tools
+from . import mcp_tools
 
 from .config import load_config
 from .core import (AGENT_INSTRUCTIONS, BOOTSTRAP_INSTRUCTIONS, BOOTSTRAP_MARKER, CONTEXT_UPDATE_INSTRUCTIONS,

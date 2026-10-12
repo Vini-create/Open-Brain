@@ -1,7 +1,4 @@
-"""Pure text helpers shared by the local CLI and the Brain service.
-
-Extracted from the V1 ``second_brain.core`` ranking code; behaviour is unchanged.
-"""
+"""Pure text helpers for the local Brain CLI and index."""
 
 import re
 import unicodedata

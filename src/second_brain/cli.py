@@ -92,8 +92,6 @@ def parser() -> argparse.ArgumentParser:
     kb.add_argument("--title")
     kb.add_argument("--limit", type=int, default=5)
     kb.add_argument("--budget", type=int, default=900)
-    kb.add_argument("--direct", action="store_true",
-                    help="Ingest directly into $BRAIN_DATABASE_URL instead of asking the service")
     kb.add_argument("--json", action="store_true")
     cost = command("cost", help="LLM usage and cost report")
     cost.add_argument("--workflow")
@@ -101,9 +99,6 @@ def parser() -> argparse.ArgumentParser:
     cost.add_argument("--all", action="store_true", help="All projects")
     cost.add_argument("--group-by", default="component", choices=["component", "model", "task", "workflow_id"])
     cost.add_argument("--json", action="store_true")
-    server = command("serve", help="Run the Brain service (REST + MCP over HTTP)")
-    server.add_argument("--host")
-    server.add_argument("--port", type=int)
     return app
 
 
@@ -279,7 +274,7 @@ def main() -> None:
                       else backend.context(None, args.budget))
             _print(result, args.json, result["context"])
         elif args.command == "list" or args.command in LIST_ALIASES:
-            from brain_engine.mcp_tools import render_records
+            from .mcp_tools import render_records
 
             from .remote import backend_for
 
@@ -287,14 +282,14 @@ def main() -> None:
             rows = backend_for(root).list(None, kind, args.status, args.limit)
             _print(rows, args.json, render_records(rows))
         elif args.command == "show":
-            from brain_engine.mcp_tools import render_record
+            from .mcp_tools import render_record
 
             from .remote import backend_for
 
             record = backend_for(root).get(None, args.ref)
             _print(record, args.json, render_record(record))
         elif args.command == "feature":
-            from brain_engine.mcp_tools import render_record
+            from .mcp_tools import render_record
 
             from .remote import BrainHTTPError, backend_for
 
@@ -340,16 +335,8 @@ def main() -> None:
                 source = Path(args.value or "").expanduser().resolve()
                 if not source.is_dir():
                     raise ValueError(f"Knowledge directory not found: {source}")
-                if args.direct or os.environ.get("BRAIN_DATABASE_URL"):
-                    from brain_engine.service import BrainService
-
-                    service = BrainService()
-                    service.migrate()
-                    print(json.dumps(service.ingest(args.collection, source, args.title), indent=2))
-                    service.close()
-                else:
-                    print(json.dumps(BrainClient().post("/v1/knowledge/ingest", {
-                        "collection": args.collection, "path": str(source), "title": args.title}), indent=2))
+                print(json.dumps(BrainClient().post("/v1/knowledge/ingest", {
+                    "collection": args.collection, "path": str(source), "title": args.title}), indent=2))
         elif args.command == "cost":
             from .remote import BrainClient, remote_settings
 
@@ -359,14 +346,6 @@ def main() -> None:
                 "/v1/telemetry/report", workflow_id=args.workflow, project=project, task=args.task,
                 group_by=args.group_by)
             _print(report, args.json, report["table"])
-        elif args.command == "serve":
-            if args.host:
-                os.environ["BRAIN_HOST"] = args.host
-            if args.port:
-                os.environ["BRAIN_PORT"] = str(args.port)
-            from brain_engine.api import main as serve_api
-
-            serve_api()
     except (ValueError, RuntimeError, OSError) as exc:
         print(f"brain: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc

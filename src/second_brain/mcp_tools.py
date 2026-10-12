@@ -1,9 +1,8 @@
 """MCP tool definitions and a transport-independent JSON-RPC handler.
 
-The same tools are exposed over stdio (``brain mcp``) and Streamable HTTP (``POST /mcp``).
-A *backend* implements the operations; the server backend talks to Postgres directly,
-the remote backend talks HTTP, and the local backend uses the V1 ``.brain/`` files.
-This module has no server dependencies so the CLI can import it.
+The CLI exposes these tools over stdio (``brain mcp``). A backend uses
+either the local ``.brain/`` files or an optional Creare Brain connection.
+This module has no hosted-service dependencies.
 """
 
 import json
