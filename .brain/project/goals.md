@@ -2,6 +2,9 @@
 
 ## Current priorities
 
+- Keep the core save/retrieve contract stable: atomic vector updates, recoverable rebuilds, real multilingual retrieval and observable agent usage.
+- Preserve the storage and MCP acceptance tests plus fact-recovery gates in CI; see STABILITY_REPORT.md for the current evidence and limits.
+
 - Make cloning, installation, `brain init`, and MCP connection clear for a new user.
 - Preserve durable decisions across sessions while reducing retrieved context in measured scenarios.
 - Keep Markdown canonical, local CPU embeddings, and a rebuildable SQLite + sqlite-vec index.
@@ -9,7 +12,7 @@
 
 ## Out of scope
 
-Text generation, telemetry, remote databases, automatic whole-repository ingestion, and paid LLM APIs inside the Brain.
+Text generation, automatic whole-repository ingestion, and paid LLM APIs inside the local Brain. An optional linked-service client exists; the standalone memory path stays local.
 
 ## Next steps
 

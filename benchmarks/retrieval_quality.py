@@ -73,8 +73,11 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--label',default='current')
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--check', action='store_true', help='Fail if any 500/900-budget question loses an expected fact')
     args=parser.parse_args()
     report=run(args.label)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report['summaries'],indent=2))
+    if args.check and any(row['complete'] != row['questions'] for row in report['summaries'] if row['budget'] >= 500):
+        raise SystemExit('Retrieval regression: expected facts missing at budget >= 500')

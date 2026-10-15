@@ -51,3 +51,31 @@ rules, validation commands and remaining work. Check specific fact recovery
 through `brain_search` and save sources checked and gaps in "Memory coverage".
 Indexed record counts alone do not establish coverage. Read the detailed guide
 for this audit; later tasks update relevant memories incrementally.
+
+## Preserve implementation details
+
+<!-- second-brain-detail-coverage:v1 -->
+
+Follow the detail checklist in `.brain/PROJECT_COVERAGE.md`: keep contracts,
+failure cases and validation independently searchable. For a broad question,
+split it into subquestions when the bounded response omits facts. Never assume
+that a summary or a successful search establishes complete source coverage.
+
+
+## Verify access and complete the memory loop
+
+<!-- second-brain-agent-access:v1 -->
+
+If MCP tools are unavailable, use the CLI in the project directory:
+`brain search "task question" --token-budget 1000` and
+`brain remember --type decision --title "Subject" --content "Verified facts"`.
+Do not silently skip memory because a tool is missing. If neither interface
+works, report the error. A fresh clone may need `brain init` to refresh local
+MCP paths; never replace existing project facts with templates.
+
+Before work, retrieve relevant facts. After meaningful work, update the same
+type/title with verified changes, reasons, validation and remaining work.
+Search using a paraphrased question to confirm the saved fact is recoverable.
+Use focused queries when the answer spans multiple subjects. Search logs in
+`.brain/history/searches.jsonl` and writes in `changes.jsonl` provide evidence
+of actual use; configuration or record counts alone do not prove agent usage.

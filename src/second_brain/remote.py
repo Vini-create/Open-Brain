@@ -101,8 +101,10 @@ class RemoteBackend:
         return self.client.post(self._p(project) + "/relevant-context",
                                 {"task": task, "token_budget": token_budget, "include_knowledge": knowledge})
 
-    def search(self, project, query, scope, kinds, limit, token_budget):
+    def search(self, project, query, scope, kinds, limit, token_budget, tags=None):
         payload = {"query": query, "scope": scope, "kinds": kinds, "limit": limit, "token_budget": token_budget}
+        if tags:
+            payload["tags"] = tags
         if scope == "knowledge":
             return self.client.post("/v1/knowledge/search", payload)
         return self.client.post(self._p(project) + "/search", payload)
@@ -181,13 +183,13 @@ class LocalBackend:
         found = self.search(project, task, "project", None, 8, max(100, token_budget - token_budget // 4))
         return {"context": context + "\n\n## Relevant project memory\n" + found["context"]}
 
-    def search(self, project, query, scope, kinds, limit, token_budget):
+    def search(self, project, query, scope, kinds, limit, token_budget, tags=None):
         from .core import search
 
         if scope == "knowledge":
             return RemoteBackend(BrainClient(), None).knowledge(query, None, limit, token_budget)
         local_kinds = [("next-step" if kind == "next_step" else kind) for kind in kinds] if kinds else None
-        return search(self.root, query, types=local_kinds, limit=limit, token_budget=token_budget)
+        return search(self.root, query, types=local_kinds, tags=tags, limit=limit, token_budget=token_budget)
 
     def knowledge(self, query, collections, limit, token_budget):
         return RemoteBackend(BrainClient(), None).knowledge(query, collections, limit, token_budget)
@@ -198,7 +200,7 @@ class LocalBackend:
             if ref in (meta["id"], meta.get("key"), meta["title"]) or ref.lower() == meta["title"].lower():
                 return {"kind": meta["type"], "key": meta.get("key", meta["id"]), "title": meta["title"],
                         "status": meta.get("status"), "body": doc["body"], "tags": meta.get("tags", []),
-                        "source": meta.get("source", "local"), "data": {}, "relations": [
+                        "source": meta.get("source", "local"), "data": meta.get("data") or {}, "relations": [
                             {"type": "relates_to", "direction": "out", "kind": "", "title": r, "key": r}
                             for r in meta.get("related", [])]}
         raise ValueError(f"Record not found: {ref}")
@@ -221,12 +223,13 @@ class LocalBackend:
         return remember(self.root, type="next-step" if kind == "next_step" else kind, title=payload.get("title", ""),
                         content=payload.get("body", ""), tags=payload.get("tags"),
                         importance=payload.get("importance"), status=payload.get("status"),
-                        related=payload.get("related"))
+                        related=payload.get("related"), key=payload.get("key"), data=payload.get("data"))
 
     def update_status(self, project, ref, status, note):
         record = self.get(project, ref)
         result = self.record(project, {"kind": record["kind"], "title": record["title"],
-                                       "body": record["body"].split("\n", 2)[-1].strip() or record["title"],
+                                       "body": re.sub(r"^# [^\n]+\n*", "", record["body"]).strip() or record["title"],
+                                       "key": record["key"],
                                        "status": status})
         self.log_event(project, {"type": "record.status_changed", "summary": f"{record['title']}: {status} {note}"})
         return result
@@ -257,9 +260,9 @@ class LinkedBackend:
     def __getattr__(self, name):
         remote_method = getattr(self.remote, name)
 
-        def call(*args):
+        def call(*args, **kwargs):
             try:
-                return remote_method(*args)
+                return remote_method(*args, **kwargs)
             except Unreachable:
                 if name in self.WRITES:
                     entry = {"op": name, "args": list(args), "queued_at": datetime.now(timezone.utc).isoformat()}
@@ -268,7 +271,7 @@ class LinkedBackend:
                     return {"queued": True, "detail": "Brain service offline; run 'brain sync' later"}
                 if name in ("knowledge",):
                     raise
-                return getattr(self.local, name)(*args)
+                return getattr(self.local, name)(*args, **kwargs)
         return call
 
 

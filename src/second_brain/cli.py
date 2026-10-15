@@ -44,7 +44,7 @@ def parser() -> argparse.ArgumentParser:
     save.add_argument("--related", action="append")
     save.add_argument("--importance", type=float)
     save.add_argument("--status")
-    save.add_argument("--key", help="Stable key (linked projects)")
+    save.add_argument("--key", help="Stable key for updates, including title changes")
     model = command("model", help="Manage the local embedding model")
     model.add_argument("action", choices=["download"])
 
@@ -212,7 +212,7 @@ def main() -> None:
             if remote_settings(root) or args.scope != "project":
                 backend = backend_for(root)
                 result = backend.search(None, args.query, args.scope, args.types, args.limit or 8,
-                                        args.token_budget or 1000)
+                                        args.token_budget or 1000, tags=args.tags)
             else:
                 result = search(root, args.query, types=args.types, tags=args.tags, limit=args.limit,
                                 token_budget=args.token_budget)
@@ -233,7 +233,7 @@ def main() -> None:
                 result = backend_for(root).record(None, {k: v for k, v in payload.items() if v is not None})
             else:
                 result = remember(root, type=args.type, title=args.title, content=content, tags=args.tags,
-                                  importance=args.importance, related=args.related, status=args.status)
+                                  importance=args.importance, related=args.related, status=args.status, key=args.key)
             print(json.dumps(result, ensure_ascii=False, indent=2))
         elif args.command == "mcp":
             serve(root)

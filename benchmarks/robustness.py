@@ -1,6 +1,7 @@
 """Evaluate multilingual query paraphrases against a synthetic local corpus."""
 
 import json
+import argparse
 import statistics
 import tempfile
 from pathlib import Path
@@ -115,6 +116,9 @@ def markdown(report: dict) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--check', action='store_true', help='Fail if any question loses its expected memory or fact')
+    args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="brain-robustness-") as folder:
         report = run(Path(folder))
     output = ROOT / "benchmarks/results"
@@ -123,6 +127,9 @@ def main() -> None:
                                             encoding="utf-8")
     (ROOT / "ROBUSTNESS_REPORT.md").write_text(markdown(report), encoding="utf-8")
     print(markdown(report))
+    if args.check and any(row['returned'] != row['questions'] or row['fact_in_context'] != row['questions']
+                          for row in report['summaries']):
+        raise SystemExit('Retrieval regression: expected memory or fact missing')
 
 
 if __name__ == "__main__":

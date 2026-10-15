@@ -12,7 +12,7 @@ import unicodedata
 from pathlib import Path
 
 from second_brain.core import AGENT_INSTRUCTIONS, initialize, remember
-from second_brain.mcp import TOOLS
+from second_brain.mcp import LOCAL_TOOLS as TOOLS
 from second_brain.storage import index
 from second_brain.config import load_config
 
@@ -53,10 +53,10 @@ MEMORIES = [
 TASKS = [
     {"id": "indexacao", "query": "Editei um Markdown. Como reindexar só o necessário e reconstruir o índice?",
      "expected": ["SHA-256", "brain index", "brain rebuild"],
-     "excerpts": [("src/second_brain/storage.py", "index"), ("src/second_brain/documents.py", "parse")]},
+     "excerpts": [("src/second_brain/storage.py", "index"), ("src/second_brain/storage.py", "_index"), ("src/second_brain/documents.py", "parse")]},
     {"id": "mcp", "query": "Como um agente novo conecta ao MCP local e quais ferramentas ele pode chamar?",
      "expected": [".mcp.json", "brain_search", "brain_remember", "brain_status"],
-     "excerpts": [("src/second_brain/mcp.py", "TOOLS"), ("src/second_brain/mcp.py", "serve"),
+     "excerpts": [("src/second_brain/mcp_tools.py", "TOOLS"), ("src/second_brain/mcp.py", "serve"),
                   ("src/second_brain/core.py", "initialize")]},
     {"id": "embedding", "query": "Qual modelo de embedding roda na CPU sem provider nem API key?",
      "expected": ["intfloat/multilingual-e5-small", "CPU", "API key"],

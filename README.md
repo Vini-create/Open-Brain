@@ -123,6 +123,21 @@ Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/inde
 
 `brain init` generates `.brain/mcp.json` and a project-root `.mcp.json` with the exact stdio command for that installation. If your client does not read `.mcp.json`, copy its `command` and `args` into the client's stdio MCP settings. Restart the client and verify these three tools: `brain_status`, `brain_search`, and `brain_remember`. The generated `AGENTS.md` directs agents to `.brain/AGENT_BRAIN.md`; MCP initialization also returns those instructions. A client's behavior determines whether it presents them to the agent. Details are in [Installation guide](docs/INSTALLATION.md#connect-an-mcp-client).
 
+If MCP tools are unavailable, the agent protocol now requires the CLI fallback
+(`brain search` / `brain remember`) and a paraphrased retrieval check after saving.
+Actual usage is visible in `.brain/history/searches.jsonl` and `changes.jsonl`;
+instructions cannot force every third-party agent to comply. Run `brain init`
+after cloning or upgrading to refresh local paths and add missing protocol sections.
+`brain status` reports vector counts, missing/orphaned vectors and
+`index_consistent`; use `brain rebuild` if consistency fails. This checks the
+index, while source review and focused searches establish memory coverage.
+
+The [stability audit](STABILITY_REPORT.md) records storage failure/recovery,
+real embedding/cosine checks, MCP restart and current retrieval evidence.
+Its detailed fixture recovered all expected facts for 12/12 questions at
+500 estimated tokens; at 180, two answers omitted details. Use focused queries
+or a larger budget for questions with several required facts.
+
 ## What the benchmarks actually show
 
 The [measured growth benchmark](GROWTH_REPORT.md) creates up to 10,000 project documents and 10,000 corresponding indexed memories: four fact-bearing pairs plus synthetic distractors. It checks exact facts in the returned text and counts that text with `cl100k_base`. The Brain returned **582 tokens** for four questions; one copy of the instructions and MCP schemas adds **760 tokens** to the table above. At 10,000 memories, adding the last 5,000 and regenerating the map took **90 seconds**; the SQLite index occupied **104 MiB** and the map **3.76 MiB**. Token savings therefore come with a real latency and indexing cost at this scale.

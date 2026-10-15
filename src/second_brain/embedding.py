@@ -1,5 +1,6 @@
 from functools import lru_cache
 import os
+import math
 
 
 @lru_cache(maxsize=2)
@@ -29,8 +30,12 @@ def embed(texts: list[str], config: dict, *, query: bool = False) -> list[list[f
     prefix = "query: " if query and "e5" in setting["model"].lower() else "passage: " if "e5" in setting["model"].lower() else ""
     vectors = model.encode([prefix + text for text in texts], normalize_embeddings=True, show_progress_bar=False)
     result = [list(map(float, vector)) for vector in vectors]
-    if result and len(result[0]) != setting["dimensions"]:
+    if len(result) != len(texts):
+        raise ValueError("Model returned an unexpected number of embeddings")
+    if any(len(vector) != setting["dimensions"] for vector in result):
         raise ValueError("Model dimension differs from config.json; fix the configuration and run 'brain rebuild'")
+    if any(not all(math.isfinite(value) for value in vector) or not any(vector) for vector in result):
+        raise ValueError("Model returned a non-finite or zero embedding")
     return result
 
 

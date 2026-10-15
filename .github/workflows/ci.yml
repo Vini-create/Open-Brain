@@ -38,7 +38,10 @@ jobs:
         run: python benchmarks/measure.py
       - name: Multilingual retrieval robustness
         if: matrix.python-version == '3.12'
-        run: python benchmarks/robustness.py
+        run: python benchmarks/robustness.py --check
+      - name: Detailed retrieval quality gate
+        if: matrix.python-version == '3.12'
+        run: python benchmarks/retrieval_quality.py --label ci --output benchmarks/results/ci-retrieval.json --check
       - name: Measured growth benchmark
         if: matrix.python-version == '3.12'
         run: |

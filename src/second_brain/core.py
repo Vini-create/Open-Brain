@@ -6,16 +6,37 @@ import time
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 from .config import CORE_TYPES, DEFAULT_CONFIG, TYPES, load_config
-from .documents import document_id, now, parse, render
+from .documents import document_id, markdown_paths, now, parse, render
 from .embedding import embed
+from .locking import serialized
 from .storage import connect, index, stats, vector_scores
 
 CONTEXT_UPDATE_MARKER = "<!-- second-brain-context-update:v2 -->"
 BOOTSTRAP_MARKER = "<!-- second-brain-bootstrap:v1 -->"
 COVERAGE_MARKER = "<!-- second-brain-project-coverage:v1 -->"
 DETAIL_MARKER = "<!-- second-brain-detail-coverage:v1 -->"
+ACCESS_MARKER = "<!-- second-brain-agent-access:v1 -->"
+ACCESS_INSTRUCTIONS = f"""## Verify access and complete the memory loop
+
+{ACCESS_MARKER}
+
+If MCP tools are unavailable, use the CLI in the project directory:
+`brain search \"task question\" --token-budget 1000` and
+`brain remember --type decision --title \"Subject\" --content \"Verified facts\"`.
+Do not silently skip memory because a tool is missing. If neither interface
+works, report the error. A fresh clone may need `brain init` to refresh local
+MCP paths; never replace existing project facts with templates.
+
+Before work, retrieve relevant facts. After meaningful work, update the same
+type/title with verified changes, reasons, validation and remaining work.
+Search using a paraphrased question to confirm the saved fact is recoverable.
+Use focused queries when the answer spans multiple subjects. Search logs in
+`.brain/history/searches.jsonl` and writes in `changes.jsonl` provide evidence
+of actual use; configuration or record counts alone do not prove agent usage.
+"""
 DETAIL_INSTRUCTIONS = f"""## Preserve implementation details
 
 {DETAIL_MARKER}
@@ -142,7 +163,7 @@ implementation details in source code before editing or testing. Keep
 manual Markdown edits.
 
 Search before rediscovering. Remember after learning.
-""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS + "\n" + DETAIL_INSTRUCTIONS
+""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS + "\n" + DETAIL_INSTRUCTIONS + "\n" + ACCESS_INSTRUCTIONS
 
 
 def _ensure_agent_instructions(path: Path) -> None:
@@ -155,6 +176,7 @@ def _ensure_agent_instructions(path: Path) -> None:
         (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS),
         (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
         (DETAIL_MARKER, DETAIL_INSTRUCTIONS),
+        (ACCESS_MARKER, ACCESS_INSTRUCTIONS),
     ) if marker not in existing]
     if additions:
         path.write_text(existing.rstrip("\n") + "\n\n" + "\n\n".join(additions), encoding="utf-8")
@@ -250,8 +272,10 @@ def initialize(root: Path, idea: str | None = None) -> dict:
 
 
 
+@serialized
 def remember(root: Path, *, type: str, title: str, content: str, tags: list[str] | None = None,
-             importance: float | None = None, related: list[str] | None = None, status: str | None = None) -> dict:
+             importance: float | None = None, related: list[str] | None = None, status: str | None = None,
+             key: str | None = None, data: dict | None = None) -> dict:
     root = root.resolve()
     config = load_config(root)
     if type not in TYPES:
@@ -260,6 +284,22 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
     if len(title) < 3 or len(content) < 8:
         raise ValueError("Title must have at least 3 characters and content at least 8")
     doc_id = document_id(type, title)
+    keyed_path = None
+    if data is not None and not isinstance(data, dict):
+        raise ValueError("data must be an object")
+    if key is not None:
+        if not isinstance(key, str) or not key.strip():
+            raise ValueError("key must be a non-empty string")
+        key = key.strip()
+        doc_id = document_id(type, key)
+        for candidate in markdown_paths(root):
+            doc = parse(candidate, root)
+            if doc and key in (doc["metadata"].get("key"), doc["metadata"]["id"]):
+                if keyed_path is not None:
+                    raise ValueError(f"Duplicate memory key: {key}")
+                if doc["metadata"]["type"] != type:
+                    raise ValueError("Cannot change a keyed record's type")
+                keyed_path, doc_id = candidate, doc["metadata"]["id"]
     db = connect(root, config)
     try:
         for existing in db.execute("SELECT id,title,body FROM documents WHERE type=? AND id<>?", (type, doc_id)):
@@ -269,10 +309,11 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
         prior = db.execute("SELECT path FROM documents WHERE id=?", (doc_id,)).fetchone()
     finally:
         db.close()
-    path = root / prior["path"] if prior else root / ".brain" / "knowledge" / TYPES[type] / f"{doc_id}.md"
+    path = keyed_path or (root / prior["path"] if prior else root / ".brain" / "knowledge" / TYPES[type] / f"{doc_id}.md")
     previous = path.read_text(encoding="utf-8") if path.exists() else None
     parsed_previous = parse(path, root) if previous else None
     previous_meta = parsed_previous["metadata"] if parsed_previous else None
+    data = previous_meta.get("data", {}) if data is None and previous_meta else (data or {})
     tags = previous_meta.get("tags", []) if tags is None and previous_meta else (tags or [])
     related = previous_meta.get("related", []) if related is None and previous_meta else (related or [])
     importance = previous_meta.get("importance", 0.5) if importance is None and previous_meta else (0.5 if importance is None else importance)
@@ -293,12 +334,19 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
         old_body = parsed_previous["body"]
         if (old_body == f"# {title}\n\n{content}" and previous_meta.get("tags") == tags
                 and previous_meta.get("related") == related and previous_meta.get("importance") == importance
-                and previous_meta.get("status") == status):
+                and previous_meta.get("status") == status and previous_meta.get("data", {}) == data):
+            index(root, config)
             return {"id": doc_id, "path": path.relative_to(root).as_posix(), "changed": False}
     timestamp = now()
     meta = {**(previous_meta or {}), "id": doc_id, "type": type, "title": title, "tags": tags, "importance": importance,
             "status": status, "created_at": previous_meta.get("created_at", timestamp) if previous_meta else timestamp,
             "updated_at": timestamp, "related": related}
+    if key is not None:
+        meta["key"] = key
+    if data:
+        meta["data"] = data
+    else:
+        meta.pop("data", None)
     markdown = render(meta, f"# {title}\n\n{content}")
     if previous == markdown:
         return {"id": doc_id, "path": path.relative_to(root).as_posix(), "changed": False}
@@ -308,12 +356,17 @@ def remember(root: Path, *, type: str, title: str, content: str, tags: list[str]
         version = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         (version_dir / f"{version}.md").write_text(previous, encoding="utf-8")
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".md.tmp")
-    tmp.write_text(markdown, encoding="utf-8")
-    tmp.replace(path)
+    tmp = path.with_suffix(f".{uuid4().hex}.tmp")
+    try:
+        tmp.write_text(markdown, encoding="utf-8")
+        tmp.replace(path)
+    finally:
+        tmp.unlink(missing_ok=True)
     event = {"timestamp": timestamp, "document_id": doc_id, "path": path.relative_to(root).as_posix(),
              "action": "updated" if previous else "created", "previous_version": bool(previous)}
-    with (root / ".brain" / "history" / "changes.jsonl").open("a", encoding="utf-8") as log:
+    history = root / ".brain" / "history"
+    history.mkdir(parents=True, exist_ok=True)
+    with (history / "changes.jsonl").open("a", encoding="utf-8") as log:
         log.write(json.dumps(event, ensure_ascii=False) + "\n")
     result = index(root, config)
     return {"id": doc_id, "path": event["path"], "changed": True, "index": result}
@@ -350,8 +403,11 @@ def search(root: Path, query: str, *, types: list[str] | None = None, tags: list
     vector = embed([query], config, query=True)[0]
     db = connect(root, config)
     try:
+        db.execute("BEGIN")
         similarities = vector_scores(db, vector)
         rows = db.execute("SELECT d.*, c.id AS chunk_id, c.text AS chunk FROM chunks c JOIN documents d ON d.id=c.document_id").fetchall()
+        if set(similarities) != {row["chunk_id"] for row in rows}:
+            raise ValueError("Vector index is inconsistent. Run 'brain rebuild'.")
     finally:
         db.close()
     query_terms = _tokens(query)
@@ -416,7 +472,9 @@ def search(root: Path, query: str, *, types: list[str] | None = None, tags: list
     estimated_tokens = (len(context) + CHARS_PER_TOKEN - 1) // CHARS_PER_TOKEN
     log = {"timestamp": now(), "query": query, "results": [{"id": item["id"], "score": item["score"]} for item in results],
            "estimated_tokens": estimated_tokens, "duration_ms": elapsed_ms, "memories_consulted": len(selected)}
-    with (root / ".brain" / "history" / "searches.jsonl").open("a", encoding="utf-8") as file:
+    history = root / ".brain" / "history"
+    history.mkdir(parents=True, exist_ok=True)
+    with (history / "searches.jsonl").open("a", encoding="utf-8") as file:
         file.write(json.dumps(log, ensure_ascii=False) + "\n")
     return {"context": context, "results": results, "estimated_tokens": estimated_tokens,
             "duration_ms": elapsed_ms, "memories_consulted": len(selected)}

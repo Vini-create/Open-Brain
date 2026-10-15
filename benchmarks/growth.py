@@ -19,7 +19,7 @@ from pathlib import Path
 from second_brain.config import load_config
 from second_brain.core import AGENT_INSTRUCTIONS, initialize, remember, search
 from second_brain.documents import now, render
-from second_brain.mcp import TOOLS
+from second_brain.mcp import LOCAL_TOOLS as TOOLS
 from second_brain.storage import index
 
 from measure import counter

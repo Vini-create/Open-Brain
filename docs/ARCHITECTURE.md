@@ -58,6 +58,26 @@ your-project/
 4. The MCP server exposes the same search and write operations to a compatible client. It has no network listener or LLM dependency.
 5. `brain init`, `brain remember`, and any indexing change regenerate `.brain/map.html`. `brain map` refreshes it directly from canonical Markdown without loading the embedding model. The page embeds its own data and scripts and does not contact a server. It shows shared-tag and explicit-`related` links; hub lines mean project membership, not semantic similarity.
 
+Canonical writes and indexing share a reentrant per-project file lock across
+threads and processes. Each incremental index update commits documents, chunks
+and vectors in one SQLite transaction. Duplicate Markdown IDs are rejected;
+renaming or swapping paths preserves identity. Rebuild writes a sibling temporary
+database and replaces the live index only after success. A failed embedding leaves
+the last index intact; searches retry synchronization and report the error until
+the underlying problem is resolved. Markdown remains canonical if saving succeeds
+but indexing fails, so a later `brain index` can recover it.
+
+Search reads scores and chunks in one database snapshot and rejects missing or
+orphaned vectors with a rebuild instruction. Status exposes counts and consistency.
+Ignored history directories are recreated on use, including in fresh clones.
+Embeddings must have the configured dimension, one vector per input, finite
+components and nonzero length. The default encoder normalizes query/passages and
+uses E5's respective `query:` / `passage:` prefixes.
+
+Local MCP supports tag filters and optional stable record keys across title
+changes. `brain_record` persists `data` in YAML; `brain_get` returns it. Without
+an explicit key, type/title remains the identity used by `brain_remember`.
+
 ### Detailed retrieval
 
 Passages have a maximum of 850 characters with approximately 100 characters

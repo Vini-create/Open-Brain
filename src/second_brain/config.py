@@ -1,4 +1,5 @@
 import json
+import math
 from pathlib import Path
 
 DEFAULT_CONFIG = {
@@ -52,7 +53,7 @@ def load_config(root: Path) -> dict:
     weights = config["retrieval"]
     for name in ("vector", "keyword", "importance", "recency"):
         value = weights[f"{name}_weight"]
-        if not isinstance(value, (int, float)) or value < 0:
+        if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
             raise ValueError(f"Invalid weight: {name}_weight")
     if sum(weights[f"{name}_weight"] for name in ("vector", "keyword", "importance", "recency")) <= 0:
         raise ValueError("Search weights must have a positive sum")

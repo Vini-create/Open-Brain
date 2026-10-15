@@ -12,12 +12,13 @@ from pathlib import Path
 from . import mcp_tools
 
 from .config import load_config
-from .core import (AGENT_INSTRUCTIONS, BOOTSTRAP_INSTRUCTIONS, BOOTSTRAP_MARKER, CONTEXT_UPDATE_INSTRUCTIONS,
+from .core import (ACCESS_INSTRUCTIONS, ACCESS_MARKER, AGENT_INSTRUCTIONS, BOOTSTRAP_INSTRUCTIONS, BOOTSTRAP_MARKER, CONTEXT_UPDATE_INSTRUCTIONS,
                    CONTEXT_UPDATE_MARKER, COVERAGE_MARKER, DETAIL_INSTRUCTIONS, DETAIL_MARKER,
                    PROJECT_COVERAGE_INSTRUCTIONS)
 from .remote import backend_for, remote_settings
 
 LOCAL_ONLY_EXCLUDED = {"brain_relate"}
+LOCAL_TOOLS = [tool for tool in mcp_tools.TOOLS if tool["name"] not in LOCAL_ONLY_EXCLUDED]
 
 
 def instructions_for(root: Path) -> str:
@@ -25,7 +26,8 @@ def instructions_for(root: Path) -> str:
     instructions = path.read_text(encoding="utf-8") if path.exists() else AGENT_INSTRUCTIONS
     for marker, section in ((BOOTSTRAP_MARKER, BOOTSTRAP_INSTRUCTIONS),
                             (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
-                            (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS), (DETAIL_MARKER, DETAIL_INSTRUCTIONS)):
+                            (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS), (DETAIL_MARKER, DETAIL_INSTRUCTIONS),
+                            (ACCESS_MARKER, ACCESS_INSTRUCTIONS)):
         if marker not in instructions:
             instructions = instructions.rstrip("\n") + "\n\n" + section
     return instructions
@@ -41,7 +43,7 @@ def serve(root: Path) -> None:
     if linked:
         instructions += "\n\n" + mcp_tools.SERVER_INSTRUCTIONS
     else:
-        tools = [tool for tool in tools if tool["name"] not in LOCAL_ONLY_EXCLUDED]
+        tools = LOCAL_TOOLS
     for line in sys.stdin:
         if not line.strip():
             continue
