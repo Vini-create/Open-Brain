@@ -1,12 +1,223 @@
 # Open Brain
 
-**Persistent, searchable project memory for coding agents.** Store durable decisions, architecture, rules, and next steps as Markdown. An agent retrieves relevant snippets through local vector search instead of receiving the whole memory on every request. Explore what it knows in an interactive, offline project map. Embeddings run on CPU with a public model; no LLM provider, API key, or hosted database is required.
+**Local, persistent project memory for coding agents.** Save decisions, architecture,
+rules and next steps as Markdown. Retrieve the relevant context with semantic
+search when the next task or session needs it.
 
-The application is a Python CLI plus a small stdio MCP server. It works in any project directory after one local installation. Docker is optional.
+[English](README.md) · [Português brasileiro](README.pt-BR.md)
 
-## Token savings by project size
+[![CI](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml/badge.svg)](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Four questions in one session, with **one copy of the agent instructions and MCP tool schemas recorded in that benchmark run included** on the Brain side. Each measured project document has a corresponding indexed memory. All four facts were recovered at every size. Percentages compare the text given to an agent for retrieval, counted with `cl100k_base`; they are **not measured savings on a complete LLM task or bill**. The onboarding protocol has since expanded; reproducing the benchmark measures its current setup cost.
+Open Brain is a Python CLI (`brain`) and a stdio MCP server. Embeddings run
+locally on CPU. The standalone workflow needs **no LLM API key, hosted database
+or GPU**. Installation and the initial public-model download need internet;
+normal local indexing and search use the cached model.
+
+**Early release (0.1.0): feedback welcome.** Native Linux x86_64 is the verified
+path. Other platform instructions and their verification limits are in the
+[installation guide](docs/INSTALLATION.md#choose-your-operating-system).
+
+[Quickstart](#quickstart) · [Use with an agent](#use-with-an-agent) ·
+[How it works](#how-it-works) · [Troubleshooting](#troubleshooting) ·
+[Evidence](#validation-and-benchmarks) · [Give feedback](#try-it-and-give-feedback)
+
+## What you get
+
+- **Memory across sessions:** project facts live in your project's `.brain/`,
+  independently of a chat history or an agent's context window.
+- **Semantic retrieval:** ask a question in English or Portuguese; the local
+  multilingual model combines vector similarity with keyword and metadata ranking.
+- **Readable files:** Markdown is canonical. SQLite + sqlite-vec is a rebuildable
+  index, and previous memory versions are kept locally.
+- **CLI and MCP access:** compatible agents can search and save; the CLI also works
+  without an MCP connection.
+- **An offline memory map:** open `.brain/map.html` to browse facts and their links.
+
+The agent chooses what to save. Open Brain does not automatically ingest the
+repository or record every conversation. Relevant memory helps an agent find
+context; source inspection and application tests still establish correctness.
+
+## Quickstart
+
+### 1. Install once
+
+On **Linux**, with Git, Bash and Python 3.10+ with `venv` installed:
+
+```bash
+cd ~
+git clone https://github.com/Vini-create/Open-Brain.git
+cd Open-Brain
+bash scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH"
+brain --help
+```
+
+The installer creates `.venv` in this clone, installs dependencies, downloads the
+public embedding model, and links `brain` into `~/.local/bin`. It also configures
+supported shell startup files; the `export` handles the current Bash/Zsh terminal.
+Keep the installation clone in place: the launcher and generated MCP commands use
+it. Cloning alone does not install the command.
+
+For prerequisites and alternatives: [Linux](docs/INSTALLATION.md#linux),
+[macOS](docs/INSTALLATION.md#macos-apple-silicon),
+[Windows PowerShell](docs/INSTALLATION.md#windows-powershell),
+[WSL2](docs/INSTALLATION.md#windows-with-wsl2),
+[Docker](docs/INSTALLATION.md#docker). The Bash installer is not a native
+PowerShell installer. PyTorch and model downloads can take time and disk space.
+
+### 2. Verify save and search in a demo project
+
+These are example facts for the demo folder:
+
+```bash
+mkdir -p ~/open-brain-demo
+cd ~/open-brain-demo
+brain init
+brain remember --type rule --title "Session expiration" --content "Idle sessions expire after 37 minutes. Pinned sessions never expire." --tag sessions
+brain search "When does an inactive session end?" --token-budget 500
+brain status
+brain map
+```
+
+The search should contain **37 minutes**. Status should show a saved memory,
+matching `indexed_chunks` / `indexed_vectors`, and `"index_consistent": true`.
+An empty Brain immediately after `init` is normal. Open `.brain/map.html` in a
+browser to inspect the saved fact. These checks exercise storage and retrieval,
+not just command installation.
+
+### 3. Initialize your real project
+
+```bash
+cd /absolute/path/to/your-project
+brain init
+```
+
+Each project gets its own independent Brain. Fill `.brain/project/idea.md`,
+`overview.md` and `goals.md` with verified facts, then run `brain index`; or have
+your agent perform the [existing-project audit](docs/INSTALLATION.md#adopt-an-existing-project).
+The public model cache is shared; project memories are not.
+
+## Use with an agent
+
+### Connect MCP
+
+MCP (Model Context Protocol) lets a compatible client expose Brain operations as
+tools the agent can call. Configure it in the client where you run the agent:
+
+1. Run `brain init` in the project.
+2. Open `.brain/mcp.json`. It contains the absolute executable and project paths
+   for this installation. A project-root `.mcp.json` is also generated.
+3. If your client reads `.mcp.json`, use it. Otherwise copy the generated `command`
+   and `args` into the client's **stdio MCP** settings, using its configuration format.
+4. Restart the MCP connection/client and confirm `brain_status`, `brain_search`
+   and `brain_remember` are available.
+5. Ask the agent to save a test fact and recover it in a fresh session.
+
+`AGENTS.md` points to `.brain/AGENT_BRAIN.md`; MCP initialization returns the
+protocol too. Client support and instruction delivery vary. A generated config
+alone does not prove that the agent uses memory. See
+[MCP setup and verification](docs/INSTALLATION.md#connect-an-mcp-client).
+
+Use this prompt to establish the routine:
+
+> Read `.brain/AGENT_BRAIN.md`. Before this task, search the Brain for relevant
+> context. Verify implementation details in source. After meaningful work, update
+> the relevant memories with what changed, why, validation actually run and open
+> work. Confirm the saved facts with a paraphrased search. If MCP is unavailable,
+> use `brain search` and `brain remember` through the project terminal.
+
+### CLI fallback and actual-use checks
+
+An agent with terminal access can use the same `brain search` and `brain remember`
+commands as the demo. Run them from the project directory, or pass
+`--project /absolute/path/to/your-project`. No MCP connection is needed for this path.
+
+Actual searches are logged in `.brain/history/searches.jsonl`; writes in
+`.brain/history/changes.jsonl`. Check tool calls or these logs when verifying
+adoption. Instructions cannot force every external agent to comply. For an
+existing codebase, summaries alone are a start: ask the agent to save focused
+contracts, decisions and failure cases, then check specific facts are recoverable.
+
+## How it works
+
+`remember` → canonical Markdown → local embeddings → SQLite vectors → `search` → ranked excerpts.
+
+The default model is `intfloat/multilingual-e5-small` (384 dimensions, CPU).
+Search first synchronizes changed Brain Markdown, then ranks passages using
+vectors, keywords, importance and recency. Unchanged files are not re-embedded.
+Scores are relative ranks, not confidence probabilities. A search returns the
+best passage per memory, so multi-part questions can require focused subqueries.
+The token budget is an approximation, not an exact tokenizer limit.
+
+Saving the same type and title updates a memory and keeps its previous version.
+Use a stable `--key` if the title needs to change. Manual Markdown edits become
+searchable with `brain index` or the next search. `brain map` only refreshes the
+view; its links represent shared tags and explicit relations, not vector similarity.
+The graph draws up to 180 matching memories; its list searches all saved memories.
+
+Keep one independently answerable subject per memory. Include source paths,
+reasons, confirmed constraints and actual validation; keep it current when code
+changes. Larger storage alone does not establish useful coverage.
+
+For sharing, commit canonical Markdown and portable instructions if appropriate
+for your project. The generated map, index, history and machine-specific MCP
+paths are ignored by `brain init`. Memory files can contain project information;
+review them before making them public. See [what to commit](docs/INSTALLATION.md#what-to-commit-in-your-project).
+
+## Common commands
+
+| Command | Purpose |
+| --- | --- |
+| `brain init` | Create or refresh project instructions and local MCP paths. |
+| `brain remember --type decision --title "Subject" --content "Verified fact"` | Save and index a memory. |
+| `brain search "question" --token-budget 500` | Retrieve relevant context. |
+| `brain search "question" --tag auth --json` | Filter by tag and inspect structured results. |
+| `brain status` | Inspect indexed counts and vector consistency. |
+| `brain index` | Synchronize changed/deleted Markdown. |
+| `brain rebuild` | Rebuild the index from canonical Markdown. |
+| `brain map` | Refresh the offline memory map. |
+| `brain model download` | Download the public model into the local cache. |
+
+Use `brain --help` and `brain <command> --help` for options. The CLI also includes
+an optional linked-service client; [remote service integration](docs/REMOTE.md)
+is separate from the standalone workflow and requires a compatible service.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| `brain: command not found` | Open a new terminal or add `~/.local/bin` to PATH. See [shell setup](docs/INSTALLATION.md#make-the-unix-command-available-in-new-terminals). |
+| Model unavailable locally | In an initialized project, run `brain model download` once with internet access. |
+| Agent does not use memory | Verify MCP tools or CLI access, make sure the protocol is loaded, and check actual calls/logs. |
+| Search misses a fact | Check that it was saved, run `brain index`, then try a focused query or a larger budget. A missing fact may need a new memory. |
+| `index_consistent` is false | Run `brain rebuild`, then check `brain status`. Canonical Markdown remains the source of truth. |
+| First search takes longer | A new process loads the model. MCP can reuse it; CPU speed, disk and corpus size affect latency. See [timing limits](STABILITY_REPORT.md). |
+
+For moved clones, dependency/platform issues and upgrades, use the
+[installation guide](docs/INSTALLATION.md#update-an-existing-installation).
+
+## Validation and benchmarks
+
+The [local stability audit](STABILITY_REPORT.md) records real embedding/cosine
+checks, clone recovery, transactional index failures, concurrent writes and MCP
+persistence. The final full suite passed 33 tests with one Fish skip on the
+recorded Linux environment. A prior cold-start timeout and unverified platforms
+are disclosed there; this is bounded evidence, not a universal stability claim.
+
+Current authored retrieval checks recovered all expected facts for **12/12
+questions at 500 estimated tokens**. At 180, two detailed answers omitted facts.
+A separate 1,000-memory fixture recovered the expected fact for all 12 fixed
+English/Portuguese questions. These synthetic sets do not establish recall on
+every real project. Use your own facts and queries when evaluating the tool.
+
+### Historical token-savings measurements
+
+The table below preserves the [published growth benchmark](GROWTH_REPORT.md).
+It compares retrieval text for four questions, including one historical copy of
+the Brain protocol/MCP setup, with broad `rg` discovery plus selected files.
+**It does not measure total LLM tokens, task quality or bills.** The current
+protocol and tool schemas have changed since this run.
 
 | Project documents / memories | Brain context incl. setup | Broad search context | Saved vs broad search | Saved if broad output is capped at 8k/question | Median Brain search |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -17,149 +228,39 @@ Four questions in one session, with **one copy of the agent instructions and MCP
 | 5,000 | 1,342 tokens | 157,028 tokens | 99.15% | 95.81% | 2,057 ms |
 | 10,000 | 1,342 tokens | 317,028 tokens | 99.58% | 95.81% | 3,963 ms |
 
-The broad baseline is actual `rg` path discovery plus one selected file for each question. Its uncapped output becomes too large for a practical prompt. The 8k/question column **simulates a cap on that measured output**; it does not show whether a truncated search still finds the right file. A precise keyword search used only **1,115 tokens** across the same four questions and beat Brain after its setup cost. The [growth report](GROWTH_REPORT.md) gives the raw method, full measurements, and limits; [benchmarking](docs/BENCHMARKS.md) explains how to interpret the claims.
+All four authored facts were recovered at every size in that run. The capped
+column simulates truncation of the conventional output; it does not verify facts
+survive that cap. A precise keyword baseline used 1,115 tokens and beat Brain
+after setup cost. Search scores every chunk, so latency grows with corpus size.
+Measurements stop at 10,000 memories; larger scenarios are projections.
+[Methods, raw data and limits](docs/BENCHMARKS.md) explain these comparisons.
 
-## Local memory and optional Creare link
+## Try it and give feedback
 
-Open Brain is the installable, open-source CLI and stdio MCP server for local
-project memory. It stores Markdown in each project and indexes it in SQLite;
-it does not run the hosted Brain service or need PostgreSQL. The Brain service
-used by Creare lives in the [Creare repository](https://github.com/Vini-create/creare/tree/main/brain-service)
-and is deployed from there.
+Start with the demo, then try a real project and a fresh agent session. Check
+whether saved facts survive restart and whether paraphrased questions return
+the details needed for work. Share a small reproducible example when something
+fails, including OS/architecture, Python version, command, expected result and
+actual output. For retrieval issues, include a non-sensitive memory, query and
+budget. Do not include credentials or private project context.
 
-Projects exported from Creare can still use this CLI locally. `brain link` and
-`brain sync` connect their local `.brain/` mirror to the Creare Brain when
-credentials are provided. Reads fall back to the mirror while offline and
-writes wait in `.brain/outbox.jsonl` until the next sync. An unlinked project
-uses only local files and the local embedding model.
+[Report a problem or test result](https://github.com/Vini-create/Open-Brain/issues/new/choose) ·
+[Browse issues](https://github.com/Vini-create/Open-Brain/issues) ·
+[Contribute](CONTRIBUTING.md)
 
-## Install once, then use it in any project
+## Documentation
 
-On Linux, install Git, Bash and Python 3.10+ with `venv` (Python 3.12/3.13 is a conservative choice). Clone the repository into your home directory and run the installer once:
-
-```bash
-cd ~
-git clone https://github.com/Vini-create/Open-Brain.git
-cd Open-Brain
-./scripts/install.sh
-export PATH="$HOME/.local/bin:$PATH" # Make brain available in this terminal too.
-brain --help
-```
-
-Choose the matching instructions in [INSTALLATION.md](docs/INSTALLATION.md): [Linux distributions](docs/INSTALLATION.md#linux), [macOS Apple Silicon](docs/INSTALLATION.md#macos-apple-silicon), [Windows PowerShell](docs/INSTALLATION.md#windows-powershell), or [WSL2](docs/INSTALLATION.md#windows-with-wsl2). The Bash installer does not run natively in PowerShell. Macs need Python with SQLite-extension support; Intel Macs should use the documented [Docker alternative](docs/INSTALLATION.md#docker). Native setup and Docker have been tested on Linux x86_64; other host environments are documented but not yet tested.
-
-This puts the installation in `~/Open-Brain`, outside your other projects. The installer creates a virtual environment in the clone, installs the CLI, downloads the public embedding model, and links `brain` into `~/.local/bin`. It adds a marked PATH block to your Bash, Zsh or Fish startup files so **new terminals find `brain` automatically**. The `export` above also makes it available in the current Bash/Zsh terminal; an installer process cannot change its parent terminal's environment. Use `--no-shell-setup` if you manage shell configuration yourself. **Cloning alone does not install the command.**
-
-Now, from **any** project directory:
-
-```bash
-cd /absolute/path/to/your-project
-brain init
-brain status
-brain map
-```
-
-`brain init` creates an **independent** `.brain/` in the project where you run it, plus `AGENTS.md` and local MCP configuration. Run it in another project to create a new, empty Brain there. No terminal activation or second download is needed. The public `intfloat/multilingual-e5-small` embedding model is shared across projects; their memories are not. Normal indexing and search run locally and offline. Installation and model download need internet access. See the [installation guide](docs/INSTALLATION.md) for Windows, manual installation, Docker, MCP setup, and what to commit.
-
-Add verified project facts to `.brain/project/idea.md` and run `brain index`, or start with `brain init --idea "A short description"`. Then use `brain search "What is this project for?"` to retrieve them.
-
-### Docker instead of local Python dependencies
-
-Tested on Linux x86_64 with Bash and a running Docker daemon:
-
-```bash
-# In the cloned Open Brain repository:
-./scripts/brain-docker build
-
-# In your separate project:
-cd /absolute/path/to/your-project
-/absolute/path/to/Open-Brain/scripts/brain-docker init
-/absolute/path/to/Open-Brain/scripts/brain-docker model download
-/absolute/path/to/Open-Brain/scripts/brain-docker status
-/absolute/path/to/Open-Brain/scripts/brain-docker map
-```
-
-The wrapper mounts your project and a persistent model cache, then writes MCP configuration using **host paths**. Use the same wrapper for `search`, `remember`, `index`, and `rebuild`. It does not need network access after the model download. Docker adds startup time per command; native Python is the simpler choice for frequent CLI use.
-
-## See what your Brain knows
-
-Open **`.brain/map.html`** in a browser. This standalone, offline map is created by `brain init` and refreshed after `brain remember`, `brain index`, and changed Markdown discovered by search. Use `brain map` to refresh it manually, then click **Reload map** if the page is already open. Search and filter memories, click nodes to read their content, and pan or zoom the graph. Strong links come from shared tags and explicit `--related` references; the faint hub lines show project membership. The graph displays up to 180 matching memories at once, while search covers all stored memories.
-
-The map shows the count of memories and links, Markdown and index size, and **approximate stored text tokens**. Stored text is not automatically sent to an LLM. The map is generated from this project's Markdown and requires no model download. It is a local file ignored by Git because it contains the project's memory content. After editing Markdown by hand, run `brain index` to make those changes searchable; `brain map` only refreshes the view.
-
-Each project has its own `.brain/` with its own Markdown, SQLite index, history, and map. Closing the CLI or agent does not erase it. Running `brain init` in another project creates a separate, empty Brain; only the downloaded **model weights** are shared in the installation cache, not project knowledge.
-
-## How project memory works
-
-1. Fill `.brain/project/idea.md`, `overview.md`, and `goals.md` with verified project facts, then run `brain index`. `brain init --idea "..."` can add the initial idea after the model is available.
-2. Save durable knowledge with `brain remember --type decision --title "..." --content "..."`, or let an MCP-connected agent call `brain_remember`. The Markdown file is indexed automatically.
-3. Ask `brain search "question" --token-budget 500` or let the agent call `brain_search`. Search combines vector similarity, keywords, importance, and recency and returns a bounded response.
-4. After meaningful changes, the generated `.brain/AGENT_BRAIN.md` tells the agent to record **what changed, why, impact, and actual validation**. It also tells a new agent how to populate an empty Brain.
-
-For an established codebase, ask the agent to [audit memory coverage](docs/INSTALLATION.md#adopt-an-existing-project) after the initial summaries. Save focused knowledge about major modules, critical flows, constraints and active work, then check that specific searches recover the expected facts. Four records alone do not establish readiness. The generated protocol includes this audit even when the Brain already has indexed summaries; ongoing changes update the relevant memories incrementally.
-
-The coverage checklist also asks the agent to preserve **contracts, state
-transitions, permissions, failure cases, exact commands and source paths** in
-focused memories. Search uses smaller passages and reserves room for multiple
-memories at normal budgets, helping details compete with general summaries.
-See the [retrieval quality comparison](RETRIEVAL_QUALITY_REPORT.md) for measured
-results and remaining gaps. No tool automatically understands every source
-file: adoption requires a source audit and later changes require memory updates.
-Run `brain init` again in an existing project after upgrading to add the new
-checklist without replacing your memories or custom instructions. The next
-index/search refreshes the older passage format locally; restart a running MCP
-client to load the updated server.
-
-A [cross-project check](CROSS_PROJECT_REPORT.md) uses five different synthetic
-domains and 30 new English/Portuguese questions. At 500 estimated tokens,
-**29/30 answers contained all expected facts** with the default search limit;
-one paraphrase required refinement. All 30 operational checks passed, covering
-isolated project storage, updates, deletion, reopening and MCP. These are
-bounded development tests, not a guarantee of recall for every project.
-
-Markdown in `.brain/project/` and `.brain/knowledge/` is canonical. `.brain/index/brain.db` is a rebuildable SQLite + `sqlite-vec` index. `brain rebuild` reconstructs it from Markdown; unchanged files are not re-embedded by `brain index`. The product does **not** automatically read every source file, watch Git, or save every conversation. An agent must still inspect code before editing and validate its work. See [architecture](docs/ARCHITECTURE.md).
-
-## MCP integration
-
-`brain init` generates `.brain/mcp.json` and a project-root `.mcp.json` with the exact stdio command for that installation. If your client does not read `.mcp.json`, copy its `command` and `args` into the client's stdio MCP settings. Restart the client and verify these three tools: `brain_status`, `brain_search`, and `brain_remember`. The generated `AGENTS.md` directs agents to `.brain/AGENT_BRAIN.md`; MCP initialization also returns those instructions. A client's behavior determines whether it presents them to the agent. Details are in [Installation guide](docs/INSTALLATION.md#connect-an-mcp-client).
-
-If MCP tools are unavailable, the agent protocol now requires the CLI fallback
-(`brain search` / `brain remember`) and a paraphrased retrieval check after saving.
-Actual usage is visible in `.brain/history/searches.jsonl` and `changes.jsonl`;
-instructions cannot force every third-party agent to comply. Run `brain init`
-after cloning or upgrading to refresh local paths and add missing protocol sections.
-`brain status` reports vector counts, missing/orphaned vectors and
-`index_consistent`; use `brain rebuild` if consistency fails. This checks the
-index, while source review and focused searches establish memory coverage.
-
-The [stability audit](STABILITY_REPORT.md) records storage failure/recovery,
-real embedding/cosine checks, MCP restart and current retrieval evidence.
-Its detailed fixture recovered all expected facts for 12/12 questions at
-500 estimated tokens; at 180, two answers omitted details. Use focused queries
-or a larger budget for questions with several required facts.
-
-## What the benchmarks actually show
-
-The [measured growth benchmark](GROWTH_REPORT.md) creates up to 10,000 project documents and 10,000 corresponding indexed memories: four fact-bearing pairs plus synthetic distractors. It checks exact facts in the returned text and counts that text with `cl100k_base`. The Brain returned **582 tokens** for four questions; one copy of the instructions and MCP schemas adds **760 tokens** to the table above. At 10,000 memories, adding the last 5,000 and regenerating the map took **90 seconds**; the SQLite index occupied **104 MiB** and the map **3.76 MiB**. Token savings therefore come with a real latency and indexing cost at this scale.
-
-A separate [multilingual query test](ROBUSTNESS_REPORT.md) recovered the exact fact in **12/12 fixed direct and paraphrased questions** against 1,000 indexed memories, at both approximate budgets of 180 and 400 tokens per query. Its authored distractors are repetitive, so this is a limited retrieval check. The [large-project scenario report](docs/SCENARIOS.md) projects 20,000 to 1,000,000 documents with explicit assumptions, including a capped discovery output, repeated sessions, common prompt input, and a hypothetical memory-creation cost. **Those figures are projections, not measurements at those sizes.** The [benchmarking guide](docs/BENCHMARKS.md) explains methods, limitations, reproduction, and how to compare actual paired builder traces. No end-to-end LLM token saving has been measured yet.
-
-## Commands and repository guides
-
-| Command | Purpose |
+| Guide | What it covers |
 | --- | --- |
-| `brain init` | Create or refresh this project's Brain and MCP paths. |
-| `brain model download` | Fetch public CPU embedding weights once. |
-| `brain remember --type decision --title ... --content ...` | Save and index a durable fact. |
-| `brain search "question" --token-budget 500` | Retrieve bounded context. |
-| `brain status`, `brain index`, `brain rebuild` | Inspect, incrementally index, or rebuild the local index. |
-| `brain map` | Refresh the standalone, interactive `.brain/map.html` view. |
+| [Installation](docs/INSTALLATION.md) | OS setup, Docker, MCP, upgrades and troubleshooting. |
+| [Português brasileiro](README.pt-BR.md) | Introdução, instalação e primeiro teste em português. |
+| [Architecture](docs/ARCHITECTURE.md) | Markdown, embeddings, vectors, retrieval and boundaries. |
+| [Benchmarking](docs/BENCHMARKS.md) | Measured vs projected results and reproduction commands. |
+| [Stability audit](STABILITY_REPORT.md) | Verified local flows and remaining limits. |
+| [Remote integration](docs/REMOTE.md) | Optional linked service, local mirror and offline queue. |
+| [Contributing](CONTRIBUTING.md) | Development environment, validation and PR guidance. |
+| [Publishing](docs/PUBLISHING.md) | Maintainer workflow for GitHub changes. |
 
-- [Installation guide](docs/INSTALLATION.md): exact clone, install, project setup, Docker, and MCP steps.
-- [Architecture](docs/ARCHITECTURE.md): files, data flow, storage, and scaling boundaries.
-- [Benchmarking](docs/BENCHMARKS.md): evidence levels, reproduction, and fair comparisons.
-- [Repository benchmark](BENCHMARK_REPORT.md), [growth benchmark](GROWTH_REPORT.md), [query robustness](ROBUSTNESS_REPORT.md), and [large-project scenarios](docs/SCENARIOS.md).
-- [Contributing](CONTRIBUTING.md) and [MIT license](LICENSE).
-- [Publishing](docs/PUBLISHING.md): create the first Git history and GitHub remote.
-
-`SECOND_BRAIN_BUILD_SPEC.md` is the original Portuguese V1 build specification retained as project history. The English guides above describe the current product.
+The [original Portuguese V1 build spec](SECOND_BRAIN_BUILD_SPEC.md) is retained
+as project history; the guides above describe current behavior. Open Brain is
+available under the [MIT license](LICENSE).

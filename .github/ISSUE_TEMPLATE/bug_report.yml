@@ -1,0 +1,52 @@
+name: Bug report / Relatar problema
+description: Report installation, CLI, retrieval or MCP failures. English and Portuguese welcome.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Include a small reproducible example. Do not paste credentials or private project memories.
+        Pode escrever em português. Para problemas de busca, inclua uma memória de exemplo, a pergunta e o orçamento.
+  - type: input
+    id: environment
+    attributes:
+      label: OS and architecture / Sistema e arquitetura
+      placeholder: Linux x86_64, macOS arm64, Windows x64, WSL2...
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Python version and Open Brain commit
+      description: Run python --version with the installation's Python, and git rev-parse --short HEAD in the installation clone.
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Installation / Instalação
+      options:
+        - Unix installer
+        - Manual Python / PowerShell
+        - Docker
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and commands / Passos e comandos
+      description: For retrieval issues, include non-sensitive saved content, query, tags and token budget. For MCP, include the client name.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result / Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and error / Resultado obtido e erro
+      description: Include relevant output and brain status if available. Remove secrets and private paths/content.
+    validations:
+      required: true

@@ -1,0 +1,35 @@
+name: Trial feedback / Resultado de teste
+description: Share what worked, what failed and what was unclear during a real trial.
+title: "[Feedback]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying Open Brain. English and Portuguese reports are welcome.
+        Conte como foi o teste, sem compartilhar credenciais ou contexto privado.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment and agent client / Ambiente e cliente do agente
+      placeholder: OS/architecture, Python, installer or Docker, CLI or MCP client
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: What did you try? / O que você testou?
+      description: Demo or existing project? Save/search, restart, agent use, map or another flow?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What worked and what failed? / O que funcionou e o que falhou?
+      description: Did a paraphrased question recover the fact? Did it survive a fresh session? Include a safe example if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: documentation
+    attributes:
+      label: What was unclear? / O que ficou confuso?
+      description: Installation, MCP configuration, instructions, expected output or anything else.

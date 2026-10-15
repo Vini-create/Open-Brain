@@ -1,6 +1,16 @@
 # Installation and project setup
 
-Second Brain is a local CLI and MCP server. Install the application once, then run `brain init` inside each software project that needs its own memory. No LLM provider, API key, FAISS server, or cloud account is required. The first installation and first embedding-model download require internet access.
+Open Brain is a local CLI and MCP server. Its Python package is named
+`second-brain-local` and its command is `brain`. Install once, then run `brain init`
+inside each project that needs memory. The standalone path needs no LLM provider,
+API key or cloud account. Installation and the first model download need internet.
+
+For a short first run, start with the [README](../README.md#quickstart) or
+[introdução em português](../README.pt-BR.md). This guide contains platform details.
+
+[Choose your OS](#choose-your-operating-system) · [First facts](#give-the-brain-its-first-facts) ·
+[MCP](#connect-an-mcp-client) · [Upgrades](#update-an-existing-installation) ·
+[Troubleshooting](#installation-checks-and-troubleshooting) · [Sharing](#what-to-commit-in-your-project)
 
 ## Choose your operating system
 
@@ -236,7 +246,25 @@ The Docker image and model cache are separate from the native Python installatio
 
 ## Installation checks and troubleshooting
 
-After installation, run `brain init`, `brain status`, `brain remember --type decision --title "Install check" --content "This project has its own local Brain."`, and `brain search "local Brain"` in a disposable project directory. These check local storage and actual embedding retrieval, beyond `brain --help`. Open `.brain/map.html` to inspect the resulting memory.
+After installation, use a disposable project to check actual storage and retrieval:
+
+```bash
+mkdir -p ~/open-brain-demo
+cd ~/open-brain-demo
+brain init
+brain remember --type rule --title "Session expiration" --content "Idle sessions expire after 37 minutes. Pinned sessions never expire." --tag sessions
+brain search "When does an inactive session end?" --token-budget 500
+brain status
+brain map
+```
+
+In PowerShell, create and enter the demo folder with `New-Item -ItemType Directory`
+and `Set-Location`; the `brain` commands are the same. The search should include
+`37 minutes`. Status should show matching `indexed_chunks` and `indexed_vectors`,
+`index_consistent: true`, and no missing/orphaned vectors. An empty index just
+after `init` is normal; the first saved memory populates it. Open `.brain/map.html`
+in a browser. `brain status` checks the current index; it does not synchronize
+manual edits or establish that all project facts have been saved.
 
 | Symptom | Action |
 | --- | --- |
@@ -245,6 +273,13 @@ After installation, run `brain init`, `brain status`, `brain remember --type dec
 | No matching distribution for `torch` or another dependency | Check Python version, OS and CPU architecture; choose an installed Python 3.12/3.13, consult the upstream wheel support, or use a compatible Docker host. |
 | macOS `enable_load_extension` missing | Recreate the virtual environment using Homebrew Python as described above; this is a Python/SQLite build issue. |
 | Model unavailable locally | Run `brain model download` once with network access from an initialized project. |
+| Search seems empty after initialization | Empty project templates contain no facts. Save a memory or populate the project summaries, then run `brain index`. |
+| A saved detail is missing from a response | Confirm it exists in Markdown, run `brain index`, then use a focused query or a larger `--token-budget`. Search returns the best passage per memory, not every passage. |
+| `index_consistent` is false / vector index inconsistent | Run `brain rebuild`, then `brain status`. The rebuild uses canonical Markdown and preserves the previous index if replacement generation fails. |
+| Embedding model or dimension changed | Check `.brain/config.json`, then run `brain rebuild` with the intended model cached. Existing vectors cannot be reused with a different model/dimension. |
+| MCP tools are not visible | Confirm the generated absolute executable/project paths exist, use the client's stdio configuration format and restart its MCP connection. The CLI still works without MCP. |
+| Agent ignores the Brain | Verify the client loads `.brain/AGENT_BRAIN.md`, ask for an actual search/save/retrieve cycle and inspect calls or local logs. Client instruction support varies. |
+| Slow first search / MCP startup timeout | New processes load model weights. Retry once, record timing/environment and report a reproducible timeout. A running MCP server reuses its model, but corpus size and hardware still affect searches. See [observed timing variability](../STABILITY_REPORT.md). |
 | Existing `~/.local/bin/brain` belongs to another clone | Keep the intended clone and remove only its obsolete launcher, or install with a different `BRAIN_BIN_DIR`; the installer refuses to overwrite another command. |
 | Clone moved or deleted | Recreate its virtual environment at the final path, repair the launcher, and rerun `brain init` in each project to refresh absolute MCP paths. Virtual environments are not portable directories. |
 
@@ -258,16 +293,27 @@ After installation, run `brain init`, `brain status`, `brain remember --type dec
 - `.brain/project/overview.md`: stack, architecture, and current state.
 - `.brain/project/goals.md`: priorities and next steps.
 
-Then index them:
+Then index them. Replace the quoted example title, content and question below
+with your project's verified decision and a question about it; the earlier
+demo provides a ready-to-run sample:
 
 ```bash
 brain index
-brain remember --type decision --title "Authentication" --content "Refresh tokens are rotated and stored in HTTPOnly cookies."
-brain search "How do refresh tokens work?" --token-budget 500
+brain remember --type decision --title "Subject" --content "Replace this example with a verified project decision."
+brain search "your question about the saved decision" --token-budget 500
 brain map
 ```
 
 You can also run `brain init --idea "..."` **after** the model is downloaded. `brain remember` writes a structured Markdown file and indexes it immediately. `brain index` synchronizes manual Markdown edits. `brain search` also notices and indexes changed Markdown before retrieving context. For Docker, replace `brain` with the absolute path to `scripts/brain-docker`.
+
+Use the same type/title to update a memory; previous versions stay in local
+history. Optional `--key` preserves identity across title changes. Common types
+include `architecture`, `decision`, `rule`, `dependency`, `bug`, `feature`,
+`constraint`, `rationale` and `next-step`. For a feature, use a status such as
+`planned`, `in_progress` or `implemented`. `--tag` and `--related` are repeatable.
+Use `brain remember --help` for the full command syntax. Write one independently
+answerable subject per memory, with sources and actual validation, rather than
+large conversation dumps.
 
 Open `.brain/map.html` to browse the saved content. It updates after indexing or remembering. If the page is already open, click **Reload map**. Use `--tag auth` when remembering related facts, and `--related <memory-id>` to create an explicit link; both appear in the map. The list searches all memories, while the graph displays up to 180 at a time. `brain map` refreshes the view from Markdown but does not index manual edits; run `brain index` for those.
 
@@ -291,13 +337,89 @@ Check readiness through searches: "How does the main request flow work?", "Where
 
 This initial inspection and memory creation consume agent context. Subsequent sessions can reuse the saved knowledge while reading the code needed for each task. The agent updates existing memories after meaningful changes and fills newly discovered gaps. Stored context size does not automatically become LLM input, but larger memory still has storage, indexing and retrieval costs.
 
-To refresh older agent instructions, update the Open Brain installation clone with `git pull --ff-only`, then run `brain init` in the existing project again. It adds the coverage protocol while preserving project memories and custom instructions. Restart the MCP connection so the client receives the updated instructions. Refreshing instructions does not itself populate the memories; the agent must perform the audit.
+After an upgrade, follow [Update an existing installation](#update-an-existing-installation)
+to refresh each project's protocol. Refreshing instructions does not itself
+populate memories; the agent must perform the coverage audit.
 
 ## Connect an MCP client
 
 Initialization generates `.brain/mcp.json` and a project-root `.mcp.json`, both containing a `second-brain` stdio server with its exact host command and arguments. If your client reads `.mcp.json`, open the project in that client and restart it. Otherwise, copy the `command` and `args` from `.brain/mcp.json` into that client's stdio MCP configuration. Confirm that `brain_status`, `brain_search`, and `brain_remember` are listed.
 
 `AGENTS.md` points coding agents to `.brain/AGENT_BRAIN.md`. The MCP server also sends those instructions during initialization. Whether an agent sees either path depends on its client. Ask the agent to consult `brain_search` before rediscovering project decisions and to call `brain_remember` after meaningful changes. The agent still needs to read source code to implement and test edits.
+
+For reference, the generated native Unix configuration has this structure:
+
+```json
+{
+  "mcpServers": {
+    "second-brain": {
+      "command": "/absolute/path/to/Open-Brain/.venv/bin/python",
+      "args": ["-m", "second_brain", "mcp", "--project", "/absolute/path/to/your-project"]
+    }
+  }
+}
+```
+
+Copy your **generated** values, rather than these placeholder paths. Some clients
+use a different configuration root than `mcpServers`; preserve `command`/`args`
+and adapt the surrounding format. The server uses stdio, not an HTTP endpoint;
+running `brain mcp` in a terminal waits for JSON-RPC input and is not a web UI.
+
+To verify agent access, ask it to save a harmless demo fact through
+`brain_remember`, search for it using a paraphrase through `brain_search`, then
+recover it again after a fresh session. Use a demo project for sample facts.
+Searches are logged in `.brain/history/searches.jsonl`, writes in
+`.brain/history/changes.jsonl`; these provide evidence of actual use. If MCP is
+unavailable, an agent with terminal access can use `brain search` and
+`brain remember`, from the project or with `--project` pointing to it.
+
+## Update an existing installation
+
+For the Unix installer path, update the **installation clone**, not a project
+that happens to use a Brain:
+
+```bash
+cd ~/Open-Brain
+git pull --ff-only
+bash scripts/install.sh
+```
+
+The installer refreshes the editable package/dependencies and shell setup and
+ensures the default model is cached. With a known-good cache, `--skip-model`
+skips that download step. Dependency installation still needs network access.
+If Git reports local changes or a non-fast-forward update, preserve your work
+and resolve it before continuing; the upgrade does not require a hard reset.
+
+For the manual Windows setup:
+
+```powershell
+Set-Location "$env:USERPROFILE\Open-Brain"
+git pull --ff-only
+& ".\.venv\Scripts\python.exe" -m pip install -e .
+```
+
+For Docker, update the clone and rebuild with `bash scripts/brain-docker build`.
+For each existing project, use its matching CLI/wrapper and run:
+
+```bash
+cd /absolute/path/to/your-project
+brain init
+brain index
+brain status
+```
+
+Rerunning `init` preserves populated project facts and custom agent rules, adds
+missing protocol sections and refreshes local MCP paths. It updates the
+`second-brain` entry in `.mcp.json` while preserving other server entries when the
+file has the expected valid structure. If your client uses another configuration
+location, refresh it from `.brain/mcp.json`. Restart already-running MCP connections
+to load the new code and instructions.
+
+An index-format change can re-embed existing Markdown on the next index/search;
+allow time for that first synchronization. If the configured model or dimensions
+changed, cache the intended model and use `brain rebuild`. Back up canonical
+Markdown before upgrades if it is not already versioned. The installation clone,
+project memory and public model cache are separate things.
 
 ## What to commit in your project
 
@@ -311,10 +433,12 @@ Commit `.brain/project/`, `.brain/knowledge/`, `.brain/config.json`, `.brain/AGE
 | `brain model download` | Fetch the default CPU embedding model once. |
 | `brain remember --type decision --title ... --content ...` | Save and index durable knowledge. |
 | `brain search "question" --token-budget 500` | Retrieve bounded context. |
-| `brain status` | Show document and index counts. |
+| `brain status` | Show indexed documents, chunks/vectors and consistency. |
 | `brain map` | Refresh `.brain/map.html` for local visual inspection. |
 | `brain index` | Index changed Markdown only. |
 | `brain rebuild` | Recreate SQLite from Markdown. |
 | `brain mcp --project /absolute/path` | Run the stdio MCP server. |
 
 See [architecture](ARCHITECTURE.md) for the data flow and [benchmarking](BENCHMARKS.md) for the measured and projected token numbers.
+Optional [remote-service integration](REMOTE.md) is separate from this standalone
+setup and requires its own service and credentials.

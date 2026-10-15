@@ -1,6 +1,6 @@
 # Architecture
 
-Second Brain stores **durable project knowledge**, not the whole repository or a conversation dump. Markdown is canonical. A local SQLite database is a disposable index. A CPU embedding model and `sqlite-vec` provide semantic distance; keyword matching, importance, and recency also affect ranking.
+Open Brain stores **durable project knowledge**, not the whole repository or a conversation dump. Markdown is canonical. A local SQLite database is a disposable index. A CPU embedding model and `sqlite-vec` provide semantic distance; keyword matching, importance, and recency also affect ranking. This guide describes the standalone local path; [optional linked-service behavior](REMOTE.md) has different network and sync boundaries.
 
 ```mermaid
 flowchart LR
@@ -25,6 +25,9 @@ flowchart LR
 | `src/second_brain/embedding.py` | Local CPU model loading, explicit download, query and passage vectors. |
 | `src/second_brain/storage.py` | SQLite schema, `sqlite-vec`, incremental index, rebuild, status. |
 | `src/second_brain/mcp.py` | JSON-RPC over stdio: `brain_search`, `brain_remember`, `brain_status`. |
+| `src/second_brain/mcp_tools.py` | MCP tool schemas, dispatch, text rendering and recoverable tool errors. |
+| `src/second_brain/locking.py` | Per-project serialization of canonical writes and index rebuilds. |
+| `src/second_brain/remote.py` | Standalone backend plus optional HTTP client, queued writes and mirror. |
 | `src/second_brain/visualization.py` and `assets/brain_map.html` | Build an offline, interactive view from one project's Markdown. |
 | `scripts/brain-docker` and `Dockerfile` | Optional container execution with host project and model-cache mounts. |
 | `benchmarks/` and `tests/` | Reproducible measurements, analytical scenarios, and automated checks. |
@@ -101,7 +104,11 @@ The agent's detailed coverage checklist records contracts, state transitions,
 failure cases, source paths and validation, then checks paraphrased retrieval.
 Saving a general overview alone does not capture these details automatically.
 
-The default model is `intfloat/multilingual-e5-small` with 384-dimensional vectors. Only `brain model download` is allowed to fetch model weights. Normal indexing and search request local cached files. No project content is sent to an embedding API.
+The default model is `intfloat/multilingual-e5-small` with 384-dimensional vectors.
+The installer and `brain model download` explicitly fetch public weights. Normal
+indexing/search use cached files with the default `local_files_only: true` setting;
+setting it to false can allow the model loader to access the network. No project
+content is sent to an embedding API in the standalone path.
 
 ## Index choice and scaling
 
@@ -111,7 +118,7 @@ Hybrid ranking currently computes a vector distance and score for **every indexe
 
 ## Boundaries
 
-- No automatic repository scan, Git hook, file watcher, background daemon, or cloud sync.
+- The standalone path has no automatic repository scan, Git hook, file watcher, background daemon or cloud sync. Optional linking/sync is documented separately.
 - The agent must decide what durable facts to record. New source-code changes are not searchable until relevant knowledge is written to `.brain/`.
 - A retrieved memory is project context, not proof that code still matches it. Agents should verify source files before edits.
 - The token budget uses a local approximation of three characters per token; benchmark reports count output with `cl100k_base` and disclose the difference.

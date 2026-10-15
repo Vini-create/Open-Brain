@@ -13,16 +13,23 @@ This project has three levels of evidence. **Measured retrieval payload** is the
 
 ## Reproduce the measured benchmarks
 
-After following [Installation guide](INSTALLATION.md) and downloading the model:
+After following [Installation guide](INSTALLATION.md) and downloading the model,
+run these from the installation clone using its Python environment:
 
 ```bash
-python -m pip install -e '.[test,benchmark]'
-python -m pytest -q
-python benchmarks/measure.py
-python benchmarks/robustness.py
-python benchmarks/growth.py --profile full
-python benchmarks/project_scenarios.py
+.venv/bin/python -m pip install -e '.[test,benchmark]'
+.venv/bin/python -m pytest -q
+.venv/bin/python benchmarks/measure.py
+.venv/bin/python benchmarks/robustness.py --check
+.venv/bin/python benchmarks/retrieval_quality.py --label current --output /tmp/open-brain-retrieval.json --check
+.venv/bin/python benchmarks/growth.py --profile full
+.venv/bin/python benchmarks/project_scenarios.py
 ```
+
+On native Windows, use `& ".\.venv\Scripts\python.exe"` instead of
+`.venv/bin/python`, and select a Windows output path. Existing report files are
+updated by the ordinary benchmark commands; use separately named output for a
+new retrieval comparison when preserving historical measurements.
 
 The scripts require `rg` and `tiktoken`'s `cl100k_base` tokenizer file. The tokenizer file may need one initial public download. If it is unavailable, measurement fails rather than silently switching to an estimate. `growth.py --profile quick` runs only 4, 44, and 164 documents and writes ignored `GROWTH_QUICK_REPORT.md` and `growth-quick.json`, preserving the published full measurements. `full` also measures 1,000, 5,000, and 10,000. A full run embeds thousands of local texts on CPU and takes longer than the unit tests.
 
@@ -52,7 +59,7 @@ The current hybrid ranker scores every chunk. Indexing time and search latency c
 ## What would prove end-to-end savings
 
 Use two equivalent checkouts and the same model, client, tasks, and fresh-session policy. Preload Brain memories in one checkout. Verify both runs finish the tasks to equivalent quality. Collect actual token usage per turn, including cached input, output, and reasoning when available, plus file reads, MCP calls, elapsed time, and memory-authoring effort. Repeat across projects and task types. `benchmarks/compare_codex_traces.py` computes paired totals from supplied JSONL traces; it does not run a builder or invent usage. Until such a study exists, the public claim is **reduced retrieval context in the measured scenarios**, not a universal reduction in LLM bills.
-## Current retrieval quality
+## Quality evidence and historical comparisons
 
 The [stability audit](../STABILITY_REPORT.md) contains the current acceptance
 results and separate raw JSON files, preserving historical measurements. CI runs
@@ -60,8 +67,8 @@ results and separate raw JSON files, preserving historical measurements. CI runs
 and `benchmarks/robustness.py --check`. These commands fail when their expected
 fact-recovery contract regresses, rather than only printing a report.
 
-The [paired retrieval comparison](../RETRIEVAL_QUALITY_REPORT.md) measures
-the newer search implementation against `4045ab8` with identical authored
+The historical [paired retrieval comparison](../RETRIEVAL_QUALITY_REPORT.md) measures
+the search implementation recorded in that report against `4045ab8` with identical authored
 memories, queries and budgets. It measures fact recovery and actual response
 tokens. Older savings reports retain their historical engine measurements;
-they should not be read as measurements of the updated retrieval engine.
+they should not be read as measurements of every subsequent engine change.
