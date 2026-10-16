@@ -18,7 +18,7 @@ normal local indexing and search use the cached model.
 path. Other platform instructions and their verification limits are in the
 [installation guide](docs/INSTALLATION.md#choose-your-operating-system).
 
-[Quickstart](#quickstart) · [Use with an agent](#use-with-an-agent) ·
+[Quickstart](#quickstart) · [Preview](#see-your-brain) · [Use with an agent](#use-with-an-agent) ·
 [How it works](#how-it-works) · [Troubleshooting](#troubleshooting) ·
 [Evidence](#validation-and-benchmarks) · [Give feedback](#try-it-and-give-feedback)
 
@@ -138,6 +138,36 @@ Actual searches are logged in `.brain/history/searches.jsonl`; writes in
 adoption. Instructions cannot force every external agent to comply. For an
 existing codebase, summaries alone are a start: ask the agent to save focused
 contracts, decisions and failure cases, then check specific facts are recoverable.
+
+## See your Brain
+
+This is the real offline map of Open Brain's own public project memory:
+
+![Open Brain map with neutral dark surfaces, project metrics, memory graph and searchable list](docs/images/brain-map-desktop.png)
+
+After saving the first useful facts, the agent protocol tells the agent to run
+`brain map`, show the absolute path and open `.brain/map.html` in a local browser
+or HTML preview when available. If it cannot open a viewer, it gives you the path.
+**No local web server, hosting or account is needed.** You can open the HTML
+directly from your project folder; `brain map` also prints its location.
+
+Click a memory in the graph or list to read it. The map's search is textual;
+semantic retrieval is available through CLI/MCP. The HTML is a generated snapshot:
+run `brain map` and click **Reload map** to view the latest data. The agent should
+present it during onboarding, rather than reopen the browser for every save.
+
+<details>
+<summary>Memory details and mobile view</summary>
+
+![Selecting a memory displays its source, tags and saved content](docs/images/brain-map-detail.png)
+
+<img src="docs/images/brain-map-mobile.png" alt="Brain map and memory inspector stacked on a narrow screen" width="390">
+
+</details>
+
+The screenshots live in [`docs/images/`](docs/images/README.md) and are part of
+the repository. Your generated `.brain/map.html` remains local and ignored by
+Git because it contains your project's memories.
 
 ## How it works
 

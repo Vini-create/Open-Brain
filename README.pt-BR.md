@@ -30,6 +30,9 @@ O agente precisa selecionar e salvar o conhecimento. O Open Brain não lê todo 
 repositório sozinho nem registra toda conversa automaticamente. O agente continua
 precisando conferir o código e rodar os testes apropriados.
 
+[Veja o mapa](#como-o-brain-aparece-para-você) · [Instalação](#1-instale-uma-vez) ·
+[Primeiro teste](#2-faça-o-primeiro-teste) · [Conexão com o agente](#4-conecte-ao-agente)
+
 ## 1. Instale uma vez
 
 No **Linux**, com Git, Bash e Python 3.10+ com `venv` disponíveis:
@@ -127,6 +130,36 @@ Rode dentro do projeto ou passe `--project /caminho/absoluto/do/projeto`.
 Consulte as chamadas do agente ou os logs `.brain/history/searches.jsonl` e
 `changes.jsonl` para verificar uso real. Nenhum arquivo de instruções obriga
 todos os agentes externos a seguir a rotina.
+
+## Como o Brain aparece para você
+
+Esta é uma captura real do mapa das memórias públicas do próprio Open Brain:
+
+![Mapa do Open Brain com fundo cinza quase preto, métricas, grafo e lista de memórias](docs/images/brain-map-desktop.png)
+
+Depois de salvar os primeiros fatos úteis, o protocolo orienta o agente a rodar
+`brain map`, mostrar o caminho completo e abrir `.brain/map.html` no navegador ou
+preview HTML local, quando disponível. Se não puder abrir, ele informa o arquivo
+para você. **Não precisa subir servidor local, hospedar nem criar conta:** basta
+abrir o HTML da pasta do projeto. O comando também mostra onde ele foi gerado.
+
+Clique numa memória para ler conteúdo, tags e origem. A busca do mapa é textual;
+a busca semântica está na CLI/MCP. O HTML é uma captura gerada dos dados: rode
+`brain map` e use **Reload map** para atualizar. O agente apresenta o mapa durante
+a adoção inicial e após atualizações importantes, sem abrir uma aba a cada gravação.
+
+<details>
+<summary>Ver leitura de uma memória e versão em tela pequena</summary>
+
+![Memória selecionada com conteúdo, tags e arquivo de origem](docs/images/brain-map-detail.png)
+
+<img src="docs/images/brain-map-mobile.png" alt="Mapa e leitura de memórias em uma tela estreita" width="390">
+
+</details>
+
+Os prints estão em [`docs/images/`](docs/images/README.md), dentro do repositório,
+para aparecerem no GitHub. O `.brain/map.html` de cada usuário continua local e
+ignorado pelo Git, pois contém as memórias do projeto dele.
 
 ## Comandos do dia a dia
 

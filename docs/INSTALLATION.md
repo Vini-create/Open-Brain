@@ -317,6 +317,26 @@ large conversation dumps.
 
 Open `.brain/map.html` to browse the saved content. It updates after indexing or remembering. If the page is already open, click **Reload map**. Use `--tag auth` when remembering related facts, and `--related <memory-id>` to create an explicit link; both appear in the map. The list searches all memories, while the graph displays up to 180 at a time. `brain map` refreshes the view from Markdown but does not index manual edits; run `brain index` for those.
 
+### Present the map to the user
+
+The generated agent protocol directs the agent to run `brain map` after the first
+useful facts are saved, provide the absolute `.brain/map.html` path and open it
+once in a local browser or the client's HTML preview when available. If opening
+is unavailable, the agent hands off the path. A static HTML file is enough; no
+HTTP server, port or hosting setup is required. Open it through the browser's
+**Open File** action if your editor displays the HTML source instead of a preview.
+With Docker, open the generated host path, rather than `/workspace` in the container.
+
+The agent should explain that the map is a snapshot and its search is textual,
+while CLI/MCP supplies semantic retrieval. Later, regenerate with `brain map`
+and use **Reload map**. The protocol asks for a handoff during onboarding or a
+substantial update, not a browser launch on every write. Client capabilities and
+instruction compliance still determine whether an agent opens a viewer.
+
+After upgrading, rerun `brain init` in an existing project to add this protocol
+section; MCP initialization also includes it for older instruction files.
+See [screenshots](../README.md#see-your-brain) for the actual layout.
+
 ## Separate Brain for every project
 
 Run `brain init` from each project's directory. Project A's `.brain/` never becomes Project B's data source: Markdown, SQLite index, local history, and map all live under the selected project path. The model cache only contains reusable public embedding weights. You can close the terminal or agent and reopen the project later; its Brain stays on disk. `brain init` is safe to rerun and does not reset saved memories. To share memory with a teammate, commit the canonical Markdown as described below; to keep it private, keep those files out of your project's Git history.

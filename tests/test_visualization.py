@@ -5,7 +5,8 @@ import sys
 from pathlib import Path
 
 from second_brain.config import load_config
-from second_brain.core import initialize, remember, search
+from second_brain.core import MAP_INSTRUCTIONS, MAP_MARKER, initialize, remember, search
+from second_brain.mcp import instructions_for
 from second_brain.storage import index, stats
 from second_brain.visualization import snapshot
 
@@ -55,6 +56,27 @@ def test_empty_map_needs_no_model_and_shows_manual_markdown(tmp_path: Path, monk
     assert stats(project, load_config(project))["memories"] == 0
     monkeypatch.setenv("BRAIN_HOST_PROJECT", str(tmp_path / "host-named-project"))
     assert snapshot(project)["project"] == "host-named-project"
+
+
+def test_map_handoff_is_delivered_to_new_and_existing_agents(tmp_path: Path):
+    initialize(tmp_path)
+    path = tmp_path / ".brain/AGENT_BRAIN.md"
+    assert MAP_MARKER in path.read_text()
+    for phrase in ("first useful project facts", "brain map", "clickable absolute",
+                   "HTML preview", "No local server", "do not reopen"):
+        assert phrase in instructions_for(tmp_path)
+    # Existing MCP clients receive the section before a user reruns init.
+    legacy = path.read_text().replace("\n" + MAP_INSTRUCTIONS, "")
+    assert MAP_MARKER not in legacy
+    path.write_text(legacy + "\nCustom project rule: keep this.\n")
+    before = path.read_bytes()
+    assert MAP_MARKER in instructions_for(tmp_path)
+    assert path.read_bytes() == before
+    initialize(tmp_path)
+    initialize(tmp_path)
+    upgraded = path.read_text()
+    assert upgraded.count(MAP_MARKER) == 1
+    assert "Custom project rule: keep this." in upgraded
 
 
 def test_maps_and_search_stay_inside_each_project_after_new_process(tmp_path: Path):

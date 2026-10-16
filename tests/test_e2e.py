@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from second_brain.config import load_config
-from second_brain.core import (BOOTSTRAP_MARKER, CONTEXT_UPDATE_MARKER, COVERAGE_MARKER,
+from second_brain.core import (BOOTSTRAP_MARKER, CONTEXT_UPDATE_MARKER, COVERAGE_MARKER, MAP_MARKER,
                                _ensure_agent_instructions, initialize, remember, search)
 from second_brain.storage import SCHEMA, connect, index, stats, vector_scores
 
@@ -238,6 +238,7 @@ def test_v1_acceptance(tmp_path: Path):
     assert [response["id"] for response in responses] == [1, 2, 3, 4, 5]
     assert CONTEXT_UPDATE_MARKER in responses[0]["result"]["instructions"]
     assert BOOTSTRAP_MARKER in responses[0]["result"]["instructions"]
+    assert MAP_MARKER in responses[0]["result"]["instructions"]
     assert "What changed" in responses[0]["result"]["instructions"]
     local_tools = {tool["name"] for tool in responses[1]["result"]["tools"]}
     assert {"brain_search", "brain_remember", "brain_status", "brain_context", "brain_list"} <= local_tools

@@ -19,6 +19,25 @@ BOOTSTRAP_MARKER = "<!-- second-brain-bootstrap:v1 -->"
 COVERAGE_MARKER = "<!-- second-brain-project-coverage:v1 -->"
 DETAIL_MARKER = "<!-- second-brain-detail-coverage:v1 -->"
 ACCESS_MARKER = "<!-- second-brain-agent-access:v1 -->"
+MAP_MARKER = "<!-- second-brain-user-map:v1 -->"
+MAP_INSTRUCTIONS = f"""## Show the user their local memory map
+
+{MAP_MARKER}
+
+After saving the first useful project facts, run `brain map` in that project
+(or use `--project` with its absolute path). Show the user a clickable absolute
+path to `.brain/map.html` and open it once in a local browser or the client's
+HTML preview when available. If opening is unavailable, give the file path
+and explain how to open it in a browser. No local server or hosting is required;
+the HTML works offline. With Docker, use the generated host path.
+
+Explain that the map shows saved memories, tags and explicit relations. Its
+search is textual; semantic search is provided by `brain_search` / `brain search`.
+The page is a generated snapshot: refresh it with `brain map` and Reload map
+after later changes. Present it again after a substantial onboarding update,
+but do not reopen a browser for every save. Never publish a user's generated
+map or screenshots without their request; it embeds their project knowledge.
+"""
 ACCESS_INSTRUCTIONS = f"""## Verify access and complete the memory loop
 
 {ACCESS_MARKER}
@@ -163,7 +182,7 @@ implementation details in source code before editing or testing. Keep
 manual Markdown edits.
 
 Search before rediscovering. Remember after learning.
-""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS + "\n" + DETAIL_INSTRUCTIONS + "\n" + ACCESS_INSTRUCTIONS
+""" + "\n" + BOOTSTRAP_INSTRUCTIONS + "\n" + PROJECT_COVERAGE_INSTRUCTIONS + "\n" + CONTEXT_UPDATE_INSTRUCTIONS + "\n" + DETAIL_INSTRUCTIONS + "\n" + ACCESS_INSTRUCTIONS + "\n" + MAP_INSTRUCTIONS
 
 
 def _ensure_agent_instructions(path: Path) -> None:
@@ -177,6 +196,7 @@ def _ensure_agent_instructions(path: Path) -> None:
         (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
         (DETAIL_MARKER, DETAIL_INSTRUCTIONS),
         (ACCESS_MARKER, ACCESS_INSTRUCTIONS),
+        (MAP_MARKER, MAP_INSTRUCTIONS),
     ) if marker not in existing]
     if additions:
         path.write_text(existing.rstrip("\n") + "\n\n" + "\n\n".join(additions), encoding="utf-8")

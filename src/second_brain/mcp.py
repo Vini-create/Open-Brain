@@ -14,7 +14,7 @@ from . import mcp_tools
 from .config import load_config
 from .core import (ACCESS_INSTRUCTIONS, ACCESS_MARKER, AGENT_INSTRUCTIONS, BOOTSTRAP_INSTRUCTIONS, BOOTSTRAP_MARKER, CONTEXT_UPDATE_INSTRUCTIONS,
                    CONTEXT_UPDATE_MARKER, COVERAGE_MARKER, DETAIL_INSTRUCTIONS, DETAIL_MARKER,
-                   PROJECT_COVERAGE_INSTRUCTIONS)
+                   MAP_INSTRUCTIONS, MAP_MARKER, PROJECT_COVERAGE_INSTRUCTIONS)
 from .remote import backend_for, remote_settings
 
 LOCAL_ONLY_EXCLUDED = {"brain_relate"}
@@ -27,7 +27,7 @@ def instructions_for(root: Path) -> str:
     for marker, section in ((BOOTSTRAP_MARKER, BOOTSTRAP_INSTRUCTIONS),
                             (CONTEXT_UPDATE_MARKER, CONTEXT_UPDATE_INSTRUCTIONS),
                             (COVERAGE_MARKER, PROJECT_COVERAGE_INSTRUCTIONS), (DETAIL_MARKER, DETAIL_INSTRUCTIONS),
-                            (ACCESS_MARKER, ACCESS_INSTRUCTIONS)):
+                            (ACCESS_MARKER, ACCESS_INSTRUCTIONS), (MAP_MARKER, MAP_INSTRUCTIONS)):
         if marker not in instructions:
             instructions = instructions.rstrip("\n") + "\n\n" + section
     return instructions

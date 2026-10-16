@@ -79,3 +79,21 @@ Search using a paraphrased question to confirm the saved fact is recoverable.
 Use focused queries when the answer spans multiple subjects. Search logs in
 `.brain/history/searches.jsonl` and writes in `changes.jsonl` provide evidence
 of actual use; configuration or record counts alone do not prove agent usage.
+
+## Show the user their local memory map
+
+<!-- second-brain-user-map:v1 -->
+
+After saving the first useful project facts, run `brain map` in that project
+(or use `--project` with its absolute path). Show the user a clickable absolute
+path to `.brain/map.html` and open it once in a local browser or the client's
+HTML preview when available. If opening is unavailable, give the file path
+and explain how to open it in a browser. No local server or hosting is required;
+the HTML works offline. With Docker, use the generated host path.
+
+Explain that the map shows saved memories, tags and explicit relations. Its
+search is textual; semantic search is provided by `brain_search` / `brain search`.
+The page is a generated snapshot: refresh it with `brain map` and Reload map
+after later changes. Present it again after a substantial onboarding update,
+but do not reopen a browser for every save. Never publish a user's generated
+map or screenshots without their request; it embeds their project knowledge.
