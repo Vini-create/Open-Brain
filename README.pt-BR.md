@@ -4,6 +4,8 @@
 arquitetura, regras e próximos passos em Markdown. Recupere o contexto relevante
 por busca semântica quando uma tarefa ou uma nova sessão precisar dele.
 
+![Mapa do Open Brain com fundo cinza quase preto, métricas, grafo e lista de memórias](docs/images/brain-map-desktop.png)
+
 [English](README.md) · **Português brasileiro**
 
 [![CI](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml/badge.svg)](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml)
@@ -133,9 +135,8 @@ todos os agentes externos a seguir a rotina.
 
 ## Como o Brain aparece para você
 
-Esta é uma captura real do mapa das memórias públicas do próprio Open Brain:
-
-![Mapa do Open Brain com fundo cinza quase preto, métricas, grafo e lista de memórias](docs/images/brain-map-desktop.png)
+A imagem no topo é uma captura real do mapa das memórias públicas do próprio
+Open Brain.
 
 Depois de salvar os primeiros fatos úteis, o protocolo orienta o agente a rodar
 `brain map`, mostrar o caminho completo e abrir `.brain/map.html` no navegador ou

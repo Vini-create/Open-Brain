@@ -4,6 +4,8 @@
 rules and next steps as Markdown. Retrieve the relevant context with semantic
 search when the next task or session needs it.
 
+![Open Brain map with neutral dark surfaces, project metrics, memory graph and searchable list](docs/images/brain-map-desktop.png)
+
 [English](README.md) · [Português brasileiro](README.pt-BR.md)
 
 [![CI](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml/badge.svg)](https://github.com/Vini-create/Open-Brain/actions/workflows/ci.yml)
@@ -141,9 +143,8 @@ contracts, decisions and failure cases, then check specific facts are recoverabl
 
 ## See your Brain
 
-This is the real offline map of Open Brain's own public project memory:
-
-![Open Brain map with neutral dark surfaces, project metrics, memory graph and searchable list](docs/images/brain-map-desktop.png)
+The preview at the top shows the real offline map of Open Brain's own public
+project memory.
 
 After saving the first useful facts, the agent protocol tells the agent to run
 `brain map`, show the absolute path and open `.brain/map.html` in a local browser
